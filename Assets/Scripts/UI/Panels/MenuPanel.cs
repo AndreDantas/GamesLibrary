@@ -8,8 +8,9 @@ public class MenuPanel : GamePanel
     public float buttonAnimTime = 0.3f;
     public List<GameObject> Buttons = new List<GameObject>();
     private float[] buttonsY;
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         if (Buttons != null)
         {
             buttonsY = new float[Buttons.Count];
@@ -85,7 +86,6 @@ public class MenuPanel : GamePanel
             Buttons[i].transform.MoveToLocal(new Vector3(end.x, buttonsY[i], buttonRect.localPosition.z), buttonAnimTime);
             yield return new WaitForSeconds(buttonAnimTime / 2f);
         }
-        yield return new WaitForSeconds(buttonAnimTime / 2f);
 
 
 
@@ -94,5 +94,10 @@ public class MenuPanel : GamePanel
 
         gameObject.SetActive(false);
         moving = false;
+    }
+
+    public override void OnBack()
+    {
+        base.OnBack();
     }
 }

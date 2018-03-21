@@ -6,6 +6,7 @@ public class Slideshow : MonoBehaviour
 {
 
     public List<GameObject> panels;
+
     List<GameObject> panelIndicator;
     public GameObject current;
     protected int index = 0;
@@ -16,11 +17,6 @@ public class Slideshow : MonoBehaviour
     public Vector2 panelIndicatorCenter;
     [Range(0f, 10f)]
     public float indicatorSpacing = 0.5f;
-    // Use this for initialization
-    void Start()
-    {
-        //Init();
-    }
 
 
     public virtual void Init()

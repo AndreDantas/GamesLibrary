@@ -8,26 +8,30 @@ public class GamePanel : MonoBehaviour
 
     public float animTime = 0.5f;
     public Vector2 screenCenter;
-
+    public GamePanel onBackPanel;
     public bool moving { get; internal set; }
-    // Use this for initialization
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public virtual void CenterPanel()
     {
         RectTransform rect = transform as RectTransform;
         rect.localPosition = screenCenter;
     }
+    public Vector2 DefaultStartPosition(int direction)
+    {
+        RectTransform rect = transform as RectTransform;
+        return new Vector2(rect.rect.width * Mathf.Sign(direction) + screenCenter.x, screenCenter.y);
+    }
 
+    protected virtual void OnEnable()
+    {
+        SceneController.OnBack += OnBack;
+    }
+
+    protected virtual void OnDisable()
+    {
+        SceneController.OnBack -= OnBack;
+    }
     public virtual IEnumerator Enter()
     {
         if (moving)
@@ -35,7 +39,7 @@ public class GamePanel : MonoBehaviour
 
         moving = true;
         RectTransform rect = transform as RectTransform;
-        yield return MovePanel(gameObject, new Vector2(rect.rect.width + screenCenter.x, screenCenter.y), screenCenter, animTime, null);
+        yield return MovePanel(gameObject, DefaultStartPosition(1), screenCenter, animTime, null);
 
         moving = false;
     }
@@ -47,8 +51,7 @@ public class GamePanel : MonoBehaviour
         moving = true;
 
         RectTransform rect = transform as RectTransform;
-        yield return MovePanel(gameObject, screenCenter, new Vector2(-rect.rect.width + screenCenter.x, screenCenter.y), animTime, null);
-
+        yield return MovePanel(gameObject, screenCenter, DefaultStartPosition(-1), animTime, null);
         gameObject.SetActive(false);
         moving = false;
     }
@@ -62,6 +65,14 @@ public class GamePanel : MonoBehaviour
         panel.transform.localPosition = start;
         panel.transform.MoveToLocal(end, animTime, equation);
         yield return new WaitForSeconds(animTime);
+    }
+
+    public virtual void OnBack()
+    {
+        if (onBackPanel && !moving)
+        {
+            SceneController.instance.ChangePanel(onBackPanel);
+        }
     }
 
 }

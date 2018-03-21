@@ -1,16 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 public class SceneController : MonoBehaviour
 {
-
+    public static SceneController instance;
     public List<GamePanel> panels = new List<GamePanel>();
+    public delegate void OnBackEventHandler();
+    public static OnBackEventHandler OnBack;
     public GamePanel current;
     bool moving;
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+    }
     private void Start()
     {
         Init();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (OnBack != null)
+                OnBack();
+        }
     }
 
     public virtual void Init()

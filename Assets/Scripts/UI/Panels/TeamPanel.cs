@@ -6,22 +6,99 @@ using TMPro;
 public class TeamPanel : GamePanel
 {
 
-    public List<PickAColor> teams;
     public InputField roundsInput;
     public InputField roundTimeInput;
     public CatchphrasePanel gamePanel;
-
-    public override IEnumerator Enter()
+    public List<GameObject> panelObjects = new List<GameObject>();
+    private float[] objectsY;
+    protected override void OnEnable()
     {
-        ResetSettings();
-        yield return base.Enter();
+        base.OnEnable();
+        if (panelObjects != null)
+        {
+            objectsY = new float[panelObjects.Count];
+            int counter = 0;
+            foreach (GameObject button in panelObjects)
+            {
+                objectsY[counter] = button.transform.localPosition.y;
+                counter++;
+            }
+        }
 
     }
 
-
-    public void ResetSettings()
+    public override IEnumerator Enter()
     {
-        StartCoroutine(ResetSett());
+        if (moving)
+            yield break;
+
+        moving = true;
+        if (panelObjects == null ? true : panelObjects.Count == 0)
+            yield return base.Enter();
+
+
+        RectTransform rect = transform as RectTransform;
+        Vector2 start = new Vector2(rect.rect.width + screenCenter.x, screenCenter.y);
+        Vector2 end = screenCenter;
+        transform.localPosition = start;
+        foreach (GameObject button in panelObjects)
+        {
+            button.gameObject.SetActive(false);
+        }
+        yield return null;
+        transform.MoveToLocal(end, animTime);
+        yield return new WaitForSeconds(animTime / 2f);
+
+        for (int i = 0; i < panelObjects.Count; i++)
+        {
+
+            RectTransform buttonRect = panelObjects[i].transform as RectTransform;
+
+            buttonRect.localPosition = new Vector3(start.x, objectsY[i], buttonRect.localPosition.z);
+
+            panelObjects[i].gameObject.SetActive(true);
+            panelObjects[i].transform.MoveToLocal(new Vector3(end.x, objectsY[i], buttonRect.localPosition.z), animTime);
+            yield return new WaitForSeconds(animTime / 2f);
+        }
+        yield return new WaitForSeconds(animTime / 2f);
+
+        moving = false;
+
+    }
+
+    public override IEnumerator Exit()
+    {
+        if (moving)
+            yield break;
+
+        moving = true;
+        if (panelObjects == null ? true : panelObjects.Count == 0)
+            yield return base.Exit();
+
+        RectTransform rect = transform as RectTransform;
+        Vector2 start = screenCenter;
+        Vector2 end = new Vector2(-rect.rect.width + screenCenter.x, screenCenter.y);
+        transform.localPosition = start;
+
+        for (int i = panelObjects.Count - 1; i >= 0; i--)
+        {
+
+            RectTransform buttonRect = panelObjects[i].transform as RectTransform;
+
+            buttonRect.localPosition = new Vector3(start.x, objectsY[i], buttonRect.localPosition.z);
+
+            panelObjects[i].gameObject.SetActive(true);
+            panelObjects[i].transform.MoveToLocal(new Vector3(end.x, objectsY[i], buttonRect.localPosition.z), animTime);
+            yield return new WaitForSeconds(animTime / 2f);
+        }
+
+
+
+        transform.MoveToLocal(end, animTime);
+        yield return new WaitForSeconds(animTime);
+
+        gameObject.SetActive(false);
+        moving = false;
     }
 
     public void InitTeams()
@@ -29,22 +106,11 @@ public class TeamPanel : GamePanel
         if (gamePanel == null)
             return;
 
-        List<TeamInfo> newTeams = new List<TeamInfo>();
-        for (int i = 0; i < teams.Count; i++)
-        {
-            TeamInfo temp = new TeamInfo();
-            temp.teamColor = teams[i].color;
-            temp.teamName = teams[i].teamName;
-            if (temp.teamName.Trim() == "")
-                temp.teamName = "Team " + (i + 1);
-            temp.teamScore = 0;
-            newTeams.Add(temp);
-        }
         int rounds;
         int roundTime;
         int.TryParse(roundTimeInput != null ? roundTimeInput.text : "30", out roundTime);
         int.TryParse(roundsInput != null ? roundsInput.text : "1", out rounds);
-        gamePanel.SetGameStats(newTeams, rounds, roundTime);
+        //Set game panel teams
     }
 
     public void ValidateRoundInput(string input)
@@ -65,16 +131,4 @@ public class TeamPanel : GamePanel
             roundTimeInput.text = n.ToString();
     }
 
-    IEnumerator ResetSett()
-    {
-        if (teams != null ? teams.Count == 0 : true)
-            yield break;
-        roundsInput.text = "2";
-        roundTimeInput.text = "30";
-        foreach (PickAColor p in teams)
-        {
-            p.colorPicker.SetRandomColor();
-            yield return null;
-        }
-    }
 }
