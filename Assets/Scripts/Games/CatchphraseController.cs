@@ -513,6 +513,7 @@ X-ray";
         wordText.text = word;
         if (timer)
         {
+
             timer.gameObject.SetActive(true);
             timer.countdown = countdown;
             timer.StartTimer();

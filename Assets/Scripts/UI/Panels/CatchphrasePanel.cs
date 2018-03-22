@@ -21,11 +21,13 @@ public class CatchphrasePanel : GamePanel
     public TextMeshProUGUI roundText;
     public TextMeshProUGUI wordText;
     public TextMeshProUGUI teamNameText;
+    public TextMeshProUGUI scoreText;
     public Button correctWordButton;
     public Image teamBackground;
     bool gameStart;
     int currentRound;
     int roundTime;
+    Color backgroundOldColor;
     [SerializeField]
     int _rounds;
     public int rounds
@@ -53,10 +55,9 @@ public class CatchphrasePanel : GamePanel
 
     public void PrepareGame()
     {
+        backgroundOldColor = teamBackground.color;
         catchphraseController.countdown = roundTime;
         catchphraseController.HideTimer();
-
-        HideUI();
 
         index = -1;
         currentRound = 1;
@@ -68,6 +69,7 @@ public class CatchphrasePanel : GamePanel
     }
     public override IEnumerator Enter()
     {
+        HideUI();
         PrepareGame();
         catchphraseController.timer.OnFinish += OnFinishTimer;
         yield return base.Enter();
@@ -79,9 +81,9 @@ public class CatchphrasePanel : GamePanel
         catchphraseController.HideTimer();
         roundText.gameObject.SetActive(false);
         wordText.gameObject.SetActive(false);
-        teamBackground.gameObject.SetActive(false);
         teamNameText.gameObject.SetActive(false);
         correctWordButton.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(false);
     }
 
     public override IEnumerator Exit()
@@ -103,15 +105,24 @@ public class CatchphrasePanel : GamePanel
             StartCoroutine(EndGame());
             return;
         }
+        roundText.text = "Round " + currentRound + "/" + rounds;
 
-        roundText.gameObject.SetActive(false);
         wordText.gameObject.SetActive(false);
         correctWordButton.gameObject.SetActive(false);
 
+        roundText.gameObject.SetActive(true);
+        scoreText.gameObject.SetActive(true);
         teamNameText.gameObject.SetActive(true);
-        teamBackground.gameObject.SetActive(true);
+
         teamBackground.color = teams[index].teamColor;
         teamNameText.text = teams[index].teamName;
+        scoreText.text = string.Format("<color={0}>{1} : <b>{2}</b> </color> | <color={3}> <b>{4}</b> : {5} </color>",
+                                ColorTypeConverter.ToRGBHex(teams[0].teamColor),
+                                teams[0].teamName,
+                                teams[0].teamScore + "pts",
+                                ColorTypeConverter.ToRGBHex(teams[1].teamColor),
+                                teams[1].teamScore + "pts",
+                                teams[1].teamName);
         catchphraseController.HideTimer();
         StartCoroutine(NextRound());
     }
@@ -119,6 +130,7 @@ public class CatchphrasePanel : GamePanel
     IEnumerator EndGame()
     {
         HideUI();
+        teamBackground.color = backgroundOldColor;
         wordText.gameObject.SetActive(true);
         wordText.text = "Fim de Jogo";
         yield return new WaitForSeconds(2f);
@@ -133,11 +145,9 @@ public class CatchphrasePanel : GamePanel
         yield return new WaitForSeconds(2f);
 
         teamNameText.gameObject.SetActive(false);
-
-        roundText.gameObject.SetActive(true);
         correctWordButton.gameObject.SetActive(true);
 
-        roundText.text = "Round " + currentRound + "/" + rounds;
+
         wordText.gameObject.SetActive(true);
         catchphraseController.ShowTimer();
         catchphraseController.NewWord();

@@ -10,6 +10,7 @@ public class TeamPanel : GamePanel
     public InputField roundTimeInput;
     public CatchphrasePanel gamePanel;
     public List<GameObject> panelObjects = new List<GameObject>();
+    public List<TeamInfo> teams = new List<TeamInfo>();
     private float[] objectsY;
     protected override void OnEnable()
     {
@@ -31,7 +32,10 @@ public class TeamPanel : GamePanel
     {
         if (moving)
             yield break;
-
+        if (roundsInput)
+            roundsInput.text = "2";
+        if (roundTimeInput)
+            roundTimeInput.text = "30";
         moving = true;
         if (panelObjects == null ? true : panelObjects.Count == 0)
             yield return base.Enter();
@@ -108,9 +112,10 @@ public class TeamPanel : GamePanel
 
         int rounds;
         int roundTime;
-        int.TryParse(roundTimeInput != null ? roundTimeInput.text : "30", out roundTime);
-        int.TryParse(roundsInput != null ? roundsInput.text : "1", out rounds);
+        int.TryParse(roundTimeInput != null ? roundTimeInput.text.Trim() != "" ? roundTimeInput.text : "30" : "30", out roundTime);
+        int.TryParse(roundsInput != null ? roundsInput.text.Trim() != "" ? roundsInput.text : "1" : "1", out rounds);
         //Set game panel teams
+        gamePanel.SetGameStats(teams, rounds, roundTime);
     }
 
     public void ValidateRoundInput(string input)
