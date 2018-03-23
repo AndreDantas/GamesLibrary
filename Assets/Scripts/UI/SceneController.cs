@@ -23,7 +23,7 @@ public class SceneController : MonoBehaviour
     }
     private void Start()
     {
-        Init();
+        StartCoroutine(Init());
     }
 
     private void Update()
@@ -35,8 +35,9 @@ public class SceneController : MonoBehaviour
         }
     }
 
-    public virtual void Init()
+    public virtual IEnumerator Init()
     {
+        yield return null;
         if (panels != null)
         {
             foreach (GamePanel g in panels)

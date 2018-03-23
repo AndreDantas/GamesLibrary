@@ -11,10 +11,20 @@ public class Timer : MonoBehaviour
     float currentTime;
     public TextMeshProUGUI timerText;
     public Image timerImage;
+
+    public AudioSource beepSound;
+    public bool beepOn = true;
+    [Range(0, 3f)]
+    public float beepRateMax = 1f;
+    [Range(0, 1f)]
+    public float beepRateMin = 0.3f;
+    float beepCount;
+
     public delegate void OnFinishEventHandler();
     public event OnFinishEventHandler OnFinish;
     bool counting = false;
     bool finished;
+
     private void OnValidate()
     {
         if (timerText)
@@ -26,8 +36,21 @@ public class Timer : MonoBehaviour
         if (counting)
         {
             currentTime -= Time.deltaTime;
+
             UpdateTimer();
             UpdateImage();
+
+            if (beepSound)
+            {
+                if (beepCount > MathOperations.Map(0f, countdown, beepRateMin, beepRateMax, currentTime))
+                {
+                    beepCount = 0;
+                    if (beepOn)
+                        beepSound.Play();
+                }
+                beepCount += Time.deltaTime;
+            }
+
             if (currentTime < 0)
             {
                 counting = false;
@@ -43,11 +66,17 @@ public class Timer : MonoBehaviour
         currentTime = countdown;
         finished = false;
         counting = true;
+        beepCount = 0;
     }
 
     public void StopTimer()
     {
         counting = false;
+    }
+
+    public void ToggleBeep()
+    {
+        beepOn = !beepOn;
     }
 
     public void ContinueTimer()

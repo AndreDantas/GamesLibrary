@@ -7,7 +7,7 @@ public class PickAColor : MonoBehaviour
 {
 
     public Image image;
-    public TextMeshProUGUI teamNameText;
+    public ObjectFocus objFocus;
     public CUIColorPicker colorPicker;
     public Color color
     {
@@ -20,29 +20,37 @@ public class PickAColor : MonoBehaviour
         }
     }
 
-    public string teamName
-    {
-        get
-        {
-            if (teamNameText)
-                return teamNameText.text;
-            else
-                return "";
-        }
-    }
     // Use this for initialization
     void Start()
     {
+        if (!objFocus)
+        {
+            objFocus = FindObjectOfType<ObjectFocus>();
+        }
         colorPicker.SetOnValueChangeCallback(color => image.color = color);
         //colorPicker.SetRandomColor();
-        image.color = colorPicker.Color;
+        colorPicker.Color = color;
 
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void Focus()
     {
-
+        if (objFocus)
+        {
+            List<GameObject> focus = new List<GameObject>();
+            focus.Add(image.gameObject);
+            colorPicker.gameObject.SetActive(true);
+            focus.Add(colorPicker.gameObject);
+            objFocus.SetFocusObjects(focus);
+            objFocus.OnDisableFocus += OnDisableFocus;
+            objFocus.EnableFocus();
+        }
     }
 
+    public void OnDisableFocus()
+    {
+        colorPicker.gameObject.SetActive(false);
+        objFocus.OnDisableFocus -= OnDisableFocus;
+    }
 }

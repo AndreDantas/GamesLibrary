@@ -116,13 +116,17 @@ public class CatchphrasePanel : GamePanel
 
         teamBackground.color = teams[index].teamColor;
         teamNameText.text = teams[index].teamName;
-        scoreText.text = string.Format("<color={0}>{1} : <b>{2}</b> </color> | <color={3}> <b>{4}</b> : {5} </color>",
-                                ColorTypeConverter.ToRGBHex(teams[0].teamColor),
-                                teams[0].teamName,
-                                teams[0].teamScore + "pts",
-                                ColorTypeConverter.ToRGBHex(teams[1].teamColor),
-                                teams[1].teamScore + "pts",
-                                teams[1].teamName);
+        scoreText.text = "";
+        for (int i = 0; i < teams.Count; i++)
+        {
+            scoreText.text += string.Format("<color={0}>{1} : <b>{2}</b> </color> ",
+                                                 ColorTypeConverter.ToRGBHex(teams[i].teamColor),
+                                                 teams[i].teamName,
+                                                 teams[i].teamScore + "pts");
+            if (i != teams.Count - 1)
+                scoreText.text += "| ";
+
+        }
         catchphraseController.HideTimer();
         StartCoroutine(NextRound());
     }

@@ -72,4 +72,32 @@ public static class MathOperations
         }
         return t;
     }
+    public static float Map(float OldMin, float OldMax, float NewMin, float NewMax, float OldValue)
+    {
+
+        float OldRange = (OldMax - OldMin);
+        float NewRange = (NewMax - NewMin);
+        float NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin;
+
+        return (NewValue);
+    }
+
+    public static List<T> ToList<T>(T[] array)
+    {
+        List<T> result = new List<T>();
+        foreach (T t in array)
+        {
+            result.Add(t);
+        }
+        return result;
+    }
+
+    public static Vector3 RoundVector3(Vector3 v)
+    {
+        return new Vector3(Mathf.Round(v.x), Mathf.Round(v.y), Mathf.Round(v.z));
+    }
+    public static Vector2 RoundVector2(Vector2 v)
+    {
+        return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
+    }
 }
