@@ -18,12 +18,12 @@ MonoBehaviour:
   m_fontInfo:
     Name: Nirmala UI
     PointSize: 112
-    Scale: 0
+    Scale: 1
     CharacterCount: 213
     LineHeight: 149
     Baseline: 0
     Ascender: 121
-    CapHeight: 0
+    CapHeight: 78
     Descender: -28
     CenterLine: 0
     SuperscriptOffset: 121
@@ -33,7 +33,7 @@ MonoBehaviour:
     UnderlineThickness: 3.9375
     strikethrough: 33.81818
     strikethroughThickness: 3.9375
-    TabWidth: 0
+    TabWidth: 310
     Padding: 5
     AtlasWidth: 1024
     AtlasHeight: 1024
@@ -42,10 +42,10 @@ MonoBehaviour:
   - id: 32
     x: 5
     y: 1019
-    width: 0
-    height: 0
+    width: 31
+    height: 149
     xOffset: 0
-    yOffset: 0
+    yOffset: 121
     xAdvance: 31
     scale: 1
   - id: 33

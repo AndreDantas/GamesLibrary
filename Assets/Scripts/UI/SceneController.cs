@@ -9,6 +9,7 @@ public class SceneController : MonoBehaviour
     public delegate void OnBackEventHandler();
     public static OnBackEventHandler OnBack;
     public GamePanel current;
+    bool canMove;
     bool moving;
 
     private void Awake()
@@ -35,9 +36,14 @@ public class SceneController : MonoBehaviour
         }
     }
 
+    public void SetCanMove(bool lockMove)
+    {
+        canMove = lockMove;
+    }
+
     public virtual IEnumerator Init()
     {
-        yield return null;
+
         if (panels != null)
         {
             foreach (GamePanel g in panels)
@@ -45,16 +51,18 @@ public class SceneController : MonoBehaviour
                 g.gameObject.SetActive(false);
             }
         }
+        yield return null;
         if (current)
         {
             current.gameObject.SetActive(true);
             current.CenterPanel();
         }
+        canMove = true;
     }
 
     public void ChangePanel(GamePanel other = null)
     {
-        if (other == null || moving)
+        if (other == null || moving || !canMove)
             return;
         StartCoroutine(IEChangePanel(other));
     }

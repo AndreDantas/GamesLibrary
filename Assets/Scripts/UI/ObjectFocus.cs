@@ -68,7 +68,7 @@ public class ObjectFocus : MonoBehaviour
 
             }
         }
-
+        SceneController.instance.SetCanMove(false);
         if (focusBackground)
             focusBackground.SetActive(true);
         if (OnEnableFocus != null)
@@ -90,7 +90,7 @@ public class ObjectFocus : MonoBehaviour
                 obj.focusObj.transform.SetSiblingIndex(obj.hierarchyIndex);
             }
         }
-
+        SceneController.instance.SetCanMove(true);
         if (OnDisableFocus != null)
             OnDisableFocus();
 

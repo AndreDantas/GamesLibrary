@@ -53,7 +53,6 @@ public class GamePanel : MonoBehaviour
             obj.gameObject.SetActive(false);
         }
 
-        RectTransform rect = transform as RectTransform;
         Vector2 start = DefaultStartPosition(1);
         Vector2 end = screenCenter;
         transform.localPosition = start;
@@ -91,8 +90,6 @@ public class GamePanel : MonoBehaviour
 
         moving = true;
 
-
-        RectTransform rect = transform as RectTransform;
         Vector2 start = screenCenter;
         Vector2 end = DefaultStartPosition(-1);
         transform.localPosition = start;

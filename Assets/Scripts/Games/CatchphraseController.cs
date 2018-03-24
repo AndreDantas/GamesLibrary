@@ -507,7 +507,7 @@ X-ray";
 
     }
 
-    public void NewWord()
+    public string NewWord()
     {
         string word = wordList[Random.Range(0, wordList.Count)];
         wordText.text = word;
@@ -518,6 +518,7 @@ X-ray";
             timer.countdown = countdown;
             timer.StartTimer();
         }
+        return word;
     }
 
     public void ShowTimer()

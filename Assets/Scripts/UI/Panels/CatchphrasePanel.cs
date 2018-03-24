@@ -24,7 +24,10 @@ public class CatchphrasePanel : GamePanel
     public TextMeshProUGUI scoreText;
     public Button correctWordButton;
     public Image teamBackground;
+    List<TeamWord> wordList;
     bool gameStart;
+    bool correctWord;
+    string currentWord;
     int currentRound;
     int roundTime;
     Color backgroundOldColor;
@@ -61,7 +64,8 @@ public class CatchphrasePanel : GamePanel
 
         index = -1;
         currentRound = 1;
-
+        correctWord = false;
+        wordList = new List<TeamWord>();
         foreach (TeamInfo team in teams)
         {
             team.teamScore = 0;
@@ -138,7 +142,9 @@ public class CatchphrasePanel : GamePanel
         wordText.gameObject.SetActive(true);
         wordText.text = "Fim de Jogo";
         yield return new WaitForSeconds(2f);
-        scorePanel.teamsScore = teams;
+        scorePanel.team1Result = teams[0];
+        scorePanel.team2Result = teams[1];
+        scorePanel.wordList = wordList;
         FindObjectOfType<SceneController>().ChangePanel(scorePanel);
     }
 
@@ -154,18 +160,33 @@ public class CatchphrasePanel : GamePanel
 
         wordText.gameObject.SetActive(true);
         catchphraseController.ShowTimer();
-        catchphraseController.NewWord();
+        currentWord = catchphraseController.NewWord();
+
+    }
+
+    IEnumerator EndRound()
+    {
+        yield return null;
+        TeamWord temp = new TeamWord();
+        temp.teamName = teams[index].teamName;
+        temp.word = currentWord;
+        temp.correct = correctWord;
+        correctWord = false;
+        wordList.Add(temp);
+        IntroPhase();
     }
 
     public void OnFinishTimer()
     {
-        IntroPhase();
+        StartCoroutine(EndRound());
     }
 
     public void CorrectWord()
     {
         teams[index].teamScore++;
-        IntroPhase();
+
+        correctWord = true;
+        StartCoroutine(EndRound());
 
     }
 
