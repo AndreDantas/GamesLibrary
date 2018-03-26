@@ -5,9 +5,17 @@ using UnityEngine;
 
 public class GamePanel : MonoBehaviour
 {
-
+    /// <summary>
+    /// The panel's animation time.
+    /// </summary>
     public float animTime = 0.5f;
+    /// <summary>
+    /// The reference for the center of the screen.
+    /// </summary>
     public Vector2 screenCenter;
+    /// <summary>
+    /// Panel to change when the Escape key is pressed. (Back key on mobile)
+    /// </summary>
     public GamePanel onBackPanel;
     public List<GameObject> panelObjects = new List<GameObject>();
 
@@ -41,6 +49,7 @@ public class GamePanel : MonoBehaviour
     {
         SceneController.OnBack -= OnBack;
     }
+
     public virtual IEnumerator Enter()
     {
         if (moving)

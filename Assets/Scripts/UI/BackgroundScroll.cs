@@ -5,26 +5,37 @@ using UnityEngine.UI;
 public class BackgroundScroll : MonoBehaviour
 {
 
-    [SerializeField]
-    Material material;
+    public Material material;
+    Material materialCopy;
+    public Image background;
     public float oneLoopTime = 10f;
     public float parallax = 2f;
     public bool scrollX = false;
     public bool scrollY = true;
-    // Use this for initialization
+
 
     void Start()
     {
-        if (material == null)
-            material = GetComponent<Image>().materialForRendering;
+        if (background == null)
+            background = GetComponent<Image>();
+        if (background != null && material != null)
+        {
+            materialCopy = background.material = new Material(material);
+        }
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        if (material != null)
+
+        ScrollBackground();
+    }
+
+    public void ScrollBackground()
+    {
+        if (materialCopy != null)
         {
-            Vector2 offSet = material.mainTextureOffset;
+            Vector2 offSet = materialCopy.mainTextureOffset;
             if (scrollY)
             {
                 offSet.y += Time.deltaTime / oneLoopTime / parallax;
@@ -41,9 +52,8 @@ public class BackgroundScroll : MonoBehaviour
                 if (offSet.x < 0)
                     offSet = new Vector2(1f, offSet.y);
             }
-            material.mainTextureOffset = offSet;
+            materialCopy.mainTextureOffset = offSet;
         }
-
 
     }
 }

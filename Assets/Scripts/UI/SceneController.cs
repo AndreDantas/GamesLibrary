@@ -48,6 +48,8 @@ public class SceneController : MonoBehaviour
         {
             foreach (GamePanel g in panels)
             {
+                if (g == null)
+                    continue;
                 g.gameObject.SetActive(false);
             }
         }

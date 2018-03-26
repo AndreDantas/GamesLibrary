@@ -16,7 +16,7 @@ TagManager:
   - Background
   - Panels
   - Buttons
-  - 
+  - Game
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 2877019771
+    locked: 0
+  - name: Game
+    uniqueID: 682115893
     locked: 0
