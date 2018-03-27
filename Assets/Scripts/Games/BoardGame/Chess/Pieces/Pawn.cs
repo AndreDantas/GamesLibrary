@@ -9,38 +9,43 @@ public class Pawn : ChessPiece
     {
         type = ChessPieceType.PAWN;
     }
+    public Pawn(Position pos, ChessPlayer player) : base(pos, player)
+    {
+        type = ChessPieceType.PAWN;
+    }
+
+    public Pawn(Pawn other) : base(other)
+    {
+        type = ChessPieceType.PAWN;
+    }
+
+    public override ChessPiece GetCopy()
+    {
+        return new Pawn(this);
+    }
+
 
     public override List<Move> GetPossibleMovement()
     {
+
         List<Move> moves = new List<Move>();
-        ChessPlayer player = this.player as ChessPlayer;
-        Chess board = this.board as Chess;
-        int dy = -MathOperations.Sign(player.orientation);
-
+        ChessPlayer player = (ChessPlayer)this.player;
+        int dy = player.orientation == Orientation.DOWN ? 1 : -1;
         Position newPos = new Position(pos.x, pos.y + dy);
-
 
         if (board.IsPositionEmpty(newPos))
         {
 
             Move currentMove = new Move(pos, newPos);
-            Chess boardAfterMove = new Chess(board.BoardAfterMove(currentMove));
-
-            if (!boardAfterMove.IsPlayerInCheck(player))
-            {
-
-                moves.Add(currentMove);
-            }
+            moves.Add(currentMove);
 
             newPos = new Position(pos.x, pos.y + dy * 2);
             if (board.IsPositionEmpty(newPos) && pos == startPosition)
             {
                 currentMove = new Move(pos, newPos);
-                boardAfterMove = new Chess(board.BoardAfterMove(currentMove));
-                if (!boardAfterMove.IsPlayerInCheck(player))
-                {
-                    moves.Add(currentMove);
-                }
+
+                moves.Add(currentMove);
+
             }
         }
 
@@ -49,11 +54,9 @@ public class Pawn : ChessPiece
         if (piece != null && piece.player != player)
         {
             Move currentMove = new Move(pos, newPos);
-            Chess boardAfterMove = new Chess(board.BoardAfterMove(currentMove));
-            if (!boardAfterMove.IsPlayerInCheck(player))
-            {
-                moves.Add(currentMove);
-            }
+
+            moves.Add(currentMove);
+
         }
 
         newPos = new Position(pos.x - 1, pos.y + dy);
@@ -61,11 +64,9 @@ public class Pawn : ChessPiece
         if (piece != null && piece.player != player)
         {
             Move currentMove = new Move(pos, newPos);
-            Chess boardAfterMove = new Chess(board.BoardAfterMove(currentMove));
-            if (!boardAfterMove.IsPlayerInCheck(player))
-            {
-                moves.Add(currentMove);
-            }
+
+            moves.Add(currentMove);
+
         }
 
         return moves;

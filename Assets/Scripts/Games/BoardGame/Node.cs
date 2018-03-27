@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [System.Serializable]
 public class Node
@@ -16,13 +17,23 @@ public class Node
     /// </summary>
     public static int MaxCost = 1;
 
-    /// <summary>
-    /// The piece on the Node.
-    /// </summary>
-    public Piece pieceOnNode;
+    public Node()
+    {
 
+    }
     public Node(Position position)
     {
         this.pos = position;
     }
+
+    public Node(Node oldNode)
+    {
+        if (oldNode == null)
+            return;
+        pos = oldNode.pos;
+
+
+    }
+
+
 }

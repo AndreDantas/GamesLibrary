@@ -100,4 +100,19 @@ public static class MathOperations
     {
         return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
     }
+
+    public static void DestroyChildren(this Transform parent)
+    {
+        List<GameObject> destroyList = new List<GameObject>();
+        foreach (Transform child in parent.transform)
+        {
+            destroyList.Add(child.gameObject);
+        }
+
+        for (int i = destroyList.Count - 1; i >= 0; i--)
+        {
+            Object.Destroy(destroyList[i]);
+        }
+
+    }
 }

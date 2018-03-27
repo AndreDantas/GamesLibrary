@@ -6,5 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TestScene.unity
+    path: Assets/Scenes/Chess.unity
+    guid: 26096ebb9e1244e48990ebd67936eca4
+  - enabled: 1
+    path: Assets/Scenes/Catchphrase.unity
     guid: 9f2a5df0b5ac6854f89e7561fa6bdab0

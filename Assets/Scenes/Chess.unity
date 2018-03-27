@@ -797,7 +797,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &528848853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -883,6 +883,96 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 393668910}
   m_Script: {fileID: 11500000, guid: 7a79e936b9cdbc64f9bac38901215291, type: 3}
+--- !u!1 &905660534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 905660535}
+  - component: {fileID: 905660538}
+  - component: {fileID: 905660537}
+  - component: {fileID: 905660536}
+  m_Layer: 11
+  m_Name: MovementRender
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &905660535
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 905660534}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!23 &905660536
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 905660534}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 11a58fff662903a49af08b8e0711407a, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 682115893
+  m_SortingLayer: 2
+  m_SortingOrder: 1
+--- !u!33 &905660537
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 905660534}
+  m_Mesh: {fileID: 0}
+--- !u!114 &905660538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 905660534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70f19f52e146fbf46a3e8538ea3dec07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRender: {fileID: 905660536}
+  renderColor: {r: 0, g: 0.5862069, b: 1, a: 0.397}
 --- !u!1 &1046501770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,11 +1103,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -1374,7 +1464,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1394,7 +1484,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   columns: 8
   rows: 8
+  board:
+    mapNavigation: 0
+    rows: 10
+    columns: 10
+    nodeOffsetX: 0.5
+    nodeOffsetY: 0.5
+    player1:
+      orientation: 0
+    player2:
+      orientation: 0
   tilePrefab: {fileID: 1585537792793140, guid: ae536776159868441a9209e89020d6c5, type: 2}
-  lightColor: {r: 1, g: 1, b: 1, a: 1}
-  darkColor: {r: 0.21323532, g: 0.21323532, b: 0.21323532, a: 1}
+  lightTileColor: {r: 0.9191176, g: 0.9191176, b: 0.9191176, a: 1}
+  darkTileColor: {r: 0.44852942, g: 0.44852942, b: 0.44852942, a: 1}
   pawnPrefab: {fileID: 1140575208570264, guid: 86fb555c7f4b5ec478d982d150fff712, type: 2}
+  rookPrefab: {fileID: 1331430552292562, guid: 1b034c1838dd09c43b62194c171011b4, type: 2}
+  bishopPrefab: {fileID: 1787515592130588, guid: d3e5b26f683175942a4f7a3dfca0a8d1,
+    type: 2}
+  knightPrefab: {fileID: 1692695792644282, guid: b48e9e5e63b866f4fa62f393117f7c3c,
+    type: 2}
+  kingPrefab: {fileID: 1827706855476952, guid: ce929184b18c0684ea9aa97dc5322da5, type: 2}
+  queenPrefab: {fileID: 1039721960385052, guid: 9d7d45f3de01108479a7eeae14d87c1e,
+    type: 2}
+  lightPieceColor: {r: 1, g: 1, b: 1, a: 1}
+  darkPieceColor: {r: 0, g: 0, b: 0, a: 1}
+  movementsRender: {fileID: 905660538}
+  canClick: 1

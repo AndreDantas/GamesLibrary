@@ -1,15 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+public enum Orientation
+{
+    UP,
+    DOWN
+}
+[System.Serializable]
 public class ChessPlayer : Player
 {
 
-    public int orientation;
+    public Orientation orientation;
 
-    public ChessPlayer(int orientation)
+    public ChessPlayer(Orientation orientation)
     {
-        this.orientation = MathOperations.Sign(orientation);
+        this.orientation = orientation;
     }
 
+    public override string ToString()
+    {
+        return "Player - Orientation: " + orientation;
+    }
 }
