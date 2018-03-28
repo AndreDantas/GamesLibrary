@@ -443,6 +443,19 @@ public class ChessBoard
         return board;
     }
 
+    /// <summary>
+    /// Returns the other player.
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public ChessPlayer OtherPlayer(ChessPlayer player)
+    {
+        if (player == player1)
+            return player2;
+        else
+            return player1;
+    }
+
 
     /// <summary>
     /// Returns all possible movements from the pieces of the given player.
@@ -465,8 +478,15 @@ public class ChessBoard
 
                     if (current.player == player)
                     {
-
-                        List<Move> moves = current.GetPossibleMovement();
+                        List<Move> moves = null;
+                        if (current.type != ChessPieceType.KING)
+                            moves = current.GetPossibleMovement();
+                        else
+                        {
+                            King k = current as King;
+                            if (k != null)
+                                moves = k.GetDefaultMovements();
+                        }
 
                         if (moves != null)
                         {

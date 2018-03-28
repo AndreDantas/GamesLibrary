@@ -33,7 +33,7 @@ public class ChessPanel : GamePanel
         {
             chessObject.transform.position = new Vector3(end.x + MathOperations.ScreenWidth, end.y, chessObject.transform.position.y);
             chessObject.SetActive(true);
-            chessBoardGame.PrepareGame();
+            chessBoardGame.PrepareGame1vs1();
             chessObject.transform.MoveTo(end, animTime);
             yield return new WaitForSeconds(animTime / 2f);
         }

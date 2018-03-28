@@ -11,7 +11,7 @@ public class ChessPlayer : Player
 {
 
     public Orientation orientation;
-
+    public bool inCheck = false;
     public ChessPlayer(Orientation orientation)
     {
         this.orientation = orientation;

@@ -7,6 +7,7 @@ public struct MoveInfo
 {
     public ChessPiece piece;
     public Move move;
+    public ChessBoard boardAfterMove;
 }
 public class ChessBoardgame : Boardgame
 {
@@ -15,7 +16,7 @@ public class ChessBoardgame : Boardgame
 
     public Color lightTileColor = Color.white;
     public Color darkTileColor = Color.black;
-    protected ChessPlayer turnPlayer;
+    public ChessPlayer turnPlayer { get; internal set; }
     protected ChessPiece selectedPiece;
     public GameObject pawnPrefab;
     public GameObject rookPrefab;
@@ -28,13 +29,17 @@ public class ChessBoardgame : Boardgame
     public AreaRangeRenderer movementsRender;
     public AreaRangeRenderer checkRender;
     public AreaRangeRenderer lastMoveRender;
+    [SerializeField]
+    private float tileRenderScale = 0.89f;
     public List<MoveInfo> movesLog;
     public ChessTile[,] tiles { get; internal set; }
     private List<ChessPiece> pieces = new List<ChessPiece>();
+
     private GameObject tilesParentObj;
     private GameObject piecesParentObj;
-    [SerializeField]
-    private float tileScale;
+    private GameObject darkPiecesParent;
+    private GameObject lightPiecesParent;
+
     [SerializeField]
     private bool canClick = true;
 
@@ -72,7 +77,7 @@ public class ChessBoardgame : Boardgame
 
     }
 #endif
-    public virtual void PrepareGame()
+    public virtual void PrepareGame1vs1()
     {
 
         board = new ChessBoard(columns, rows);
@@ -82,8 +87,18 @@ public class ChessBoardgame : Boardgame
         turnPlayer = board.player1;
         RenderMap();
         PlacePieces();
+        foreach (Transform g in darkPiecesParent.transform)
+        {
+            SpriteRenderer sr = g.gameObject.GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sr.flipX = true;
+                sr.flipY = true;
+            }
+        }
         ClearRenders();
         movesLog = new List<MoveInfo>();
+        canClick = true;
     }
     public override void RenderMap()
     {
@@ -102,6 +117,15 @@ public class ChessBoardgame : Boardgame
             piecesParentObj.transform.SetParent(transform);
             piecesParentObj.transform.localScale = Vector3.one;
             piecesParentObj.transform.localPosition = Vector3.zero;
+
+            darkPiecesParent = new GameObject("Dark Pieces");
+            darkPiecesParent.transform.SetParent(piecesParentObj.transform);
+            darkPiecesParent.transform.localScale = Vector3.one;
+            darkPiecesParent.transform.localPosition = Vector3.zero;
+            lightPiecesParent = new GameObject("Light Pieces");
+            lightPiecesParent.transform.SetParent(piecesParentObj.transform);
+            lightPiecesParent.transform.localScale = Vector3.one;
+            lightPiecesParent.transform.localPosition = Vector3.zero;
 
             bool tileColor = false;
             SpriteRenderer sr;
@@ -169,7 +193,7 @@ public class ChessBoardgame : Boardgame
     {
         if (!board.ValidCoordinate(pos))
             return;
-        obj.gameObject.transform.SetParent(piecesParentObj.transform);
+        obj.gameObject.transform.SetParent(lightPiece ? lightPiecesParent.transform : darkPiecesParent.transform);
         tiles[pos.x, pos.y].chessPiece = obj;
         ChessPiece cp = p;
         cp.startPosition = cp.pos = pos;
@@ -253,7 +277,9 @@ public class ChessBoardgame : Boardgame
                 yield return new WaitForSeconds(0.1f);
                 tiles[move.start.x, move.start.y].chessPiece = null;
                 if (tiles[move.end.x, move.end.y].chessPiece != null)
-                    tiles[move.end.x, move.end.y].chessPiece.gameObject.SetActive(false);
+                {
+                    Destroy(tiles[move.end.x, move.end.y].chessPiece);
+                }
                 tiles[move.end.x, move.end.y].chessPiece = temp;
                 canClick = true;
             }
@@ -267,12 +293,14 @@ public class ChessBoardgame : Boardgame
         MoveInfo m = new MoveInfo();
         m.piece = selectedPiece;
         m.move = move;
+        m.boardAfterMove = new ChessBoard(board);
         movesLog.Add(m);
         selectedPiece = null;
         movementsRender.Clear();
         ChangeTurn();
 
     }
+
 
     public void StartTurn()
     {
@@ -315,20 +343,23 @@ public class ChessBoardgame : Boardgame
         {
             if (board.IsPlayerInCheck(turnPlayer))
             {
+                turnPlayer.inCheck = true;
                 Position pos = board.GetKingPos(turnPlayer);
                 if (ValidCoordinate(pos))
                 {
                     List<Vector3> positions = new List<Vector3>();
                     positions.Add(tiles[pos.x, pos.y].transform.position);
-                    checkRender.RenderSquaresArea(positions, tileScale);
+                    checkRender.RenderSquaresArea(positions, tileRenderScale);
                 }
             }
             else
             {
+                turnPlayer.inCheck = false;
                 checkRender.Clear();
             }
         }
     }
+
 
     public void RenderLastMove()
     {
@@ -343,7 +374,7 @@ public class ChessBoardgame : Boardgame
                 if (ValidCoordinate(move.end))
                     pos.Add(tiles[move.end.x, move.end.y].transform.position);
 
-                lastMoveRender.RenderSquaresArea(pos, tileScale);
+                lastMoveRender.RenderSquaresArea(pos, tileRenderScale);
             }
             else
                 lastMoveRender.Clear();
@@ -414,7 +445,7 @@ public class ChessBoardgame : Boardgame
                             moves.Add(tiles[m.end.x, m.end.y].transform.position);
                         }
                     }
-                    movementsRender.RenderSquaresArea(moves, tileScale);
+                    movementsRender.RenderSquaresArea(moves, tileRenderScale);
                 }
                 else
                 {
