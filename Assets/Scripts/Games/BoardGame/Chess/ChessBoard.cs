@@ -334,13 +334,24 @@ public class ChessBoard
                 {
                     if (piece.type == ChessPieceType.KING)
                     {
-                        Debug.Log("King is in check.");
+
                         return true;
                     }
                 }
             }
         }
         return false;
+    }
+
+    public Position GetKingPos(ChessPlayer player)
+    {
+        foreach (ChessNode n in GetNodes())
+        {
+            if (n.pieceOnNode != null)
+                if (n.pieceOnNode.type == ChessPieceType.KING && n.pieceOnNode.player == player)
+                    return n.pos;
+        }
+        return new Position(-1, -1);
     }
     /// <summary>
     /// Returns a piece from a position.

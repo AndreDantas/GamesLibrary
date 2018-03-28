@@ -52,9 +52,9 @@ public class ChessPiece : Piece
     /// </summary>
     /// <param name="moves">The list of moves to check</param>
     /// <returns></returns>
-    public List<Move> RemoveMovesPlayerInCheck(List<Move> moves)
+    public static List<Move> RemoveMovesPlayerInCheck(List<Move> moves, ChessBoard board, ChessPlayer player)
     {
-        if (this.board == null)
+        if (board == null)
             return null;
 
         List<Move> possibleMove = new List<Move>();

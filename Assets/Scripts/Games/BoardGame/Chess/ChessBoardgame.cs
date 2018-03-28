@@ -2,7 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[Serializable]
+public struct MoveInfo
+{
+    public ChessPiece piece;
+    public Move move;
+}
 public class ChessBoardgame : Boardgame
 {
     public ChessBoard board;
@@ -21,17 +26,24 @@ public class ChessBoardgame : Boardgame
     public Color lightPieceColor = Color.white;
     public Color darkPieceColor = Color.black;
     public AreaRangeRenderer movementsRender;
+    public AreaRangeRenderer checkRender;
+    public AreaRangeRenderer lastMoveRender;
+    public List<MoveInfo> movesLog;
     public ChessTile[,] tiles { get; internal set; }
     private List<ChessPiece> pieces = new List<ChessPiece>();
     private GameObject tilesParentObj;
     private GameObject piecesParentObj;
+    [SerializeField]
     private float tileScale;
     [SerializeField]
     private bool canClick = true;
 
+    public delegate void OnGameEnd();
+    public OnGameEnd OnEnd;
+
     protected void Start()
     {
-        PrepareGame();
+        //PrepareGame();
     }
 
     /*
@@ -46,7 +58,9 @@ public class ChessBoardgame : Boardgame
 
         Gizmos.color = Color.red;
 
+
         Vector3 scale = Vector3.one * (6.25f / columns);
+
         for (int i = 0; i < columns; i++)
         {
             for (int j = 0; j < rows; j++)
@@ -68,6 +82,8 @@ public class ChessBoardgame : Boardgame
         turnPlayer = board.player1;
         RenderMap();
         PlacePieces();
+        ClearRenders();
+        movesLog = new List<MoveInfo>();
     }
     public override void RenderMap()
     {
@@ -91,9 +107,8 @@ public class ChessBoardgame : Boardgame
             SpriteRenderer sr;
             GameObject tile;
 
-            float width = Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
+            float width = MathOperations.ScreenWidth;
             transform.localScale = Vector3.one * (width / columns);
-            tileScale = width / columns;
             tiles = new ChessTile[columns, rows];
             for (int i = 0; i < columns; i++)
             {
@@ -145,11 +160,11 @@ public class ChessBoardgame : Boardgame
     /// <summary>
     /// Initializes the piece on the board.
     /// </summary>
-    /// <param name="obj"></param>
-    /// <param name="pos"></param>
-    /// <param name="p"></param>
-    /// <param name="player"></param>
-    /// <param name="lightPiece"></param>
+    /// <param name="obj">The piece's GameObject (The prefab)</param>
+    /// <param name="pos">The position on the board</param>
+    /// <param name="p">The correspondent piece</param>
+    /// <param name="player">The piece's player</param>
+    /// <param name="lightPiece">If it's light piece</param>
     public void PlacePiece(GameObject obj, Position pos, ChessPiece p, ChessPlayer player, bool lightPiece = true)
     {
         if (!board.ValidCoordinate(pos))
@@ -228,7 +243,7 @@ public class ChessBoardgame : Boardgame
     {
         if (ValidCoordinate(move.end))
         {
-            turnPlayer = turnPlayer == board.player1 ? board.player2 : board.player1;
+
             GameObject temp = tiles[move.start.x, move.start.y].chessPiece;
             if (temp != null)
             {
@@ -243,6 +258,108 @@ public class ChessBoardgame : Boardgame
                 canClick = true;
             }
         }
+    }
+
+    IEnumerator MakeAMove(Move move)
+    {
+        selectedPiece.MoveToPos(move); // Move the piece internally
+        yield return MovePieceObj(move); // Move piece object on scene
+        MoveInfo m = new MoveInfo();
+        m.piece = selectedPiece;
+        m.move = move;
+        movesLog.Add(m);
+        selectedPiece = null;
+        movementsRender.Clear();
+        ChangeTurn();
+
+    }
+
+    public void StartTurn()
+    {
+        RenderCheck();
+        RenderLastMove();
+        if (CheckForCheckmate())
+        {
+
+            EndGame();
+            return;
+        }
+
+    }
+
+    public void ChangeTurn()
+    {
+        turnPlayer = turnPlayer == board.player1 ? board.player2 : board.player1;
+        StartTurn();
+    }
+
+    public void EndGame()
+    {
+        canClick = false;
+        if (OnEnd != null)
+            OnEnd();
+    }
+
+    /// <summary>
+    /// Checks for a checkmate.
+    /// </summary>
+    /// <returns></returns>
+    public bool CheckForCheckmate()
+    {
+        return (ChessPiece.RemoveMovesPlayerInCheck(board.GetPossibleMoves(turnPlayer), board, turnPlayer).Count == 0);
+    }
+
+    public void RenderCheck()
+    {
+        if (checkRender != null)
+        {
+            if (board.IsPlayerInCheck(turnPlayer))
+            {
+                Position pos = board.GetKingPos(turnPlayer);
+                if (ValidCoordinate(pos))
+                {
+                    List<Vector3> positions = new List<Vector3>();
+                    positions.Add(tiles[pos.x, pos.y].transform.position);
+                    checkRender.RenderSquaresArea(positions, tileScale);
+                }
+            }
+            else
+            {
+                checkRender.Clear();
+            }
+        }
+    }
+
+    public void RenderLastMove()
+    {
+        if (lastMoveRender)
+        {
+            if (movesLog != null ? movesLog.Count > 0 : false)
+            {
+                Move move = movesLog[movesLog.Count - 1].move;
+                List<Vector3> pos = new List<Vector3>();
+                if (ValidCoordinate(move.start))
+                    pos.Add(tiles[move.start.x, move.start.y].transform.position);
+                if (ValidCoordinate(move.end))
+                    pos.Add(tiles[move.end.x, move.end.y].transform.position);
+
+                lastMoveRender.RenderSquaresArea(pos, tileScale);
+            }
+            else
+                lastMoveRender.Clear();
+        }
+    }
+
+    public void ClearRenders()
+    {
+        if (movementsRender)
+            movementsRender.Clear();
+        if (lastMoveRender)
+            lastMoveRender.Clear();
+        if (checkRender)
+            checkRender.Clear();
+
+
     }
 
     /// <summary>
@@ -261,15 +378,12 @@ public class ChessBoardgame : Boardgame
 
         if (selectedPiece != null)
         {
-            List<Move> moves = selectedPiece.GetPossibleMovement();
+            List<Move> moves = ChessPiece.RemoveMovesPlayerInCheck(selectedPiece.GetPossibleMovement(), board, selectedPiece.player as ChessPlayer);
             foreach (var item in moves)
             {
                 if (pos == item.end)
                 {
-                    selectedPiece.MoveToPos(item);
-                    MovePieceObject(item);
-                    selectedPiece = null;
-                    movementsRender.Clear();
+                    StartCoroutine(MakeAMove(item));
                     return;
                 }
             }
@@ -290,7 +404,7 @@ public class ChessBoardgame : Boardgame
             {
 
                 List<Vector3> moves = new List<Vector3>();
-                List<Move> possibleMoves = piece.RemoveMovesPlayerInCheck(piece.GetPossibleMovement());
+                List<Move> possibleMoves = ChessPiece.RemoveMovesPlayerInCheck(piece.GetPossibleMovement(), board, piece.player as ChessPlayer);
                 if (possibleMoves != null ? possibleMoves.Count != 0 : false)
                 {
                     foreach (Move m in possibleMoves)

@@ -47,7 +47,13 @@ public static class MathOperations
         else
             return -1;
     }
-
+    public static float ScreenWidth
+    {
+        get
+        {
+            return Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
+        }
+    }
     public static float ChangeLerpT(LerpMode lerpMode = LerpMode.EaseOut, float t = 0f)
     {
         switch (lerpMode)
