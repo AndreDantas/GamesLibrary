@@ -9,11 +9,19 @@ public struct MoveInfo
     public Move move;
     public ChessBoard boardAfterMove;
 }
+
+[Serializable]
+class BoardSaveData
+{
+    public ChessBoard board;
+    public List<MoveInfo> movesLog;
+    public ChessPlayer turnPlayer;
+}
 public class ChessBoardgame : Boardgame
 {
     public ChessBoard board;
     public GameObject tilePrefab;
-
+    public bool darkPiecesFlipped;
     public Color lightTileColor = Color.white;
     public Color darkTileColor = Color.black;
     public ChessPlayer turnPlayer { get; internal set; }
@@ -40,8 +48,7 @@ public class ChessBoardgame : Boardgame
     private GameObject darkPiecesParent;
     private GameObject lightPiecesParent;
 
-    [SerializeField]
-    private bool canClick = true;
+    public bool canClick = true;
 
     public delegate void OnGameEnd();
     public OnGameEnd OnEnd;
@@ -51,11 +58,17 @@ public class ChessBoardgame : Boardgame
         //PrepareGame();
     }
 
+    private void OnValidate()
+    {
+        ChangePiecesColor(true);
+        ChangePiecesColor(false);
+        ChangeTileColor();
+    }
+
     /*
      * Finish extra rules for each piece.
      * Recover lost pieces.
      * Player score.
-     * Fix check bug
      */
 #if UNITY_EDITOR
     protected void OnDrawGizmosSelected()
@@ -77,6 +90,7 @@ public class ChessBoardgame : Boardgame
 
     }
 #endif
+
     public virtual void PrepareGame1vs1()
     {
 
@@ -87,18 +101,27 @@ public class ChessBoardgame : Boardgame
         turnPlayer = board.player1;
         RenderMap();
         PlacePieces();
+        ClearRenders();
+        movesLog = new List<MoveInfo>();
+        canClick = true;
+        FlipDarkSidePieces(darkPiecesFlipped);
+    }
+
+    public void FlipDarkSidePieces(bool flip)
+    {
+        if (darkPiecesParent == null)
+            return;
         foreach (Transform g in darkPiecesParent.transform)
         {
             SpriteRenderer sr = g.gameObject.GetComponent<SpriteRenderer>();
             if (sr != null)
             {
-                sr.flipX = true;
-                sr.flipY = true;
+                sr.flipX = flip;
+                sr.flipY = flip;
             }
         }
-        ClearRenders();
-        movesLog = new List<MoveInfo>();
-        canClick = true;
+
+        darkPiecesFlipped = flip;
     }
     public override void RenderMap()
     {
@@ -106,6 +129,7 @@ public class ChessBoardgame : Boardgame
         {
             if (tilesParentObj != null)
                 tilesParentObj.transform.DestroyChildren();
+            Destroy(tilesParentObj);
             tilesParentObj = new GameObject("Tiles");
             tilesParentObj.transform.SetParent(transform);
             tilesParentObj.transform.localScale = Vector3.one;
@@ -113,10 +137,12 @@ public class ChessBoardgame : Boardgame
 
             if (piecesParentObj != null)
                 piecesParentObj.transform.DestroyChildren();
+            Destroy(piecesParentObj);
             piecesParentObj = new GameObject("Pieces");
             piecesParentObj.transform.SetParent(transform);
             piecesParentObj.transform.localScale = Vector3.one;
             piecesParentObj.transform.localPosition = Vector3.zero;
+
 
             darkPiecesParent = new GameObject("Dark Pieces");
             darkPiecesParent.transform.SetParent(piecesParentObj.transform);
@@ -132,6 +158,7 @@ public class ChessBoardgame : Boardgame
             GameObject tile;
 
             float width = MathOperations.ScreenWidth;
+            tileRenderScale = width / columns;
             transform.localScale = Vector3.one * (width / columns);
             tiles = new ChessTile[columns, rows];
             for (int i = 0; i < columns; i++)
@@ -166,6 +193,68 @@ public class ChessBoardgame : Boardgame
             }
         }
 
+    }
+
+    public void SaveBoardState()
+    {
+        if (board == null)
+            return;
+
+        BoardSaveData save = new BoardSaveData();
+        save.board = board;
+        save.movesLog = movesLog;
+        save.turnPlayer = turnPlayer;
+        SaveLoad.SaveFile("/chessdata.dat", save);
+    }
+
+    public void LoadBoardState()
+    {
+        BoardSaveData load = SaveLoad.LoadFile<BoardSaveData>("/chessdata.dat");
+        if (load.board != null)
+        {
+            ReconstructBoard(load);
+        }
+    }
+
+    void ReconstructBoard(BoardSaveData data, bool playerVsplayer = true)
+    {
+        ClearRenders();
+        if (data.board != null)
+        {
+            board = data.board;
+            movesLog = data.movesLog;
+            turnPlayer = data.turnPlayer;
+            RenderMap();
+
+            foreach (ChessNode node in data.board.GetNodes())
+            {
+                if (node.pieceOnNode == null)
+                    continue;
+                GameObject obj = Instantiate(GetPieceObjectFromType(node.pieceOnNode.type));
+                obj.transform.SetParent(node.pieceOnNode.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
+                obj.transform.localPosition = tiles[node.pos.x, node.pos.y].transform.localPosition;
+                tiles[node.pos.x, node.pos.y].chessPiece = obj;
+
+                SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    if (node.pieceOnNode.player == board.player1)
+                    {
+                        sr.color = lightPieceColor;
+
+                    }
+                    else
+                    {
+                        sr.color = darkPieceColor;
+                    }
+
+                }
+
+            }
+            FlipDarkSidePieces(darkPiecesFlipped);
+            StartTurn();
+            canClick = true;
+        }
     }
 
     public bool ValidCoordinate(Position pos)
@@ -209,6 +298,40 @@ public class ChessBoardgame : Boardgame
         pieces.Add(cp);
     }
 
+    public void ChangePiecesColor(bool lightPiece = true)
+    {
+        if (lightPiecesParent != null && darkPiecesParent != null)
+            foreach (Transform t in lightPiece ? lightPiecesParent.transform : darkPiecesParent.transform)
+            {
+                SpriteRenderer sr = t.gameObject.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.color = lightPiece ? lightPieceColor : darkPieceColor;
+                }
+            }
+    }
+
+    public void ChangeTileColor()
+    {
+        if (tiles != null ? tiles.GetLength(0) > 0 && tiles.GetLength(1) > 0 : false)
+        {
+            bool tileColor = false;
+            for (int i = 0; i < tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < tiles.GetLength(1); j++)
+                {
+                    SpriteRenderer sr = tiles[i, j].GetComponent<SpriteRenderer>();
+                    if (sr)
+                    {
+                        sr.color = tileColor ? lightTileColor : darkTileColor;
+                    }
+
+                    if (j < rows - 1)
+                        tileColor = !tileColor;
+                }
+            }
+        }
+    }
 
     public virtual void PlacePieces()
     {
@@ -261,6 +384,26 @@ public class ChessBoardgame : Boardgame
     public void MovePieceObject(Move move)
     {
         StartCoroutine(MovePieceObj(move));
+    }
+
+    public GameObject GetPieceObjectFromType(ChessPieceType type)
+    {
+        switch (type)
+        {
+            case ChessPieceType.PAWN:
+                return pawnPrefab;
+            case ChessPieceType.ROOK:
+                return rookPrefab;
+            case ChessPieceType.BISHOP:
+                return bishopPrefab;
+            case ChessPieceType.KNIGHT:
+                return knightPrefab;
+            case ChessPieceType.QUEEN:
+                return queenPrefab;
+            case ChessPieceType.KING:
+                return kingPrefab;
+        }
+        return null;
     }
 
     IEnumerator MovePieceObj(Move move)
@@ -393,6 +536,7 @@ public class ChessBoardgame : Boardgame
 
     }
 
+
     /// <summary>
     /// When a tile is clicked.
     /// </summary>
@@ -429,6 +573,7 @@ public class ChessBoardgame : Boardgame
         {
             if (piece.player != turnPlayer) // Opponent piece
             {
+                selectedPiece = null;
                 movementsRender.Clear();
             }
             else // Player piece
@@ -459,6 +604,7 @@ public class ChessBoardgame : Boardgame
         }
         else
         {
+            selectedPiece = null;
             movementsRender.Clear();
         }
     }

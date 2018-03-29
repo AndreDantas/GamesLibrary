@@ -51,8 +51,14 @@ public class ObjectFocus : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        SceneController.OnBack += DisableFocus;
+    }
+
     private void OnDisable()
     {
+        SceneController.OnBack -= DisableFocus;
         DisableFocus();
     }
 
@@ -95,4 +101,6 @@ public class ObjectFocus : MonoBehaviour
             OnDisableFocus();
 
     }
+
+
 }

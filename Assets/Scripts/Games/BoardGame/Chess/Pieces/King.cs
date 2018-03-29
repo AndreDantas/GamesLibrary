@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
 public class King : ChessPiece
 {
 
@@ -28,7 +28,9 @@ public class King : ChessPiece
             ChessPiece rook = board.GetPiece(new Position(board.nodes.GetLength(0) - 1, pos.y));
             if (rook != null)
             {
-                GameObject.FindObjectOfType<ChessBoardgame>().MovePieceObject(new Move(rook.pos, new Position(pos.x + 1, rook.pos.y)));
+                ChessBoardgame c = GameObject.FindObjectOfType<ChessBoardgame>();
+                if (c != null)
+                    c.MovePieceObject(new Move(rook.pos, new Position(pos.x + 1, rook.pos.y)));
                 rook.MoveToPos(new Move(rook.pos, new Position(pos.x + 1, rook.pos.y)));
 
             }
@@ -38,7 +40,9 @@ public class King : ChessPiece
             ChessPiece rook = board.GetPiece(new Position(0, pos.y));
             if (rook != null)
             {
-                GameObject.FindObjectOfType<ChessBoardgame>().MovePieceObject(new Move(rook.pos, new Position(pos.x - 1, rook.pos.y)));
+                ChessBoardgame c = GameObject.FindObjectOfType<ChessBoardgame>();
+                if (c != null)
+                    c.MovePieceObject(new Move(rook.pos, new Position(pos.x - 1, rook.pos.y)));
                 rook.MoveToPos(new Move(rook.pos, new Position(pos.x - 1, rook.pos.y)));
 
             }

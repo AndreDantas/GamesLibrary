@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
 public class Pawn : ChessPiece
 {
     public Pawn(Position pos) : base(pos)
@@ -24,6 +24,26 @@ public class Pawn : ChessPiece
         return new Pawn(this);
     }
 
+    public override void MoveToPos(Move move)
+    {
+
+        if (Mathf.Abs(move.end.x - move.start.x) == 1 && Mathf.Abs(move.end.y - move.start.y) == 1)
+        {
+            if (board.nodes[move.end.x, move.end.y].pieceOnNode == null)
+            {
+                int dx = move.end.x - move.start.x;
+                board.nodes[pos.x + dx, pos.y].pieceOnNode = null;
+                ChessBoardgame c = GameObject.FindObjectOfType<ChessBoardgame>();
+                if (c != null)
+                {
+                    c.tiles[pos.x + dx, pos.y].chessPiece.SetActive(false);
+                    c.tiles[pos.x + dx, pos.y].chessPiece = null;
+                }
+            }
+
+        }
+        base.MoveToPos(move);
+    }
 
     public override List<Move> GetPossibleMovement()
     {
@@ -31,6 +51,52 @@ public class Pawn : ChessPiece
         List<Move> moves = new List<Move>();
         ChessPlayer player = (ChessPlayer)this.player;
         int dy = player.orientation == Orientation.DOWN ? 1 : -1;
+
+        //Check for en passant
+        bool enpassant = false;
+        ChessPiece testPiece = board.GetPiece(new Position(pos.x - 1, pos.y)); // Pawn on the left
+
+        if (testPiece != null)
+        {
+            if (testPiece.type == ChessPieceType.PAWN && testPiece.player != player)
+            {
+                ChessBoardgame boardGame = GameObject.FindObjectOfType<ChessBoardgame>();
+                if (boardGame != null && boardGame.movesLog != null ? boardGame.movesLog.Count > 0 : false)
+                {
+                    Move lastMove = boardGame.movesLog[boardGame.movesLog.Count - 1].move;
+                    ChessPiece lastMovePiece = boardGame.movesLog[boardGame.movesLog.Count - 1].piece;
+                    if (testPiece == lastMovePiece && Mathf.Abs(lastMove.start.y - lastMove.end.y) == 2)
+                    {
+                        moves.Add(new Move(pos, new Position(pos.x - 1, pos.y + dy)));
+                        enpassant = true;
+                    }
+                }
+            }
+        }
+
+        testPiece = board.GetPiece(new Position(pos.x + 1, pos.y)); // Pawn on the right
+
+        if (testPiece != null)
+        {
+            if (testPiece.type == ChessPieceType.PAWN && testPiece.player != player)
+            {
+                ChessBoardgame boardGame = GameObject.FindObjectOfType<ChessBoardgame>();
+                if (boardGame != null && boardGame.movesLog != null ? boardGame.movesLog.Count > 0 : false)
+                {
+                    Move lastMove = boardGame.movesLog[boardGame.movesLog.Count - 1].move;
+                    ChessPiece lastMovePiece = boardGame.movesLog[boardGame.movesLog.Count - 1].piece;
+                    if (testPiece == lastMovePiece && Mathf.Abs(lastMove.start.y - lastMove.end.y) == 2)
+                    {
+                        moves.Add(new Move(pos, new Position(pos.x + 1, pos.y + dy)));
+                        enpassant = true;
+                    }
+                }
+            }
+        }
+
+        if (enpassant)
+            return moves;
+
         Position newPos = new Position(pos.x, pos.y + dy);
 
         if (board.IsPositionEmpty(newPos))

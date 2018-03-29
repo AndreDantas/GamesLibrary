@@ -1,12 +1,48 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
+using UnityEngine.UI;
+[System.Serializable]
+public struct OptionsSettings
+{
+    public bool flipPieces;
+}
 public class ChessPanel : GamePanel
 {
 
     public ChessBoardgame chessBoardGame;
     public GameObject chessObject;
     public GamePanel mainMenu;
+    public GameObject chessOptions;
+    public Toggle flipPieces;
+    protected OptionsSettings optionsSettings = new OptionsSettings();
+
+    public void OpenChessOptions()
+    {
+        if (chessOptions == null)
+            return;
+
+        ObjectFocus focus = FindObjectOfType<ObjectFocus>();
+        List<GameObject> objs = new List<GameObject>();
+        chessOptions.SetActive(true);
+        objs.Add(chessOptions);
+        focus.SetFocusObjects(objs);
+        focus.OnDisableFocus += CloseChessOptions;
+        focus.EnableFocus();
+    }
+
+    public void CloseChessOptions()
+    {
+        if (chessOptions == null)
+            return;
+
+        chessOptions.SetActive(false);
+        ObjectFocus focus = FindObjectOfType<ObjectFocus>();
+        focus.OnDisableFocus -= CloseChessOptions;
+        SaveOptions();
+        focus.DisableFocus();
+    }
+
     public override IEnumerator Enter()
     {
         if (moving)
@@ -31,27 +67,67 @@ public class ChessPanel : GamePanel
         yield return new WaitForSeconds(animTime / 2f);
         if (chessObject)
         {
-            chessObject.transform.position = new Vector3(end.x + MathOperations.ScreenWidth, end.y, chessObject.transform.position.y);
+            chessObject.transform.position = new Vector3(end.x + MathOperations.ScreenWidth, end.y, chessObject.transform.position.z);
             chessObject.SetActive(true);
-            chessBoardGame.PrepareGame1vs1();
+            if (!chessBoardGame.board.isInit)
+                chessBoardGame.PrepareGame1vs1();
             chessObject.transform.MoveTo(end, animTime);
+            ConfigureOptions();
             yield return new WaitForSeconds(animTime / 2f);
         }
         yield return new WaitForSeconds(animTime / 2f);
-
+        chessBoardGame.canClick = true;
         moving = false;
     }
     protected override void OnEnable()
     {
         base.OnEnable();
+        LoadOptions();
         chessBoardGame.OnEnd += OnGameEnd;
     }
-
     protected override void OnDisable()
     {
         base.OnDisable();
+        SaveOptions();
         chessBoardGame.OnEnd -= OnGameEnd;
     }
+
+
+    public void LoadOptions()
+    {
+        if (PlayerPrefs.HasKey("flipPieces"))
+        {
+            optionsSettings.flipPieces = PlayerPrefs.GetInt("flipPieces", 0) == 1 ? true : false;
+
+        }
+    }
+
+    public void SaveOptions()
+    {
+        if (flipPieces)
+        {
+            PlayerPrefs.SetInt("flipPieces", flipPieces.isOn ? 1 : 0);
+        }
+
+    }
+
+    public void ConfigureOptions()
+    {
+        if (flipPieces)
+        {
+            flipPieces.isOn = optionsSettings.flipPieces;
+            FlipPieces(optionsSettings.flipPieces);
+        }
+    }
+
+    public void FlipPieces(bool flip)
+    {
+        if (chessBoardGame)
+        {
+            chessBoardGame.FlipDarkSidePieces(flip);
+        }
+    }
+
 
     public override IEnumerator Exit()
     {
@@ -59,7 +135,7 @@ public class ChessPanel : GamePanel
             yield break;
 
         moving = true;
-
+        chessBoardGame.canClick = false;
         Vector2 start = screenCenter;
         Vector2 end = DefaultStartPosition(-1);
         transform.localPosition = start;
@@ -85,8 +161,5 @@ public class ChessPanel : GamePanel
         SceneController.instance.ChangePanel(mainMenu);
     }
 
-    public override void OnBack()
-    {
 
-    }
 }

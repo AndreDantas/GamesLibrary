@@ -13,6 +13,7 @@ public class Slideshow : MonoBehaviour
     public ImageInfo activeSprite;
     public ImageInfo inactiveSprite;
     public bool cycle = false;
+    public bool createIndicator = true;
     public Vector2 panelCenter;
     public Vector2 panelIndicatorCenter;
     [Range(0f, 10f)]
@@ -37,8 +38,11 @@ public class Slideshow : MonoBehaviour
             current.gameObject.SetActive(true);
             index = panels.IndexOf(current);
         }
-        CreateIndicators();
-        UpdateIndicators();
+        if (createIndicator)
+        {
+            CreateIndicators();
+            UpdateIndicators();
+        }
     }
 
 
@@ -98,6 +102,24 @@ public class Slideshow : MonoBehaviour
 
     }
 
+    public void ResetSlides()
+    {
+        if (panels == null ? true : panels.Count == 0)
+            return;
+        foreach (GameObject g in panels)
+        {
+            g.gameObject.SetActive(false);
+
+        }
+
+        current = panels[0];
+        current.SetActive(true);
+        index = 0;
+        RectTransform rect = current.transform as RectTransform;
+        rect.localPosition = panelCenter;
+        UpdateIndicators();
+    }
+
     protected virtual void CreateIndicators()
     {
         if (panels != null ? panels.Count <= 1 : true)
@@ -132,7 +154,7 @@ public class Slideshow : MonoBehaviour
 
     protected virtual void UpdateIndicators()
     {
-        if (panels == null)
+        if (panels == null || !createIndicator)
             return;
 
         if (panelIndicator == null ? true : panelIndicator.Count == 0)

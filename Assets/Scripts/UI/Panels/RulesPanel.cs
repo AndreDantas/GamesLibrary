@@ -8,9 +8,13 @@ public class RulesPanel : GamePanel
 
     public override IEnumerator Enter()
     {
-        yield return base.Enter();
         if (slideshow)
+        {
             slideshow.Init();
+            slideshow.ResetSlides();
+        }
+        yield return base.Enter();
+
     }
 
 }

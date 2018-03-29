@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+[System.Serializable]
 public class ChessNode : Node
 {
     public ChessPiece pieceOnNode;

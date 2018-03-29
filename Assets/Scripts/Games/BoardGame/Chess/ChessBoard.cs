@@ -49,7 +49,10 @@ public class ChessBoard
 
     public ChessPlayer player1;
     public ChessPlayer player2;
-
+    /// <summary>
+    /// If the board has been initiated.
+    /// </summary>
+    public bool isInit;
     public ChessBoard()
     {
 
@@ -79,7 +82,7 @@ public class ChessBoard
         this.nodes = n;
         player1 = oldBoard.player1;
         player2 = oldBoard.player2;
-
+        isInit = oldBoard.isInit;
 
     }
 
@@ -106,6 +109,7 @@ public class ChessBoard
 
             }
         }
+        isInit = true;
     }
 
     /// <summary>
@@ -455,7 +459,6 @@ public class ChessBoard
         else
             return player1;
     }
-
 
     /// <summary>
     /// Returns all possible movements from the pieces of the given player.
