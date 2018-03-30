@@ -42,9 +42,13 @@ public class ChessPanel : GamePanel
 
         chessOptions.SetActive(false);
         ObjectFocus focus = FindObjectOfType<ObjectFocus>();
-        focus.OnDisableFocus -= CloseChessOptions;
+        if (focus)
+        {
+            focus.OnDisableFocus -= CloseChessOptions;
+            focus.DisableFocus();
+        }
         SaveOptions();
-        focus.DisableFocus();
+
     }
 
     public override IEnumerator Enter()
@@ -90,40 +94,42 @@ public class ChessPanel : GamePanel
     {
         base.OnEnable();
         LoadOptions();
-        chessBoardGame.OnEnd += OnGameEnd;
     }
     protected override void OnDisable()
     {
         base.OnDisable();
         SaveOptions();
-        chessBoardGame.OnEnd -= OnGameEnd;
     }
 
-
+    /// <summary>
+    /// Load options settings.
+    /// </summary>
     public void LoadOptions()
     {
         if (PlayerPrefs.HasKey("flipPieces"))
         {
-            optionsSettings.flipPieces = PlayerPrefs.GetInt("flipPieces", 0) == 1 ? true : false;
+            optionsSettings.flipPieces = PlayerPrefs.GetInt("flipPieces") == 1 ? true : false;
 
         }
     }
 
+    /// <summary>
+    /// Save options settings.
+    /// </summary>
     public void SaveOptions()
     {
-        if (flipPieces)
-        {
-            PlayerPrefs.SetInt("flipPieces", flipPieces.isOn ? 1 : 0);
-        }
+        PlayerPrefs.SetInt("flipPieces", optionsSettings.flipPieces ? 1 : 0);
 
     }
 
+    /// <summary>
+    /// Configure the elements in the options window.
+    /// </summary>
     public void ConfigureOptions()
     {
         if (flipPieces)
         {
             flipPieces.isOn = optionsSettings.flipPieces;
-            FlipPieces(optionsSettings.flipPieces);
         }
     }
 
@@ -132,6 +138,7 @@ public class ChessPanel : GamePanel
         if (chessBoardGame)
         {
             chessBoardGame.FlipDarkSidePieces(flip);
+            optionsSettings.flipPieces = flip;
         }
     }
 
@@ -161,11 +168,6 @@ public class ChessPanel : GamePanel
             chessObject.SetActive(false);
         gameObject.SetActive(false);
         moving = false;
-    }
-
-    public void OnGameEnd()
-    {
-
     }
 
 
