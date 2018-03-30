@@ -18,6 +18,7 @@ public class ObjectFocus : MonoBehaviour
     public delegate void OnFocus();
     public OnFocus OnEnableFocus;
     public OnFocus OnDisableFocus;
+    protected bool lockBackground = false;
     List<FocusObjInfo> focusObjects;
 
     private void Awake()
@@ -53,19 +54,26 @@ public class ObjectFocus : MonoBehaviour
 
     private void OnEnable()
     {
-        SceneController.OnBack += DisableFocus;
+        SceneController.OnBack += BackgroundClick;
     }
 
     private void OnDisable()
     {
-        SceneController.OnBack -= DisableFocus;
+        SceneController.OnBack -= BackgroundClick;
         DisableFocus();
     }
 
-    public void EnableFocus()
+    public void BackgroundClick()
+    {
+        if (!lockBackground)
+            DisableFocus();
+    }
+
+    public void EnableFocus(bool lockBg = false)
     {
         if (focusObjects != null ? focusObjects.Count == 0 : true)
             return;
+        lockBackground = lockBg;
         foreach (FocusObjInfo obj in focusObjects)
         {
             if (obj.focusObj)
@@ -79,6 +87,7 @@ public class ObjectFocus : MonoBehaviour
             focusBackground.SetActive(true);
         if (OnEnableFocus != null)
             OnEnableFocus();
+
     }
 
     public void DisableFocus()
@@ -99,7 +108,7 @@ public class ObjectFocus : MonoBehaviour
         SceneController.instance.SetCanMove(true);
         if (OnDisableFocus != null)
             OnDisableFocus();
-
+        lockBackground = false;
     }
 
 

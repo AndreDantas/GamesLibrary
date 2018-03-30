@@ -131,6 +131,26 @@ public class ChessBoard
         return result;
     }
 
+    public static ChessPiece GetPieceFromType(ChessPieceType type, Position pos)
+    {
+        switch (type)
+        {
+            case ChessPieceType.PAWN:
+                return new Pawn(pos);
+            case ChessPieceType.ROOK:
+                return new Rook(pos);
+            case ChessPieceType.BISHOP:
+                return new Bishop(pos);
+            case ChessPieceType.KNIGHT:
+                return new Knight(pos);
+            case ChessPieceType.QUEEN:
+                return new Queen(pos);
+            case ChessPieceType.KING:
+                return new King(pos);
+        }
+        return null;
+    }
+
     /// <summary>
     /// Returns node's neighbors.
     /// </summary>

@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
+using UnityEngine.Events;
 [System.Serializable]
 public struct OptionsSettings
 {
@@ -14,8 +16,10 @@ public class ChessPanel : GamePanel
     public GameObject chessObject;
     public GamePanel mainMenu;
     public GameObject chessOptions;
+
     public Toggle flipPieces;
     protected OptionsSettings optionsSettings = new OptionsSettings();
+
 
     public void OpenChessOptions()
     {
@@ -64,14 +68,17 @@ public class ChessPanel : GamePanel
 
         yield return null;
         transform.MoveToLocal(end, animTime);
-        yield return new WaitForSeconds(animTime / 2f);
+
         if (chessObject)
         {
-            chessObject.transform.position = new Vector3(end.x + MathOperations.ScreenWidth, end.y, chessObject.transform.position.z);
+            chessObject.transform.position = new Vector3(end.x + MathOperations.ScreenWidth, chessObject.transform.position.y, chessObject.transform.position.z);
             chessObject.SetActive(true);
             if (!chessBoardGame.board.isInit)
+            {
                 chessBoardGame.PrepareGame1vs1();
-            chessObject.transform.MoveTo(end, animTime);
+            }
+            yield return new WaitForSeconds(animTime / 2f);
+            chessObject.transform.MoveTo(new Vector3(end.x, chessObject.transform.position.y, chessObject.transform.position.z), animTime);
             ConfigureOptions();
             yield return new WaitForSeconds(animTime / 2f);
         }
@@ -141,9 +148,9 @@ public class ChessPanel : GamePanel
         transform.localPosition = start;
         if (chessObject)
         {
-            chessObject.transform.position = new Vector3(start.x, start.y, chessObject.transform.position.z);
+            chessObject.transform.position = new Vector3(start.x, chessObject.transform.position.y, chessObject.transform.position.z);
             chessObject.SetActive(true);
-            chessObject.transform.MoveTo(new Vector3(start.x - MathOperations.ScreenWidth, start.y, chessObject.transform.position.z), animTime);
+            chessObject.transform.MoveTo(new Vector3(start.x - MathOperations.ScreenWidth, chessObject.transform.position.y, chessObject.transform.position.z), animTime);
             yield return new WaitForSeconds(animTime / 2f);
         }
 
@@ -158,7 +165,7 @@ public class ChessPanel : GamePanel
 
     public void OnGameEnd()
     {
-        SceneController.instance.ChangePanel(mainMenu);
+
     }
 
 

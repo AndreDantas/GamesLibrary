@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 [Serializable]
 public struct MoveInfo
 {
@@ -37,6 +38,9 @@ public class ChessBoardgame : Boardgame
     public AreaRangeRenderer movementsRender;
     public AreaRangeRenderer checkRender;
     public AreaRangeRenderer lastMoveRender;
+    public TextMeshProUGUI victoryMsg;
+    public GameObject resetMatchButton;
+    public GameObject promotionObj;
     [SerializeField]
     private float tileRenderScale = 0.89f;
     public List<MoveInfo> movesLog;
@@ -49,6 +53,8 @@ public class ChessBoardgame : Boardgame
     private GameObject lightPiecesParent;
 
     public bool canClick = true;
+    private bool waitingPromotion = false;
+    private Position promotionPos;
 
     public delegate void OnGameEnd();
     public OnGameEnd OnEnd;
@@ -56,6 +62,12 @@ public class ChessBoardgame : Boardgame
     protected void Start()
     {
         //PrepareGame();
+    }
+
+    private void OnEnable()
+    {
+        if (promotionObj != null)
+            promotionObj.SetActive(false);
     }
 
     private void OnValidate()
@@ -93,7 +105,7 @@ public class ChessBoardgame : Boardgame
 
     public virtual void PrepareGame1vs1()
     {
-
+        waitingPromotion = false;
         board = new ChessBoard(columns, rows);
         board.InitBoard();
         board.player1 = new ChessPlayer(Orientation.DOWN);
@@ -105,6 +117,7 @@ public class ChessBoardgame : Boardgame
         movesLog = new List<MoveInfo>();
         canClick = true;
         FlipDarkSidePieces(darkPiecesFlipped);
+        StartTurn();
     }
 
     public void FlipDarkSidePieces(bool flip)
@@ -449,9 +462,14 @@ public class ChessBoardgame : Boardgame
     {
         RenderCheck();
         RenderLastMove();
+
+        if (victoryMsg)
+            victoryMsg.gameObject.SetActive(false);
+        if (resetMatchButton)
+            resetMatchButton.SetActive(false);
+
         if (CheckForCheckmate())
         {
-
             EndGame();
             return;
         }
@@ -460,13 +478,82 @@ public class ChessBoardgame : Boardgame
 
     public void ChangeTurn()
     {
+        promotionPos = CheckForPromotion();
+        if (ValidCoordinate(promotionPos) && promotionObj != null)
+        {
+            waitingPromotion = true;
+            List<GameObject> focus = new List<GameObject>();
+            promotionObj.SetActive(true);
+            focus.Add(promotionObj);
+            ObjectFocus.instance.SetFocusObjects(focus);
+            ObjectFocus.instance.EnableFocus(true);
+            return;
+        }
         turnPlayer = turnPlayer == board.player1 ? board.player2 : board.player1;
         StartTurn();
+    }
+
+    public void SetPromotion(int pieceType)
+    {
+        if (!waitingPromotion || (ChessPieceType)pieceType == ChessPieceType.KING || (ChessPieceType)pieceType == ChessPieceType.PAWN)
+            return;
+
+        ChessPieceType type = (ChessPieceType)pieceType;
+        ChessPiece piece;
+        board.nodes[promotionPos.x, promotionPos.y].pieceOnNode = piece = ChessBoard.GetPieceFromType(type, promotionPos);
+        piece.hasMoved = true;
+        piece.board = board;
+        piece.player = turnPlayer;
+
+        Destroy(tiles[promotionPos.x, promotionPos.y].chessPiece);
+        GameObject obj = Instantiate(GetPieceObjectFromType(type));
+        obj.transform.SetParent(piece.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
+        obj.transform.localPosition = tiles[promotionPos.x, promotionPos.y].transform.localPosition;
+        tiles[promotionPos.x, promotionPos.y].chessPiece = obj;
+
+        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            if (piece.player == board.player1)
+            {
+                sr.color = lightPieceColor;
+
+            }
+            else
+            {
+                sr.color = darkPieceColor;
+                if (darkPiecesFlipped)
+                {
+                    sr.flipX = true;
+                    sr.flipY = true;
+                }
+            }
+
+        }
+
+        waitingPromotion = false;
+        promotionPos = new Position(-1, -1);
+        if (promotionObj != null)
+        {
+            promotionObj.SetActive(false);
+            ObjectFocus.instance.DisableFocus();
+
+        }
+        ChangeTurn();
     }
 
     public void EndGame()
     {
         canClick = false;
+        if (victoryMsg)
+        {
+            string winner = turnPlayer == board.player1 ? "Preto" : "Branco";
+            victoryMsg.text = winner + " venceu!";
+            victoryMsg.gameObject.SetActive(true);
+        }
+
+        if (resetMatchButton)
+            resetMatchButton.SetActive(true);
         if (OnEnd != null)
             OnEnd();
     }
@@ -478,6 +565,31 @@ public class ChessBoardgame : Boardgame
     public bool CheckForCheckmate()
     {
         return (ChessPiece.RemoveMovesPlayerInCheck(board.GetPossibleMoves(turnPlayer), board, turnPlayer).Count == 0);
+    }
+
+    public Position CheckForPromotion()
+    {
+        for (int i = 0; i < board.nodes.GetLength(0); i++)
+        {
+            ChessPiece piece = board.nodes[i, board.nodes.GetLength(1) - 1].pieceOnNode;
+            if (piece != null)
+            {
+                if (piece.type == ChessPieceType.PAWN)
+                {
+                    return piece.pos;
+                }
+            }
+
+            piece = board.nodes[i, 0].pieceOnNode;
+            if (piece != null)
+            {
+                if (piece.type == ChessPieceType.PAWN)
+                {
+                    return piece.pos;
+                }
+            }
+        }
+        return new Position(int.MinValue, int.MinValue);
     }
 
     public void RenderCheck()
