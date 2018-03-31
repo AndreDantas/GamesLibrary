@@ -2,46 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 [System.Serializable]
-public enum MapNavigation
+public class ChessBoard : Board
 {
-    /// <summary>
-    /// Vertical and horizontal movement.
-    /// </summary>
-    Cross,
-    /// <summary>
-    /// 8 directions movement.
-    /// </summary>
-    Diagonals
-}
-[System.Serializable]
-public enum NodeDistance
-{
-    Manhattan,
-    Euclidean
-}
-[System.Serializable]
-public class ChessBoard
-{    /// <summary>
-     /// Type of navigation.
-     /// </summary>
-    public MapNavigation mapNavigation = MapNavigation.Cross;
-    /// <summary>
-    /// Number of rows. Can't be less than 1.
-    /// </summary>
-    public int rows = 10;
-    /// <summary>
-    /// Number of columns. Can't be less than 1.
-    /// </summary>
-    public int columns = 10;
-    /// <summary>
-    ///The X offset of each node.
-    /// </summary>
-    public float nodeOffsetX = 0.5f;
-    /// <summary>
-    ///The Y offset of each node.
-    /// </summary>
-    public float nodeOffsetY = 0.5f;
     /// <summary>
     /// The 2D array of nodes.
     /// </summary>
@@ -49,10 +13,7 @@ public class ChessBoard
 
     public ChessPlayer player1;
     public ChessPlayer player2;
-    /// <summary>
-    /// If the board has been initiated.
-    /// </summary>
-    public bool isInit;
+
     public ChessBoard()
     {
 
@@ -94,7 +55,7 @@ public class ChessBoard
     }
 
 
-    public virtual void InitBoard()
+    public override void InitBoard()
     {
         //removed = new List<Piece>();
         if (columns <= 0 || rows <= 0)
@@ -305,18 +266,6 @@ public class ChessBoard
     {
         return GetWorldPositionFromNode(node.pos.x, node.pos.y);
     }
-    /// <summary>
-    /// Distance between two nodes.
-    /// </summary>
-    public static float Distance(ChessNode a, ChessNode b, NodeDistance distance = NodeDistance.Manhattan)
-    {
-        if (distance == NodeDistance.Manhattan)
-        {
-            return (Mathf.Abs(a.pos.x - b.pos.x) + Mathf.Abs(a.pos.y - b.pos.y)) * ChessNode.MinCost;
-        }
-        else
-            return Mathf.Sqrt(Mathf.Pow(a.pos.x - b.pos.x, 2) + Mathf.Pow(a.pos.y - b.pos.y, 2));
-    }
 
     public bool IsPositionEmpty(Position pos)
     {
@@ -325,9 +274,6 @@ public class ChessBoard
 
         return nodes[pos.x, pos.y].pieceOnNode == null;
     }
-
-
-
 
     /// <summary>
     /// Checks if a player is in check.

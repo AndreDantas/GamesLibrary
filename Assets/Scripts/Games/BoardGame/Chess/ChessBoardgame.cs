@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 [Serializable]
-public struct MoveInfo
+public struct ChessMoveInfo
 {
     public ChessPiece piece;
     public Move move;
@@ -15,7 +15,7 @@ public struct MoveInfo
 class BoardSaveData
 {
     public ChessBoard board;
-    public List<MoveInfo> movesLog;
+    public List<ChessMoveInfo> movesLog;
     public ChessPlayer turnPlayer;
 }
 public class ChessBoardgame : Boardgame
@@ -43,7 +43,7 @@ public class ChessBoardgame : Boardgame
     public GameObject promotionObj;
     [SerializeField]
     private float tileRenderScale = 0.89f;
-    public List<MoveInfo> movesLog;
+    public List<ChessMoveInfo> movesLog;
     public ChessTile[,] tiles { get; internal set; }
     private List<ChessPiece> pieces = new List<ChessPiece>();
 
@@ -114,7 +114,7 @@ public class ChessBoardgame : Boardgame
         RenderMap();
         PlacePieces();
         ClearRenders();
-        movesLog = new List<MoveInfo>();
+        movesLog = new List<ChessMoveInfo>();
         canClick = true;
         FlipDarkSidePieces(darkPiecesFlipped);
         StartTurn();
@@ -223,10 +223,11 @@ public class ChessBoardgame : Boardgame
     public void LoadBoardState()
     {
         BoardSaveData load = SaveLoad.LoadFile<BoardSaveData>("/chessdata.dat");
-        if (load.board != null)
-        {
-            ReconstructBoard(load);
-        }
+        if (load != null)
+            if (load.board != null)
+            {
+                ReconstructBoard(load);
+            }
     }
 
     void ReconstructBoard(BoardSaveData data, bool playerVsplayer = true)
@@ -446,7 +447,7 @@ public class ChessBoardgame : Boardgame
     {
         selectedPiece.MoveToPos(move); // Move the piece internally
         yield return MovePieceObj(move); // Move piece object on scene
-        MoveInfo m = new MoveInfo();
+        ChessMoveInfo m = new ChessMoveInfo();
         m.piece = selectedPiece;
         m.move = move;
         m.boardAfterMove = new ChessBoard(board);

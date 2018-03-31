@@ -915,6 +915,7 @@ MonoBehaviour:
     width: 20
     height: 20
   cycle: 1
+  createIndicator: 1
   panelCenter: {x: 0, y: 0}
   panelIndicatorCenter: {x: 0, y: -3.42}
   indicatorSpacing: 0.36
