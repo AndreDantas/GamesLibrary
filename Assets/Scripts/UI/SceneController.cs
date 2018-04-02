@@ -27,7 +27,7 @@ public class SceneController : MonoBehaviour
         StartCoroutine(Init());
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {

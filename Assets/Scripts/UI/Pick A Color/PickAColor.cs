@@ -44,7 +44,7 @@ public class PickAColor : MonoBehaviour
             focus.Add(colorPicker.gameObject);
             objFocus.SetFocusObjects(focus);
             objFocus.OnDisableFocus += OnDisableFocus;
-            objFocus.EnableFocus();
+            objFocus.EnableFocus(true);
         }
     }
 

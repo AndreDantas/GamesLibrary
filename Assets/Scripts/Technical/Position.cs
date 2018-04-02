@@ -45,6 +45,20 @@ public class Position : System.Object
         return !(a == b);
     }
 
+    public static Position operator -(Position a)
+    {
+        if (a == null)
+            return new Position(0, 0);
+
+        return new Position(-a.x, -a.y);
+    }
+    public static Position operator -(Position a, Position b)
+    {
+        if (a == null)
+            return new Position(0, 0);
+
+        return new Position(a.x - b.x, a.y - b.y);
+    }
     public override bool Equals(System.Object obj)
     {
         // If parameter is null return false.

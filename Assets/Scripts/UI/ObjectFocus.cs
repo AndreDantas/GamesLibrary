@@ -66,7 +66,7 @@ public class ObjectFocus : MonoBehaviour
     public void BackgroundClick()
     {
         if (!lockBackground)
-            DisableFocus();
+            DisableFocusDelay();
     }
 
     public void EnableFocus(bool lockBg = false)
@@ -92,6 +92,7 @@ public class ObjectFocus : MonoBehaviour
 
     public void DisableFocus()
     {
+
         if (focusBackground)
             focusBackground.SetActive(false);
 
@@ -111,5 +112,31 @@ public class ObjectFocus : MonoBehaviour
         lockBackground = false;
     }
 
+    public void DisableFocusDelay()
+    {
+        StartCoroutine(IEDisableFocus());
+    }
+
+    IEnumerator IEDisableFocus()
+    {
+        yield return null;
+        if (focusBackground)
+            focusBackground.SetActive(false);
+
+        if (focusObjects != null ? focusObjects.Count == 0 : true)
+            yield break;
+        foreach (FocusObjInfo obj in focusObjects)
+        {
+            if (obj.focusObj)
+            {
+                obj.focusObj.transform.SetParent(obj.parent);
+                obj.focusObj.transform.SetSiblingIndex(obj.hierarchyIndex);
+            }
+        }
+        SceneController.instance.SetCanMove(true);
+        if (OnDisableFocus != null)
+            OnDisableFocus();
+        lockBackground = false;
+    }
 
 }

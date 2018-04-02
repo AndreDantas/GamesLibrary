@@ -8,10 +8,11 @@ public class CheckerTile : BoardgameTile
     public GameObject checkerPiece;
     public override void OnPointerClick(PointerEventData pointerEventData)
     {
+
         if (boardGame != null)
         {
-            CheckersBoardgame chessBoard = boardGame as CheckersBoardgame;
-            chessBoard.OnClick(pos);
+            CheckersBoardgame Board = boardGame as CheckersBoardgame;
+            Board.OnClick(pos);
         }
     }
 }

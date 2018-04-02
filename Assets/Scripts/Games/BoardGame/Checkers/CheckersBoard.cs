@@ -9,7 +9,10 @@ public class CheckersBoard : Board
 
     public CheckerPlayer playerTop;
     public CheckerPlayer playerBottom;
+    public CheckersBoard()
+    {
 
+    }
     public CheckersBoard(CheckersBoard oldBoard)
     {
         if (oldBoard == null)
@@ -117,12 +120,74 @@ public class CheckersBoard : Board
         return ValidCoordinate(node.pos);
     }
 
+    public List<CheckersNode> GetNeighbors(Position pos)
+    {
+        if (ValidCoordinate(pos))
+        {
+            List<CheckersNode> result = new List<CheckersNode>();
+            if (ValidCoordinate(pos.x + 1, pos.y + 1))
+            {
+                result.Add(nodes[pos.x + 1, pos.y + 1]);
+            }
+            if (ValidCoordinate(pos.x + 1, pos.y - 1))
+            {
+                result.Add(nodes[pos.x + 1, pos.y - 1]);
+            }
+            if (ValidCoordinate(pos.x - 1, pos.y + 1))
+            {
+                result.Add(nodes[pos.x - 1, pos.y + 1]);
+            }
+            if (ValidCoordinate(pos.x - 1, pos.y - 1))
+            {
+                result.Add(nodes[pos.x - 1, pos.y - 1]);
+            }
+            return result;
+        }
+        return null;
+    }
+
     public bool IsPositionEmpty(Position pos)
     {
         if (!ValidCoordinate(pos))
             return false;
 
         return nodes[pos.x, pos.y].checkerOnNode == null;
+    }
+
+    /// <summary>
+    /// Used to move a piece.
+    /// </summary>
+    /// <param name="move"></param>
+    public void Move(CheckerMove move)
+    {
+        if (move == null)
+            return;
+
+        Checker piece = GetPiece(move.start);
+        SetPiece(move.end, piece);
+        SetPiece(move.start, null);
+
+    }
+
+    /// <summary>
+    /// Used to make "Capture" movements. Returns the captured pieces.
+    /// </summary>
+    /// <param name="moves"></param>
+    /// <returns></returns>
+    public List<Checker> CaptureMovement(List<CheckerMove> moves)
+    {
+        if (moves == null)
+            return null;
+        List<Checker> captured = new List<Checker>();
+        foreach (CheckerMove m in moves)
+        {
+            Position delta = new Position(MathOperations.Sign(m.end.x - m.start.x), MathOperations.Sign(m.end.y - m.start.y));
+            Position capturedPiece = m.end - delta;
+            Move(m);
+            captured.Add(GetPiece(capturedPiece));
+            SetPiece(capturedPiece, null);
+        }
+        return captured;
     }
 
     /// <summary>
@@ -163,7 +228,13 @@ public class CheckersBoard : Board
         return this;
     }
 
-    public int GetDiagonalDistance(Position start, Position end)
+    /// <summary>
+    /// Returns the distance between two points by diagonal movements only.
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <returns></returns>
+    public static int GetDiagonalDistance(Position start, Position end)
     {
         return Mathf.Max(Mathf.Abs(start.x - end.x), Mathf.Abs(start.y - end.y));
     }
