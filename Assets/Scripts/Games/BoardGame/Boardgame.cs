@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Boardgame : MonoBehaviour
 {
+    [Header("Board Settings")]
     public int columns = 8;
     public int rows = 8;
 

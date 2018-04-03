@@ -56,16 +56,6 @@ public class Checker : Piece
         }
     }
 
-    /// <summary>
-    /// Used to change checker piece to a king piece
-    /// </summary>
-    public virtual void BecomeKing()
-    {
-        isKing = true;
-        moveDistance = 99;
-        normalMovement = new DiagonalMovement(true, true, true, true);
-        jumpMovement = new DiagonalMovement(true, true, true, true);
-    }
 
     public virtual List<CheckerMove> GetMovements()
     {

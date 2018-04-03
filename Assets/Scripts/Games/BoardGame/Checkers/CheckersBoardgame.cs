@@ -27,16 +27,24 @@ class CheckerBoardSaveData
 }
 public class CheckersBoardgame : Boardgame
 {
+    [Header("Game Settings")]
+    public int rowsWithPieces = 3;
+    public int normalPiecesMoveDistance = 1;
+    [Header("Tile Settings")]
     public GameObject tilePrefab;
     public Color lightTile = Color.white;
     public Color darkTile = Color.cyan;
+    [Space(10)]
     public GameObject checkerPrefab;
     public GameObject checkerKingPrefab;
     public Color topPlayerColor = Color.red;
     public Color bottomPlayerColor = Color.black;
+    [Space(10)]
+    [HideInInspector]
     public CheckersBoard board;
     public CheckerPlayer turnPlayer { get; internal set; }
     protected Checker selectedPiece;
+    [Header("Renders")]
     public AreaRangeRenderer movementsRender;
     public AreaRangeRenderer captureRender;
     public AreaRangeRenderer lastMoveRender;
@@ -66,48 +74,66 @@ public class CheckersBoardgame : Boardgame
     }
     public void PrepareGame()
     {
+
+        // Board settings
         board = new CheckersBoard();
-        board.columns = board.rows = 8;
+        board.columns = columns;
+        board.rows = rows;
         (board.playerTop = new CheckerPlayer()).orientation = Orientation.UP;
         (board.playerBottom = new CheckerPlayer()).orientation = Orientation.DOWN;
         turnPlayer = board.playerBottom;
         board.InitBoard();
+
+        // Map settings
         RenderMap();
+        PlacePieces();
+        ClearRenders();
+
+
+        movesLog = new List<CheckersMoveInfo>();
+        canClick = true;
         capturing = false;
         selectedPiece = null;
-        ClearRenders();
-        movesLog = new List<CheckersMoveInfo>();
-        PlacePieces();
-        canClick = true;
+
         StartTurn();
     }
 
     public void PlacePieces()
     {
+        if (board == null ? true : board.nodes == null)
+            return;
+        int rowsWithPieces = this.rowsWithPieces;
+        if (rowsWithPieces >= rows / 2)
+            rowsWithPieces = (rows / 2) - 1;
+        if (rowsWithPieces <= 0)
+            rowsWithPieces = 1;
 
-        for (int i = 0; i < 3; i++)
+
+        for (int i = 0; i < rowsWithPieces; i++)
         {
             bool oddRow = i % 2 == 0;
-            for (int j = 0; j < 8; j += 2)
+            for (int j = 0; j < columns; j += 2)
             {
                 Position pos = new Position(oddRow ? j : j + 1, i);
                 Checker c = new Checker(pos);
                 c.player = board.playerBottom;
+                c.moveDistance = normalPiecesMoveDistance;
                 GeneratePiece(c, pos);
             }
         }
 
 
-        for (int i = 7; i > 4; i--)
+        for (int i = rows - 1; i > rows - 1 - rowsWithPieces; i--)
         {
             bool oddRow = i % 2 == 0;
-            for (int j = 0; j < 8; j += 2)
+            for (int j = 0; j < columns; j += 2)
             {
                 Position pos = new Position(oddRow ? j : j + 1, i);
                 Checker c = new Checker(pos);
                 c.normalMovement = new DiagonalMovement(false, false, true, true);
                 c.jumpMovement = new DiagonalMovement(false, false, true, true);
                 c.player = board.playerTop;
+                c.moveDistance = normalPiecesMoveDistance;
                 GeneratePiece(c, pos, true);
             }
         }
@@ -117,9 +143,12 @@ public class CheckersBoardgame : Boardgame
     {
         if (piece == null || board == null || tiles == null)
             return;
+        if (!ValidCoordinate(pos))
+            return;
         piece.board = board;
         piece.startPosition = pos;
         board.SetPiece(pos, piece);
+        Destroy(tiles[pos.x, pos.y].checkerPiece);
         GameObject pieceObj = Instantiate(piece.isKing ? checkerKingPrefab : checkerPrefab);
 
         SpriteRenderer sr = pieceObj.GetComponent<SpriteRenderer>();
@@ -168,13 +197,15 @@ public class CheckersBoardgame : Boardgame
             SpriteRenderer sr;
             GameObject tile;
 
+            float columns = this.columns;
+            float rows = this.rows;
             float width = MathOperations.ScreenWidth;
-            tileRenderScale = width / columns;
-            transform.localScale = Vector3.one * (width / columns);
-            tiles = new CheckerTile[columns, rows];
-            for (int i = 0; i < columns; i++)
+            tileRenderScale = (width * 1.0f) / (columns * 1.0f);
+            transform.localScale = Vector3.one * ((width * 1.0f) / (columns * 1.0f));
+            tiles = new CheckerTile[this.columns, this.rows];
+            for (int i = 0; i < this.columns; i++)
             {
-                for (int j = 0; j < rows; j++)
+                for (int j = 0; j < this.rows; j++)
                 {
                     // Create tile object.
                     tile = Instantiate(tilePrefab);
@@ -196,9 +227,11 @@ public class CheckersBoardgame : Boardgame
                     // Set tile's position
                     tile.transform.SetParent(tilesParentObj.transform);
                     tile.transform.localScale = Vector3.one;
-                    tile.transform.localPosition = new Vector3(i + 0.5f - columns / 2, j + 0.5f - rows / 2, tilesParentObj.transform.localPosition.z);
+                    tile.transform.localPosition = new Vector3(i + 0.5f - columns / 2f, j + 0.5f - rows / 2f, tilesParentObj.transform.localPosition.z);
 
-                    if (j < rows - 1)
+                    if (j < this.rows - 1)
+                        tileColor = !tileColor;
+                    else if (this.rows % 2 != 0)
                         tileColor = !tileColor;
                 }
             }
@@ -229,6 +262,7 @@ public class CheckersBoardgame : Boardgame
                 ReconstructBoard(load);
             }
     }
+
 
     void ReconstructBoard(CheckerBoardSaveData data, bool playerVsplayer = true)
     {
@@ -305,6 +339,10 @@ public class CheckersBoardgame : Boardgame
         return true;
     }
 
+    /// <summary>
+    /// Changes the color of the pieces at runtime.
+    /// </summary>
+    /// <param name="topPlayer"></param>
     public void ChangePiecesColor(bool topPlayer = true)
     {
         if (player1PiecesParent != null && player2PiecesParent != null)
@@ -327,7 +365,6 @@ public class CheckersBoardgame : Boardgame
         if (moves == null ? true : moves.Count == 0)
             return;
         currentMoveInfo.piece = piece;
-        RemovePiecesHighlight();
         ClearRenders();
         capturing = false;
         if (!moves[0].isCapture)
@@ -336,8 +373,7 @@ public class CheckersBoardgame : Boardgame
             board.Move(move);
             currentMoveInfo.moves.Add(move);
             MovePieceObject(move);
-            selectedPiece = null;
-            ChangeTurn();
+
         }
         else
         {
@@ -383,6 +419,8 @@ public class CheckersBoardgame : Boardgame
                 tiles[move.end.x, move.end.y].checkerPiece = temp;
                 canClick = true;
             }
+            selectedPiece = null;
+            ChangeTurn();
         }
     }
 
@@ -452,7 +490,7 @@ public class CheckersBoardgame : Boardgame
             {
                 objects.Add(tiles[item.pos.x, item.pos.y].checkerPiece);
             }
-            HighlightPieces(objects);
+            RenderAttackPieces(objects);
         }
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
@@ -483,11 +521,61 @@ public class CheckersBoardgame : Boardgame
     }
     public void ChangeTurn()
     {
-
+        Position pos = CheckForPromotion();
+        if (ValidCoordinate(pos))
+        {
+            Checker c = board.nodes[pos.x, pos.y].checkerOnNode;
+            BecomeKing(c);
+            GeneratePiece(c, pos, turnPlayer == board.playerTop ? true : false);
+        }
         movesLog.Add(currentMoveInfo);
         turnPlayer = turnPlayer == board.playerTop ? board.playerBottom : board.playerTop;
         StartTurn();
     }
+    /// <summary>
+    /// Used to change checker piece to a king piece
+    /// </summary>
+    public virtual void BecomeKing(Checker c)
+    {
+        if (c == null)
+            return;
+        c.isKing = true;
+        c.moveDistance = 99;
+        c.normalMovement = new DiagonalMovement(true, true, true, true);
+        c.jumpMovement = new DiagonalMovement(true, true, true, true);
+    }
+
+    /// <summary>
+    /// Checks for a checker's promotion.
+    /// </summary>
+    /// <returns></returns>
+    public Position CheckForPromotion()
+    {
+        for (int i = 0; i < board.nodes.GetLength(0); i++)
+        {
+            Checker piece = board.nodes[i, board.nodes.GetLength(1) - 1].checkerOnNode;
+            if (piece != null)
+            {
+                if (piece.player == board.playerBottom && !piece.isKing)
+                {
+                    return piece.pos;
+                }
+            }
+
+            piece = board.nodes[i, 0].checkerOnNode;
+            if (piece != null)
+            {
+                if (piece.player == board.playerTop && !piece.isKing)
+                {
+                    return piece.pos;
+                }
+            }
+        }
+        return new Position(int.MinValue, int.MinValue);
+    }
+    /// <summary>
+    /// Changes the color of the tiles at runtime. 
+    /// </summary>
     public void ChangeTileColor()
     {
         if (tiles != null ? tiles.GetLength(0) > 0 && tiles.GetLength(1) > 0 : false)
@@ -510,6 +598,9 @@ public class CheckersBoardgame : Boardgame
         }
     }
 
+    /// <summary>
+    ///  Clears all renders.
+    /// </summary>
     public void ClearRenders()
     {
         if (movementsRender != null)
@@ -574,39 +665,22 @@ public class CheckersBoardgame : Boardgame
     }
 
 
-    public void HighlightPieces(List<GameObject> pieceObjs)
+    public void RenderAttackPieces(List<GameObject> pieceObjs)
     {
-        if (pieceObjs == null)
+        if (pieceObjs == null || captureRender == null)
             return;
         foreach (var obj in pieceObjs)
         {
             if (obj == null)
                 continue;
 
-            // Highlight
-        }
-    }
-
-    public void RemovePiecesHighlight()
-    {
-        if (player1PiecesParent != null)
-        {
-            foreach (Transform obj in player1PiecesParent.transform)
+            List<Vector3> positions = new List<Vector3>();
+            foreach (var item in pieceObjs)
             {
-                if (obj == null)
-                    continue;
-                // Remove highlight
+                positions.Add(item.transform.position);
             }
-        }
+            captureRender.RenderSquaresArea(positions, tileRenderScale, tileRenderScale);
 
-        if (player2PiecesParent != null)
-        {
-            foreach (Transform obj in player2PiecesParent.transform)
-            {
-                if (obj == null)
-                    continue;
-                // Remove highlight
-            }
         }
     }
 
