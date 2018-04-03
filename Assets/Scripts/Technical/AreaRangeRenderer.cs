@@ -27,7 +27,7 @@ public class AreaRangeRenderer : MonoBehaviour
     /// </summary>
     /// <param name="squarePos">List of positions.</param>
     /// <param name="scale">Scale of each square.</param>
-    public void RenderSquaresArea(List<Vector3> squarePos, float scale = 1f)
+    public void RenderSquaresArea(List<Vector3> squarePos, float width, float height)
     {
         if (squarePos == null || squarePos.Count == 0 || !meshFilter)
             return;
@@ -37,7 +37,6 @@ public class AreaRangeRenderer : MonoBehaviour
 
         int verticesNumber = squarePos.Count * 4; // 4 vertices per square
         int trianglesNumber = squarePos.Count * 6; // 2 Triangles per square
-        scale = MathOperations.ClampMin(scale, 0);
 
         Vector3[] vertices = new Vector3[verticesNumber];
         int[] triangles = new int[trianglesNumber];
@@ -47,17 +46,17 @@ public class AreaRangeRenderer : MonoBehaviour
         {
             // Vertices Creation
             // Bottom left 0
-            vertices[i * 4] = (squarePos[i] + new Vector3(1 - scale, 1 - scale, 0) + new Vector3(-0.5f, -0.5f, -1) - transform.position);
-            uv[i * 4] = new Vector2(squarePos[i].x / scale, squarePos[i].y / scale) + new Vector2(-0.5f, -0.5f) - (Vector2)transform.position;
+            vertices[i * 4] = (squarePos[i] + new Vector3(-width / 2f, -height / 2f) - transform.position);
+            uv[i * 4] = new Vector2(squarePos[i].x / width, squarePos[i].y / height) + new Vector2(-0.5f, -0.5f) - (Vector2)transform.position;
             // Bottom right 1
-            vertices[i * 4 + 1] = (squarePos[i] + new Vector3(scale, 1 - scale, 0) + new Vector3(-0.5f, -0.5f, -1) - transform.position);
-            uv[i * 4 + 1] = new Vector2(squarePos[i].x / scale, squarePos[i].y / scale) + new Vector2(-0.5f, -0.5f) - (Vector2)transform.position;
+            vertices[i * 4 + 1] = (squarePos[i] + new Vector3(width / 2f, -height / 2f, 0) - transform.position);
+            uv[i * 4 + 1] = new Vector2(squarePos[i].x / width, squarePos[i].y / height) + new Vector2(-0.5f, -0.5f) - (Vector2)transform.position;
             // Top right 2
-            vertices[i * 4 + 2] = (squarePos[i] + new Vector3(scale, scale, 0) + new Vector3(-0.5f, -0.5f, -1) - transform.position);
-            uv[i * 4 + 2] = new Vector2(squarePos[i].x / scale, squarePos[i].y / scale) + new Vector2(-0.5f, -0.5f) - (Vector2)transform.position;
+            vertices[i * 4 + 2] = (squarePos[i] + new Vector3(width / 2f, height / 2f, 0) - transform.position);
+            uv[i * 4 + 2] = new Vector2(squarePos[i].x / width, squarePos[i].y / height) + new Vector2(-0.5f, -0.5f) - (Vector2)transform.position;
             // Top left 3
-            vertices[i * 4 + 3] = (squarePos[i] + new Vector3(1 - scale, scale, 0) + new Vector3(-0.5f, -0.5f, -1) - transform.position);
-            uv[i * 4 + 3] = new Vector2(squarePos[i].x / scale, squarePos[i].y / scale) + new Vector2(-0.5f, -0.5f) - (Vector2)transform.position;
+            vertices[i * 4 + 3] = (squarePos[i] + new Vector3(-width / 2f, height / 2f, 0) - transform.position);
+            uv[i * 4 + 3] = new Vector2(squarePos[i].x / width, squarePos[i].y / height) + new Vector2(-0.5f, -0.5f) - (Vector2)transform.position;
 
 
             // Triangles Creation
@@ -95,13 +94,13 @@ public class AreaRangeRenderer : MonoBehaviour
     /// </summary>
     /// <param name="squarePos">List of positions.</param>
     /// <param name="scale">Scale of each square.</param>
-    public void UpdateRender(List<Vector3> squarePos, float scale = 1f)
+    public void UpdateRender(List<Vector3> squarePos, float width, float height)
     {
         if (!meshFilter)
             return;
         if (meshFilter.mesh == null)
             return;
 
-        RenderSquaresArea(squarePos, scale);
+        RenderSquaresArea(squarePos, width, height);
     }
 }

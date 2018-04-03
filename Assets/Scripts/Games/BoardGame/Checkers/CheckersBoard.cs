@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
 public class CheckersBoard : Board
 {
 
@@ -166,7 +166,59 @@ public class CheckersBoard : Board
         Checker piece = GetPiece(move.start);
         SetPiece(move.end, piece);
         SetPiece(move.start, null);
+        piece.hasMoved = true;
 
+    }
+
+    /// <summary>
+    /// Returns all possible moves of the given player.
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public List<CheckerMove> GetPossibleMovements(CheckerPlayer player)
+    {
+
+        List<CheckerMove> result = new List<CheckerMove>();
+        if (nodes == null)
+            return result;
+
+        for (int i = 0; i < nodes.GetLength(0); i++)
+        {
+            for (int j = 0; j < nodes.GetLength(1); j++)
+            {
+                Checker c = GetPiece(new Position(i, j));
+                if (c != null ? c.player == player : false)
+                    result.AddRange(c.GetMovements());
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Returns all pieces of the given player that can capture.
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public List<Checker> GetPiecesWithCapture(CheckerPlayer player)
+    {
+        List<Checker> result = new List<Checker>();
+        if (nodes == null)
+            return result;
+
+        for (int i = 0; i < nodes.GetLength(0); i++)
+        {
+            for (int j = 0; j < nodes.GetLength(1); j++)
+            {
+                Checker c = GetPiece(new Position(i, j));
+                if (c != null ? c.player == player : false)
+                {
+                    if (c.HasCapture())
+                        result.Add(c);
+                }
+
+            }
+        }
+        return result;
     }
 
     /// <summary>

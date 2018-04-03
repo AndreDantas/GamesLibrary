@@ -2,11 +2,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-// Make continuation of capture if there are more jumps. Check for more after moving the piece object
-// Check for out of moves
 // Make promotion
-// 
+// Highlight attack pieces
+// Checkers's rules
+
+[Serializable]
+public struct CheckersMoveInfo
+{
+    public Checker piece;
+    public List<CheckerMove> moves;
+
+}
+[Serializable]
+class CheckerBoardSaveData
+{
+    public CheckersBoard board;
+    public List<CheckersMoveInfo> movesLog;
+    public CheckerPlayer turnPlayer;
+    public bool capturing;
+    public Checker selectedPiece;
+    public CheckerMove previousCaptureMove;
+}
 public class CheckersBoardgame : Boardgame
 {
     public GameObject tilePrefab;
@@ -20,17 +38,25 @@ public class CheckersBoardgame : Boardgame
     public CheckerPlayer turnPlayer { get; internal set; }
     protected Checker selectedPiece;
     public AreaRangeRenderer movementsRender;
+    public AreaRangeRenderer captureRender;
+    public AreaRangeRenderer lastMoveRender;
+    public AreaRangeRenderer selectedPieceRender;
+    public TextMeshProUGUI victoryMsg;
+    public GameObject resetMatchButton;
     public bool canClick = true;
+    public List<CheckersMoveInfo> movesLog;
+    private CheckersMoveInfo currentMoveInfo;
     private float tileRenderScale = 0.89f;
     private GameObject tilesParentObj;
     private GameObject piecesParentObj;
     private GameObject player1PiecesParent;
     private GameObject player2PiecesParent;
     public CheckerTile[,] tiles { get; internal set; }
+    private CheckerMove previousCaptureMove;
     private bool capturing;
     private void Start()
     {
-        PrepareGame();
+        //PrepareGame();
     }
     private void OnValidate()
     {
@@ -47,13 +73,18 @@ public class CheckersBoardgame : Boardgame
         turnPlayer = board.playerBottom;
         board.InitBoard();
         RenderMap();
+        capturing = false;
+        selectedPiece = null;
+        ClearRenders();
+        movesLog = new List<CheckersMoveInfo>();
         PlacePieces();
         canClick = true;
-
+        StartTurn();
     }
 
     public void PlacePieces()
     {
+
         for (int i = 0; i < 3; i++)
         {
             bool oddRow = i % 2 == 0;
@@ -65,6 +96,7 @@ public class CheckersBoardgame : Boardgame
                 GeneratePiece(c, pos);
             }
         }
+
 
         for (int i = 7; i > 4; i--)
         {
@@ -86,6 +118,7 @@ public class CheckersBoardgame : Boardgame
         if (piece == null || board == null || tiles == null)
             return;
         piece.board = board;
+        piece.startPosition = pos;
         board.SetPiece(pos, piece);
         GameObject pieceObj = Instantiate(piece.isKing ? checkerKingPrefab : checkerPrefab);
 
@@ -172,6 +205,93 @@ public class CheckersBoardgame : Boardgame
         }
     }
 
+    public void SaveBoardState()
+    {
+        if (board == null)
+            return;
+
+        CheckerBoardSaveData save = new CheckerBoardSaveData();
+        save.board = board;
+        save.movesLog = movesLog;
+        save.turnPlayer = turnPlayer;
+        save.capturing = capturing;
+        save.selectedPiece = selectedPiece;
+        save.previousCaptureMove = previousCaptureMove;
+        SaveLoad.SaveFile("/checkers_game1v1_data.dat", save);
+    }
+
+    public void LoadBoardState()
+    {
+        CheckerBoardSaveData load = SaveLoad.LoadFile<CheckerBoardSaveData>("/checkers_game1v1_data.dat");
+        if (load != null)
+            if (load.board != null)
+            {
+                ReconstructBoard(load);
+            }
+    }
+
+    void ReconstructBoard(CheckerBoardSaveData data, bool playerVsplayer = true)
+    {
+        ClearRenders();
+        if (data.board != null)
+        {
+            board = data.board;
+            movesLog = data.movesLog;
+            turnPlayer = data.turnPlayer;
+            capturing = data.capturing;
+            selectedPiece = data.selectedPiece;
+            previousCaptureMove = data.previousCaptureMove;
+            RenderMap();
+
+            foreach (CheckersNode node in data.board.GetNodes())
+            {
+                if (node.checkerOnNode == null)
+                    continue;
+                GameObject obj = Instantiate(node.checkerOnNode.isKing ? checkerKingPrefab : checkerPrefab);
+                obj.transform.SetParent(node.checkerOnNode.player == board.playerTop ? player2PiecesParent.transform : player1PiecesParent.transform);
+                obj.transform.localPosition = tiles[node.pos.x, node.pos.y].transform.localPosition;
+                obj.transform.localScale = Vector3.one;
+                tiles[node.pos.x, node.pos.y].checkerPiece = obj;
+
+                SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    if (node.checkerOnNode.player == board.playerTop)
+                    {
+                        sr.color = topPlayerColor;
+
+                    }
+                    else
+                    {
+                        sr.color = bottomPlayerColor;
+                    }
+
+                }
+
+            }
+            if (capturing)
+            {
+                List<CheckerMove> captureMoves = selectedPiece.GetPossibleJumps(new List<CheckerMove> { previousCaptureMove });
+                captureMoves.Remove(captureMoves.Find(x => x.end == selectedPiece.pos));
+                if (captureMoves.Count > 0)
+                {
+                    capturing = true;
+                    RenderMoves(captureMoves);
+                    RenderSelectedPiece(selectedPiece.pos);
+                }
+                else
+                {
+                    ClearRenders();
+                    selectedPiece = null;
+                    ChangeTurn();
+                }
+            }
+            else
+                StartTurn();
+            canClick = true;
+        }
+    }
+
     public bool ValidCoordinate(Position pos)
     {
         int x = pos.x;
@@ -198,18 +318,23 @@ public class CheckersBoardgame : Boardgame
             }
     }
 
+
+
     public void MovePiece(Checker piece, List<CheckerMove> moves, Position positionClicked)
     {
         if (piece == null)
             return;
         if (moves == null ? true : moves.Count == 0)
             return;
-
-
+        currentMoveInfo.piece = piece;
+        RemovePiecesHighlight();
+        ClearRenders();
+        capturing = false;
         if (!moves[0].isCapture)
         {
             CheckerMove move = moves.Find(x => x.end == positionClicked);
             board.Move(move);
+            currentMoveInfo.moves.Add(move);
             MovePieceObject(move);
             selectedPiece = null;
             ChangeTurn();
@@ -219,6 +344,9 @@ public class CheckersBoardgame : Boardgame
             List<CheckerMove> movements = new List<CheckerMove>();
             CheckerMove current = moves.Find(x => x.end == positionClicked);
             movements.Add(current);
+            previousCaptureMove = current;
+
+
             while (current.start != piece.pos)
             {
                 current = current.previous;
@@ -226,12 +354,8 @@ public class CheckersBoardgame : Boardgame
             }
             movements.Reverse();
             board.CaptureMovement(movements);
+            currentMoveInfo.moves.AddRange(movements);
             MovePieceObjectCapture(movements);
-
-            // REMOVE AFTER CAPTURE IS FULLY IMPLEMENTED.
-            selectedPiece = null;
-            ChangeTurn();
-            ////////////////////////////////////////////
         }
 
     }
@@ -290,35 +414,77 @@ public class CheckersBoardgame : Boardgame
                         tiles[captured.x, captured.y].checkerPiece = null;
                     }
                     tiles[move.end.x, move.end.y].checkerPiece = temp;
-                    yield return new WaitForSeconds(0.2f);
+                    if ((moves.IndexOf(move) != moves.Count - 1))
+                        yield return new WaitForSeconds(0.2f);
 
                 }
             }
         canClick = true;
+        List<CheckerMove> captureMoves = selectedPiece.GetPossibleJumps(new List<CheckerMove> { previousCaptureMove });
+        captureMoves.Remove(captureMoves.Find(x => x.end == selectedPiece.pos));
+        if (captureMoves.Count > 0)
+        {
+            capturing = true;
+            RenderMoves(captureMoves);
+            RenderSelectedPiece(selectedPiece.pos);
+        }
+        else
+        {
+            ClearRenders();
+            selectedPiece = null;
+            ChangeTurn();
+        }
     }
     public bool CheckForDefeat()
     {
-        return false;
+
+        return board.GetPossibleMovements(turnPlayer).Count == 0;
 
     }
     public void StartTurn()
     {
-
+        RenderLastTurn();
+        List<Checker> attackPieces = board.GetPiecesWithCapture(turnPlayer);
+        if (attackPieces != null ? attackPieces.Count > 0 : false)
+        {
+            List<GameObject> objects = new List<GameObject>();
+            foreach (var item in attackPieces)
+            {
+                objects.Add(tiles[item.pos.x, item.pos.y].checkerPiece);
+            }
+            HighlightPieces(objects);
+        }
+        if (victoryMsg)
+            victoryMsg.gameObject.SetActive(false);
+        if (resetMatchButton)
+            resetMatchButton.SetActive(false);
         if (CheckForDefeat())
         {
             EndGame();
             return;
         }
 
+        currentMoveInfo = new CheckersMoveInfo();
+        currentMoveInfo.moves = new List<CheckerMove>();
+
     }
     public void EndGame()
     {
         canClick = false;
+        if (victoryMsg)
+        {
+            string winner = turnPlayer == board.playerTop ? "Jogador 1" : "Jogador 2";
+            victoryMsg.text = winner + " venceu!";
+            victoryMsg.gameObject.SetActive(true);
+        }
 
+        if (resetMatchButton)
+            resetMatchButton.SetActive(true);
     }
     public void ChangeTurn()
     {
 
+        movesLog.Add(currentMoveInfo);
         turnPlayer = turnPlayer == board.playerTop ? board.playerBottom : board.playerTop;
         StartTurn();
     }
@@ -343,6 +509,107 @@ public class CheckersBoardgame : Boardgame
             }
         }
     }
+
+    public void ClearRenders()
+    {
+        if (movementsRender != null)
+            movementsRender.Clear();
+        if (lastMoveRender != null)
+            lastMoveRender.Clear();
+        if (captureRender != null)
+            captureRender.Clear();
+        if (selectedPieceRender != null)
+            selectedPieceRender.Clear();
+    }
+    public void RenderMoves(List<CheckerMove> moves)
+    {
+        if (movementsRender == null)
+            return;
+
+        List<Vector3> pos = new List<Vector3>();
+
+        if (moves != null ? moves.Count != 0 : false)
+        {
+            foreach (Move m in moves)
+            {
+                if (ValidCoordinate(m.end))
+                {
+                    pos.Add(tiles[m.end.x, m.end.y].transform.position);
+                }
+            }
+            movementsRender.RenderSquaresArea(pos, tileRenderScale, tileRenderScale);
+        }
+    }
+
+    public void RenderSelectedPiece(Position pos)
+    {
+        if (selectedPieceRender == null)
+            return;
+        if (ValidCoordinate(pos))
+            selectedPieceRender.RenderSquaresArea(new List<Vector3> { tiles[pos.x, pos.y].transform.position }, tileRenderScale, tileRenderScale);
+
+
+    }
+
+    public void RenderLastTurn()
+    {
+        if (lastMoveRender)
+        {
+            if (movesLog != null ? movesLog.Count > 0 : false)
+            {
+                List<Vector3> positions = new List<Vector3>();
+                List<CheckerMove> moves = movesLog[movesLog.Count - 1].moves;
+                positions.Add(tiles[moves[0].start.x, moves[0].start.y].transform.position);
+                foreach (CheckerMove m in moves)
+                {
+                    Vector3 pos = tiles[m.end.x, m.end.y].transform.position;
+                    if (!positions.Exists(x => x.x == pos.x && x.y == pos.y))
+                        positions.Add(pos);
+                }
+
+                lastMoveRender.RenderSquaresArea(positions, tileRenderScale, tileRenderScale);
+            }
+
+        }
+    }
+
+
+    public void HighlightPieces(List<GameObject> pieceObjs)
+    {
+        if (pieceObjs == null)
+            return;
+        foreach (var obj in pieceObjs)
+        {
+            if (obj == null)
+                continue;
+
+            // Highlight
+        }
+    }
+
+    public void RemovePiecesHighlight()
+    {
+        if (player1PiecesParent != null)
+        {
+            foreach (Transform obj in player1PiecesParent.transform)
+            {
+                if (obj == null)
+                    continue;
+                // Remove highlight
+            }
+        }
+
+        if (player2PiecesParent != null)
+        {
+            foreach (Transform obj in player2PiecesParent.transform)
+            {
+                if (obj == null)
+                    continue;
+                // Remove highlight
+            }
+        }
+    }
+
     public void OnClick(Position pos)
     {
         if (!canClick)
@@ -353,6 +620,22 @@ public class CheckersBoardgame : Boardgame
         if (!board.ValidCoordinate(pos))
             return;
 
+        if (capturing)
+        {
+            List<CheckerMove> moves = selectedPiece.GetPossibleJumps(new List<CheckerMove> { previousCaptureMove });
+            moves.Remove(moves.Find(x => x.end == selectedPiece.pos));
+            foreach (var item in moves)
+            {
+                if (pos == item.end)
+                {
+                    MovePiece(selectedPiece, moves, pos);
+                    movementsRender.Clear();
+                    selectedPieceRender.Clear();
+                }
+            }
+
+            return;
+        }
         if (selectedPiece != null)
         {
             List<CheckerMove> moves = selectedPiece.GetMovements();
@@ -361,6 +644,7 @@ public class CheckersBoardgame : Boardgame
                 if (pos == item.end)
                 {
                     MovePiece(selectedPiece, moves, pos);
+                    return;
                 }
             }
 
@@ -376,29 +660,44 @@ public class CheckersBoardgame : Boardgame
             {
                 selectedPiece = null;
                 movementsRender.Clear();
+                selectedPieceRender.Clear();
             }
             else // Player piece
             {
+                List<Checker> attackPieces = board.GetPiecesWithCapture(turnPlayer);
 
-                List<Vector3> moves = new List<Vector3>();
-                List<CheckerMove> possibleMoves = piece.GetMovements();
-                if (possibleMoves != null ? possibleMoves.Count != 0 : false)
+                // If there are pieces that can attack.
+                if (attackPieces != null ? attackPieces.Count > 0 : false)
                 {
-                    foreach (Move m in possibleMoves)
+                    if (attackPieces.Contains(piece))
                     {
-                        if (ValidCoordinate(m.end))
-                        {
-                            moves.Add(tiles[m.end.x, m.end.y].transform.position);
-                        }
+                        List<CheckerMove> possibleMoves = piece.GetMovements();
+                        RenderMoves(possibleMoves);
+                        selectedPiece = piece;
+                        RenderSelectedPiece(selectedPiece.pos);
                     }
-                    movementsRender.RenderSquaresArea(moves, tileRenderScale);
+                    else
+                    {
+                        movementsRender.Clear();
+                        selectedPieceRender.Clear();
+                    }
                 }
-                else
+                else // No pieces that can attack
                 {
-                    movementsRender.Clear();
-                }
 
-                selectedPiece = piece;
+                    List<CheckerMove> possibleMoves = piece.GetMovements();
+                    if (possibleMoves != null ? possibleMoves.Count != 0 : false)
+                    {
+                        RenderMoves(possibleMoves);
+                    }
+                    else
+                    {
+                        movementsRender.Clear();
+                    }
+
+                    selectedPiece = piece;
+                    RenderSelectedPiece(selectedPiece.pos);
+                }
             }
 
 
@@ -407,6 +706,7 @@ public class CheckersBoardgame : Boardgame
         {
             selectedPiece = null;
             movementsRender.Clear();
+            selectedPieceRender.Clear();
         }
     }
 }

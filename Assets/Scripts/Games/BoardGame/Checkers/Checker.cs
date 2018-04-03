@@ -146,32 +146,7 @@ public class Checker : Piece
 
         if (hasJump) // If there was a jump
         {
-            List<CheckerMove> movesChecked = new List<CheckerMove>();
-            List<Position> jumpedPositions = new List<Position>();
-
-            while (jumpMoves.Count > 0)
-            {
-                CheckerMove current = jumpMoves[0];
-                movesChecked.Add(current);
-                Position delta = new Position(MathOperations.Sign(current.end.x - current.start.x), MathOperations.Sign(current.end.y - current.start.y));
-                if (!jumpedPositions.Exists(x => x == current.end - delta))
-                    jumpedPositions.Add(current.end - delta);
-                jumpMoves.Remove(current);
-                foreach (CheckerMove m in CheckForNextJump(current))
-                {
-
-                    Position checkJump = new Position(((m.end.x + m.start.x) / 2), ((m.end.y + m.start.y) / 2));
-
-                    if (movesChecked.Exists(x => x.start == m.start && x.end == m.end) || jumpedPositions.Exists(x => x == checkJump))
-                        continue;
-                    m.previous = current;
-                    current.next = m;
-                    jumpMoves.Add(m);
-                    jumpedPositions.Add(checkJump);
-
-                }
-            }
-            return movesChecked;
+            return GetPossibleJumps(jumpMoves);
         }
         else
         {
@@ -180,12 +155,56 @@ public class Checker : Piece
 
     }
 
+    public List<CheckerMove> GetPossibleJumps(List<CheckerMove> jumpMoves)
+    {
+        List<CheckerMove> movesChecked = new List<CheckerMove>();
+        List<Position> jumpedPositions = new List<Position>();
+
+        while (jumpMoves.Count > 0)
+        {
+            CheckerMove current = jumpMoves[0];
+            movesChecked.Add(current);
+            Position delta = new Position(MathOperations.Sign(current.end.x - current.start.x), MathOperations.Sign(current.end.y - current.start.y));
+            if (!jumpedPositions.Exists(x => x == current.end - delta))
+                jumpedPositions.Add(current.end - delta);
+            jumpMoves.Remove(current);
+            foreach (CheckerMove m in CheckForNextJump(current.end))
+            {
+
+                Position checkJump = new Position(((m.end.x + m.start.x) / 2), ((m.end.y + m.start.y) / 2));
+
+                if (movesChecked.Exists(x => x.start == m.start && x.end == m.end) || jumpedPositions.Exists(x => x == checkJump))
+                    continue;
+                m.previous = current;
+                current.next = m;
+                jumpMoves.Add(m);
+                jumpedPositions.Add(checkJump);
+
+            }
+        }
+        return movesChecked;
+    }
+
+    public bool HasCapture()
+    {
+        List<CheckerMove> moves = GetMovements();
+        if (moves != null ? moves.Count > 0 : false)
+            foreach (var item in moves)
+            {
+                if (item.isCapture)
+                {
+                    return true;
+                }
+            }
+        return false;
+    }
+
     /// <summary>
     /// Used to find other jumps
     /// </summary>
-    /// <param name="previousMove">The previous move</param>
+    /// <param name="currentPosition">The current position to check</param>
     /// <returns></returns>
-    public virtual List<CheckerMove> CheckForNextJump(CheckerMove previousMove)
+    public virtual List<CheckerMove> CheckForNextJump(Position currentPosition)
     {
         List<CheckerMove> jumpMoves = new List<CheckerMove>();
         for (int i = 0; i < 4; i++)
@@ -218,7 +237,7 @@ public class Checker : Piece
             }
             if (jumpMovement)
             {
-                Position checkPos = new Position(previousMove.end.x + dx, previousMove.end.y + dy);
+                Position checkPos = new Position(currentPosition.x + dx, currentPosition.y + dy);
 
 
                 if (!board.IsPositionEmpty(checkPos))
@@ -233,7 +252,7 @@ public class Checker : Piece
                         // Check if jump is possible
                         if (board.IsPositionEmpty(newPos))
                         {
-                            CheckerMove move = new CheckerMove(previousMove.end, newPos, true);
+                            CheckerMove move = new CheckerMove(currentPosition, newPos, true);
 
                             jumpMoves.Add(move);
                         }

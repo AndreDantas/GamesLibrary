@@ -12,7 +12,7 @@ public struct ChessMoveInfo
 }
 
 [Serializable]
-class BoardSaveData
+class ChessBoardSaveData
 {
     public ChessBoard board;
     public List<ChessMoveInfo> movesLog;
@@ -213,16 +213,16 @@ public class ChessBoardgame : Boardgame
         if (board == null)
             return;
 
-        BoardSaveData save = new BoardSaveData();
+        ChessBoardSaveData save = new ChessBoardSaveData();
         save.board = board;
         save.movesLog = movesLog;
         save.turnPlayer = turnPlayer;
-        SaveLoad.SaveFile("/chessdata.dat", save);
+        SaveLoad.SaveFile("/chess_game1v1_data.dat", save);
     }
 
     public void LoadBoardState()
     {
-        BoardSaveData load = SaveLoad.LoadFile<BoardSaveData>("/chessdata.dat");
+        ChessBoardSaveData load = SaveLoad.LoadFile<ChessBoardSaveData>("/chess_game1v1_data.dat");
         if (load != null)
             if (load.board != null)
             {
@@ -230,7 +230,7 @@ public class ChessBoardgame : Boardgame
             }
     }
 
-    void ReconstructBoard(BoardSaveData data, bool playerVsplayer = true)
+    void ReconstructBoard(ChessBoardSaveData data, bool playerVsplayer = true)
     {
         ClearRenders();
         if (data.board != null)
@@ -247,6 +247,7 @@ public class ChessBoardgame : Boardgame
                 GameObject obj = Instantiate(GetPieceObjectFromType(node.pieceOnNode.type));
                 obj.transform.SetParent(node.pieceOnNode.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
                 obj.transform.localPosition = tiles[node.pos.x, node.pos.y].transform.localPosition;
+                obj.transform.localScale = Vector3.one;
                 tiles[node.pos.x, node.pos.y].chessPiece = obj;
 
                 SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
@@ -605,7 +606,7 @@ public class ChessBoardgame : Boardgame
                 {
                     List<Vector3> positions = new List<Vector3>();
                     positions.Add(tiles[pos.x, pos.y].transform.position);
-                    checkRender.RenderSquaresArea(positions, tileRenderScale);
+                    checkRender.RenderSquaresArea(positions, tileRenderScale, tileRenderScale);
                 }
             }
             else
@@ -630,7 +631,7 @@ public class ChessBoardgame : Boardgame
                 if (ValidCoordinate(move.end))
                     pos.Add(tiles[move.end.x, move.end.y].transform.position);
 
-                lastMoveRender.RenderSquaresArea(pos, tileRenderScale);
+                lastMoveRender.RenderSquaresArea(pos, tileRenderScale, tileRenderScale);
             }
             else
                 lastMoveRender.Clear();
@@ -703,7 +704,7 @@ public class ChessBoardgame : Boardgame
                             moves.Add(tiles[m.end.x, m.end.y].transform.position);
                         }
                     }
-                    movementsRender.RenderSquaresArea(moves, tileRenderScale);
+                    movementsRender.RenderSquaresArea(moves, tileRenderScale, tileRenderScale);
                 }
                 else
                 {

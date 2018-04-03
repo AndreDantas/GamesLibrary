@@ -77,7 +77,7 @@ public class ChessPanel : GamePanel
         {
             chessObject.transform.position = new Vector3(end.x + MathOperations.ScreenWidth, chessObject.transform.position.y, chessObject.transform.position.z);
             chessObject.SetActive(true);
-            if (!chessBoardGame.board.isInit)
+            if (chessBoardGame.board != null ? !chessBoardGame.board.isInit : true)
             {
                 chessBoardGame.PrepareGame1vs1();
             }
