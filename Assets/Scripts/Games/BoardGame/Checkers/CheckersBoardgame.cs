@@ -24,12 +24,11 @@ class CheckerBoardSaveData
     public bool capturing;
     public Checker selectedPiece;
     public CheckerMove previousCaptureMove;
+    public CheckersSettingsData settings;
 }
 public class CheckersBoardgame : Boardgame
 {
-    [Header("Game Settings")]
-    public int rowsWithPieces = 3;
-    public int normalPiecesMoveDistance = 1;
+    protected CheckersSettingsData gameSettings;
     [Header("Tile Settings")]
     public GameObject tilePrefab;
     public Color lightTile = Color.white;
@@ -74,8 +73,10 @@ public class CheckersBoardgame : Boardgame
     }
     public void PrepareGame()
     {
-
+        gameSettings = new CheckersSettingsData(CheckersSettings.instance.settings);
         // Board settings
+        columns = gameSettings.columns;
+        rows = gameSettings.rows;
         board = new CheckersBoard();
         board.columns = columns;
         board.rows = rows;
@@ -102,7 +103,7 @@ public class CheckersBoardgame : Boardgame
     {
         if (board == null ? true : board.nodes == null)
             return;
-        int rowsWithPieces = this.rowsWithPieces;
+        int rowsWithPieces = gameSettings.piecesByRow;
         if (rowsWithPieces >= rows / 2)
             rowsWithPieces = (rows / 2) - 1;
         if (rowsWithPieces <= 0)
@@ -117,7 +118,8 @@ public class CheckersBoardgame : Boardgame
                 Position pos = new Position(oddRow ? j : j + 1, i);
                 Checker c = new Checker(pos);
                 c.player = board.playerBottom;
-                c.moveDistance = normalPiecesMoveDistance;
+                c.moveDistance = gameSettings.pieceMoveDistance;
+                c.jumpMovement = new DiagonalMovement(true, true, gameSettings.multiDirectionalCapture, gameSettings.multiDirectionalCapture);
                 GeneratePiece(c, pos);
             }
         }
@@ -131,9 +133,9 @@ public class CheckersBoardgame : Boardgame
                 Position pos = new Position(oddRow ? j : j + 1, i);
                 Checker c = new Checker(pos);
                 c.normalMovement = new DiagonalMovement(false, false, true, true);
-                c.jumpMovement = new DiagonalMovement(false, false, true, true);
+                c.jumpMovement = new DiagonalMovement(gameSettings.multiDirectionalCapture, gameSettings.multiDirectionalCapture, true, true);
                 c.player = board.playerTop;
-                c.moveDistance = normalPiecesMoveDistance;
+                c.moveDistance = gameSettings.pieceMoveDistance;
                 GeneratePiece(c, pos, true);
             }
         }
@@ -250,6 +252,7 @@ public class CheckersBoardgame : Boardgame
         save.capturing = capturing;
         save.selectedPiece = selectedPiece;
         save.previousCaptureMove = previousCaptureMove;
+        save.settings = new CheckersSettingsData(gameSettings);
         SaveLoad.SaveFile("/checkers_game1v1_data.dat", save);
     }
 
@@ -270,6 +273,10 @@ public class CheckersBoardgame : Boardgame
         if (data.board != null)
         {
             board = data.board;
+
+            gameSettings = data.settings;
+            columns = gameSettings.columns;
+            rows = gameSettings.rows;
             movesLog = data.movesLog;
             turnPlayer = data.turnPlayer;
             capturing = data.capturing;
@@ -540,7 +547,7 @@ public class CheckersBoardgame : Boardgame
         if (c == null)
             return;
         c.isKing = true;
-        c.moveDistance = 99;
+        c.moveDistance = gameSettings.kingInfiniteMoveDistance ? 99 : gameSettings.pieceMoveDistance;
         c.normalMovement = new DiagonalMovement(true, true, true, true);
         c.jumpMovement = new DiagonalMovement(true, true, true, true);
     }

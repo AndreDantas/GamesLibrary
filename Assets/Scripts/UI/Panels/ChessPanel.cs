@@ -106,9 +106,9 @@ public class ChessPanel : GamePanel
     /// </summary>
     public void LoadOptions()
     {
-        if (PlayerPrefs.HasKey("flipPieces"))
+        if (PlayerPrefs.HasKey("chess_flipPieces"))
         {
-            optionsSettings.flipPieces = PlayerPrefs.GetInt("flipPieces") == 1 ? true : false;
+            optionsSettings.flipPieces = PlayerPrefs.GetInt("chess_flipPieces") == 1 ? true : false;
 
         }
     }
@@ -118,7 +118,7 @@ public class ChessPanel : GamePanel
     /// </summary>
     public void SaveOptions()
     {
-        PlayerPrefs.SetInt("flipPieces", optionsSettings.flipPieces ? 1 : 0);
+        PlayerPrefs.SetInt("chess_flipPieces", optionsSettings.flipPieces ? 1 : 0);
 
     }
 

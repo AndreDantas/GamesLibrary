@@ -27,6 +27,11 @@ public struct DiagonalMovement
         bottomRight = other.bottomRight;
         bottomLeft = other.bottomLeft;
     }
+
+    public DiagonalMovement(bool value)
+    {
+        topLeft = topRight = bottomLeft = bottomRight = value;
+    }
 }
 [System.Serializable]
 public class Checker : Piece
