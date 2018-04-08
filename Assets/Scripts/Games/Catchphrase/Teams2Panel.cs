@@ -14,16 +14,24 @@ public class Teams2Panel : GamePanel
 
     public TeamInputInfo team1;
     public TeamInputInfo team2;
-    public InputField roundsInput;
-    public InputField roundTimeInput;
+    public ValueSelectUI roundsInput;
+    public ValueSelectUI roundTimeInput;
     public CatchphrasePanel gamePanel;
 
     public override IEnumerator Enter()
     {
         if (roundsInput)
-            roundsInput.text = "2";
+        {
+            roundsInput.maxValue = 7;
+            roundsInput.value = 2;
+            roundsInput.minValue = 1;
+        }
         if (roundTimeInput)
-            roundTimeInput.text = "30";
+        {
+            roundTimeInput.maxValue = 180;
+            roundTimeInput.value = 30;
+            roundTimeInput.minValue = 15;
+        }
         yield return base.Enter();
 
     }
@@ -36,8 +44,8 @@ public class Teams2Panel : GamePanel
 
         int rounds;
         int roundTime;
-        int.TryParse(roundTimeInput != null ? roundTimeInput.text.Trim() != "" ? roundTimeInput.text : "30" : "30", out roundTime);
-        int.TryParse(roundsInput != null ? roundsInput.text.Trim() != "" ? roundsInput.text : "1" : "1", out rounds);
+        roundTime = roundTimeInput != null ? roundTimeInput.value : 30;
+        rounds = roundsInput != null ? roundsInput.value : 30;
         List<TeamInfo> team = new List<TeamInfo>();
 
         TeamInfo temp = new TeamInfo();
@@ -55,22 +63,5 @@ public class Teams2Panel : GamePanel
         gamePanel.SetGameStats(team, rounds, roundTime);
     }
 
-    public void ValidateRoundInput(string input)
-    {
-        int n = 0;
-        int.TryParse(input, out n);
-        n = Mathf.Clamp(n, 1, CatchphrasePanel.MAX_ROUNDS);
-        if (roundsInput)
-            roundsInput.text = n.ToString();
-    }
-
-    public void ValidateRoundTimeInput(string input)
-    {
-        int n = 0;
-        int.TryParse(input, out n);
-        n = Mathf.Clamp(n, 10, 300);
-        if (roundTimeInput)
-            roundTimeInput.text = n.ToString();
-    }
 
 }

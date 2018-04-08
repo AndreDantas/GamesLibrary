@@ -25,8 +25,10 @@ public class BuildGridUI : MonoBehaviour
         if (tilePrefabs == null ? true : tilePrefabs.Count == 0)
             return;
         if (tilesParent != null)
+        {
             tilesParent.transform.DestroyChildren();
-
+            Destroy(tilesParent);
+        }
         columns = MathOperations.ClampMin(columns, 1);
         rows = MathOperations.ClampMin(rows, 1);
 
@@ -66,7 +68,7 @@ public class BuildGridUI : MonoBehaviour
 
                 rect.SetParent(tilesParent.transform);
                 rect.localScale = Vector3.one;
-                rect.localPosition = new Vector3(i * tilesWidth + tilesWidth / 2f - (columns * tilesWidth) / 2f,
+                rect.anchoredPosition = new Vector3(i * tilesWidth + tilesWidth / 2f - (columns * tilesWidth) / 2f,
                                                 j * tilesHeight + tilesHeight / 2f - (rows * tilesHeight) / 2f, tilesParent.transform.localPosition.z);
                 rect.sizeDelta = new Vector2(tilesWidth, tilesHeight);
 

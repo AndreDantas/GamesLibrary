@@ -39,7 +39,6 @@ public class ChessBoardgame : Boardgame
     public AreaRangeRenderer checkRender;
     public AreaRangeRenderer lastMoveRender;
     public TextMeshProUGUI victoryMsg;
-    public GameObject resetMatchButton;
     public GameObject promotionObj;
     [SerializeField]
     private float tileRenderScale = 0.89f;
@@ -77,11 +76,6 @@ public class ChessBoardgame : Boardgame
         ChangeTileColor();
     }
 
-    /*
-     * Finish extra rules for each piece.
-     * Recover lost pieces.
-     * Player score.
-     */
 #if UNITY_EDITOR
     protected void OnDrawGizmosSelected()
     {
@@ -247,7 +241,7 @@ public class ChessBoardgame : Boardgame
                 GameObject obj = Instantiate(GetPieceObjectFromType(node.pieceOnNode.type));
                 obj.transform.SetParent(node.pieceOnNode.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
                 obj.transform.localPosition = tiles[node.pos.x, node.pos.y].transform.localPosition;
-                obj.transform.localScale = Vector3.one;
+                //obj.transform.localScale = Vector3.one;
                 tiles[node.pos.x, node.pos.y].chessPiece = obj;
 
                 SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
@@ -467,8 +461,6 @@ public class ChessBoardgame : Boardgame
 
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
-        if (resetMatchButton)
-            resetMatchButton.SetActive(false);
 
         if (CheckForCheckmate())
         {
@@ -554,8 +546,6 @@ public class ChessBoardgame : Boardgame
             victoryMsg.gameObject.SetActive(true);
         }
 
-        if (resetMatchButton)
-            resetMatchButton.SetActive(true);
         if (OnEnd != null)
             OnEnd();
     }

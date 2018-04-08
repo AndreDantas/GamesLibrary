@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckersPanel : GamePanel {
+public class CheckersPanel : GamePanel
+{
 
     public CheckersBoardgame checkersBoardgame;
     public GameObject checkersObject;
@@ -29,7 +30,7 @@ public class CheckersPanel : GamePanel {
 
         if (checkersOptions.activeSelf == false)
             return;
-            
+
         checkersOptions.SetActive(false);
         ObjectFocus focus = FindObjectOfType<ObjectFocus>();
         if (focus)
@@ -47,6 +48,7 @@ public class CheckersPanel : GamePanel {
 
         if (checkersObject)
             checkersObject.SetActive(false);
+        CloseCheckersOptions();
         moving = true;
 
         foreach (GameObject obj in panelObjects)
@@ -83,7 +85,7 @@ public class CheckersPanel : GamePanel {
     {
         if (moving)
             yield break;
-
+        CloseCheckersOptions();
         moving = true;
         checkersBoardgame.canClick = false;
         Vector2 start = screenCenter;

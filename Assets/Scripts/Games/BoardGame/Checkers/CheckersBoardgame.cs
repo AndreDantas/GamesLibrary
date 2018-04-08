@@ -49,7 +49,6 @@ public class CheckersBoardgame : Boardgame
     public AreaRangeRenderer lastMoveRender;
     public AreaRangeRenderer selectedPieceRender;
     public TextMeshProUGUI victoryMsg;
-    public GameObject resetMatchButton;
     public bool canClick = true;
     public List<CheckersMoveInfo> movesLog;
     private CheckersMoveInfo currentMoveInfo;
@@ -501,8 +500,7 @@ public class CheckersBoardgame : Boardgame
         }
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
-        if (resetMatchButton)
-            resetMatchButton.SetActive(false);
+
         if (CheckForDefeat())
         {
             EndGame();
@@ -523,8 +521,6 @@ public class CheckersBoardgame : Boardgame
             victoryMsg.gameObject.SetActive(true);
         }
 
-        if (resetMatchButton)
-            resetMatchButton.SetActive(true);
     }
     public void ChangeTurn()
     {

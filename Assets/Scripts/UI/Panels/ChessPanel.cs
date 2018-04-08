@@ -14,7 +14,6 @@ public class ChessPanel : GamePanel
 
     public ChessBoardgame chessBoardGame;
     public GameObject chessObject;
-    public GamePanel mainMenu;
     public GameObject chessOptions;
 
     public Toggle flipPieces;

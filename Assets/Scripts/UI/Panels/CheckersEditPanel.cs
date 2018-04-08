@@ -15,10 +15,7 @@ public class CheckersEditPanel : GamePanel
     {
         { "6x6", 6},
         { "8x8", 8 },
-        { "10x10", 10 },
-        { "12x12", 12 },
-        { "14x14", 14 },
-        { "16x16", 16 }
+        { "10x10", 10 }
     };
     private readonly List<int> boardSizeIndex = new List<int>();
     public ValueSelectUI piecesByRow;

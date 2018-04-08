@@ -13,6 +13,7 @@ public class OnValueSelectChanged : UnityEvent<int>
 public class ValueSelectUI : MonoBehaviour
 {
     public TextMeshProUGUI valueText;
+    public string valueUnit = "";
     [SerializeField]
     int _maxValue;
     public int maxValue
@@ -97,15 +98,15 @@ public class ValueSelectUI : MonoBehaviour
         {
             RectTransform rect = increaseButton.transform as RectTransform;
             increaseButton.SetActive(!(value == maxValue));
-            rect.anchoredPosition = new Vector2(10f, 0f);
+            // rect.anchoredPosition = new Vector2(10f, 0f);
         }
         if (decreaseButton)
         {
             RectTransform rect = decreaseButton.transform as RectTransform;
             decreaseButton.SetActive(!(value == minValue));
-            rect.anchoredPosition = new Vector2(-10f, 0f);
+            //rect.anchoredPosition = new Vector2(-10f, 0f);
         }
         if (valueText)
-            valueText.text = value.ToString();
+            valueText.text = value.ToString() + valueUnit.Trim();
     }
 }
