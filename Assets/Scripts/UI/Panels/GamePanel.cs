@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GamePanel : MonoBehaviour
 {
+    
     /// <summary>
     /// The panel's animation time.
     /// </summary>

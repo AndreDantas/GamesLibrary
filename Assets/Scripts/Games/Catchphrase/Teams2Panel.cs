@@ -30,7 +30,7 @@ public class Teams2Panel : GamePanel
         {
             roundTimeInput.maxValue = 180;
             roundTimeInput.value = 30;
-            roundTimeInput.minValue = 15;
+            roundTimeInput.minValue = 20;
         }
         yield return base.Enter();
 

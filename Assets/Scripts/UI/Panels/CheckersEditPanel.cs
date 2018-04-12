@@ -101,7 +101,7 @@ public class CheckersEditPanel : GamePanel
     private void PiecesByRowChanged(int value)
     {
         settings.piecesByRow = value;
-        settings.piecesByRow = MathOperations.ClampMin(settings.piecesByRow, 1);
+        settings.piecesByRow = UtilityFunctions.ClampMin(settings.piecesByRow, 1);
     }
 
 
@@ -117,7 +117,7 @@ public class CheckersEditPanel : GamePanel
     private void PiecesMovementDistanceChanged(int value)
     {
         settings.pieceMoveDistance = value;
-        settings.pieceMoveDistance = MathOperations.ClampMin(settings.pieceMoveDistance, 1);
+        settings.pieceMoveDistance = UtilityFunctions.ClampMin(settings.pieceMoveDistance, 1);
     }
 
     public void ResetSettings()

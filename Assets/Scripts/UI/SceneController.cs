@@ -69,6 +69,18 @@ public class SceneController : MonoBehaviour
         StartCoroutine(IEChangePanel(other));
     }
 
+    public static void LockPanel()
+    {
+        if (instance)
+            instance.canMove = false;
+    }
+
+    public static void UnlockPanel()
+    {
+        if (instance)
+            instance.canMove = true;
+    }
+
     public IEnumerator IEChangePanel(GamePanel other)
     {
 

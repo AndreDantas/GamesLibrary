@@ -13,7 +13,6 @@ public class BackgroundScroll : MonoBehaviour
     public bool scrollX = false;
     public bool scrollY = true;
 
-
     void Start()
     {
         if (background == null)

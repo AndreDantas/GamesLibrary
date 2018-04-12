@@ -107,7 +107,7 @@ public class Checker : Piece
             if (normalMovement || jumpMovement)
                 for (int j = 0; j < moveDistance; j++)
                 {
-                    Position checkPos = new Position(pos.x + (j + 1) * MathOperations.Sign(dx), pos.y + (j + 1) * MathOperations.Sign(dy));
+                    Position checkPos = new Position(pos.x + (j + 1) * UtilityFunctions.Sign(dx), pos.y + (j + 1) * UtilityFunctions.Sign(dy));
                     // Movement blocked
                     if (!board.IsPositionEmpty(checkPos))
                     {
@@ -159,7 +159,7 @@ public class Checker : Piece
         {
             CheckerMove current = jumpMoves[0];
             movesChecked.Add(current);
-            Position delta = new Position(MathOperations.Sign(current.end.x - current.start.x), MathOperations.Sign(current.end.y - current.start.y));
+            Position delta = new Position(UtilityFunctions.Sign(current.end.x - current.start.x), UtilityFunctions.Sign(current.end.y - current.start.y));
             if (!jumpedPositions.Exists(x => x == current.end - delta))
                 jumpedPositions.Add(current.end - delta);
             jumpMoves.Remove(current);

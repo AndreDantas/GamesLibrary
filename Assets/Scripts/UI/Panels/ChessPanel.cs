@@ -74,7 +74,7 @@ public class ChessPanel : GamePanel
 
         if (chessObject)
         {
-            chessObject.transform.position = new Vector3(end.x + MathOperations.ScreenWidth, chessObject.transform.position.y, chessObject.transform.position.z);
+            chessObject.transform.position = new Vector3(end.x + UtilityFunctions.ScreenWidth, chessObject.transform.position.y, chessObject.transform.position.z);
             chessObject.SetActive(true);
             if (chessBoardGame.board != null ? !chessBoardGame.board.isInit : true)
             {
@@ -156,7 +156,7 @@ public class ChessPanel : GamePanel
         {
             chessObject.transform.position = new Vector3(start.x, chessObject.transform.position.y, chessObject.transform.position.z);
             chessObject.SetActive(true);
-            chessObject.transform.MoveTo(new Vector3(start.x - MathOperations.ScreenWidth, chessObject.transform.position.y, chessObject.transform.position.z), animTime);
+            chessObject.transform.MoveTo(new Vector3(start.x - UtilityFunctions.ScreenWidth, chessObject.transform.position.y, chessObject.transform.position.z), animTime);
             yield return new WaitForSeconds(animTime / 2f);
         }
 

@@ -113,7 +113,10 @@ public class ChessBoardgame : Boardgame
         FlipDarkSidePieces(darkPiecesFlipped);
         StartTurn();
     }
-
+    public void ConfirmRestartMatch()
+    {
+        ModalWindow.Choice("Reiniciar jogo?", PrepareGame1vs1);
+    }
     public void FlipDarkSidePieces(bool flip)
     {
         if (darkPiecesParent == null)
@@ -164,7 +167,7 @@ public class ChessBoardgame : Boardgame
             SpriteRenderer sr;
             GameObject tile;
 
-            float width = MathOperations.ScreenWidth;
+            float width = UtilityFunctions.ScreenWidth;
             tileRenderScale = width / columns;
             transform.localScale = Vector3.one * (width / columns);
             tiles = new ChessTile[columns, rows];
@@ -217,11 +220,16 @@ public class ChessBoardgame : Boardgame
     public void LoadBoardState()
     {
         ChessBoardSaveData load = SaveLoad.LoadFile<ChessBoardSaveData>("/chess_game1v1_data.dat");
-        if (load != null)
-            if (load.board != null)
-            {
-                ReconstructBoard(load);
-            }
+        if (load != null ? load.board != null : false)
+        {
+            ReconstructBoard(load);
+        }
+        else
+            ModalWindow.Message("Sem jogos salvos.");
+    }
+    public void ConfirmBoardLoad()
+    {
+        ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
     }
 
     void ReconstructBoard(ChessBoardSaveData data, bool playerVsplayer = true)

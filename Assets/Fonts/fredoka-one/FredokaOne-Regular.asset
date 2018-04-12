@@ -11,19 +11,19 @@ MonoBehaviour:
   m_Script: {fileID: -667331979, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
   m_Name: FredokaOne-Regular
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: 1788584451
   material: {fileID: 21103987876316602}
-  materialHashCode: 0
+  materialHashCode: 1110708392
   fontAssetType: 2
   m_fontInfo:
     Name: Fredoka One
     PointSize: 93
-    Scale: 0
+    Scale: 1
     CharacterCount: 206
     LineHeight: 113
     Baseline: 0
     Ascender: 91
-    CapHeight: 0
+    CapHeight: 69
     Descender: -22
     CenterLine: 0
     SuperscriptOffset: 91
@@ -33,7 +33,7 @@ MonoBehaviour:
     UnderlineThickness: 4.65
     strikethrough: 25.09091
     strikethroughThickness: 4.65
-    TabWidth: 0
+    TabWidth: 240
     Padding: 5
     AtlasWidth: 1024
     AtlasHeight: 1024
@@ -42,10 +42,10 @@ MonoBehaviour:
   - id: 32
     x: 5
     y: 1019
-    width: 0
-    height: 0
+    width: 24
+    height: 113
     xOffset: 0
-    yOffset: 0
+    yOffset: 91
     xAdvance: 24
     scale: 1
   - id: 33

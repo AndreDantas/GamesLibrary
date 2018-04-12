@@ -66,7 +66,7 @@ public class CheckersPanel : GamePanel
 
         if (checkersObject)
         {
-            checkersObject.transform.position = new Vector3(end.x + MathOperations.ScreenWidth, checkersObject.transform.position.y, checkersObject.transform.position.z);
+            checkersObject.transform.position = new Vector3(end.x + UtilityFunctions.ScreenWidth, checkersObject.transform.position.y, checkersObject.transform.position.z);
             checkersObject.SetActive(true);
             if (checkersBoardgame != null ? !checkersBoardgame.board.isInit : true)
             {
@@ -95,7 +95,7 @@ public class CheckersPanel : GamePanel
         {
             checkersObject.transform.position = new Vector3(start.x, checkersObject.transform.position.y, checkersObject.transform.position.z);
             checkersObject.SetActive(true);
-            checkersObject.transform.MoveTo(new Vector3(start.x - MathOperations.ScreenWidth, checkersObject.transform.position.y, checkersObject.transform.position.z), animTime);
+            checkersObject.transform.MoveTo(new Vector3(start.x - UtilityFunctions.ScreenWidth, checkersObject.transform.position.y, checkersObject.transform.position.z), animTime);
             yield return new WaitForSeconds(animTime / 2f);
         }
 

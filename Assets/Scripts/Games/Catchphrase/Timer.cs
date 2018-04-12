@@ -42,7 +42,7 @@ public class Timer : MonoBehaviour
 
             if (beepSound)
             {
-                if (beepCount > MathOperations.Map(0f, countdown, beepRateMin, beepRateMax, currentTime))
+                if (beepCount > UtilityFunctions.Map(0f, countdown, beepRateMin, beepRateMax, currentTime))
                 {
                     beepCount = 0;
                     if (beepOn)

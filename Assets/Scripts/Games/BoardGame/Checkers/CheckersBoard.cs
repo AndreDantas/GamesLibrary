@@ -37,8 +37,8 @@ public class CheckersBoard : Board
     }
     private void OnValidate()
     {
-        rows = MathOperations.ClampMin(rows, 1);
-        columns = MathOperations.ClampMin(columns, 1);
+        rows = UtilityFunctions.ClampMin(rows, 1);
+        columns = UtilityFunctions.ClampMin(columns, 1);
     }
     public override void InitBoard()
     {
@@ -233,7 +233,7 @@ public class CheckersBoard : Board
         List<Checker> captured = new List<Checker>();
         foreach (CheckerMove m in moves)
         {
-            Position delta = new Position(MathOperations.Sign(m.end.x - m.start.x), MathOperations.Sign(m.end.y - m.start.y));
+            Position delta = new Position(UtilityFunctions.Sign(m.end.x - m.start.x), UtilityFunctions.Sign(m.end.y - m.start.y));
             Position capturedPiece = m.end - delta;
             Move(m);
             captured.Add(GetPiece(capturedPiece));

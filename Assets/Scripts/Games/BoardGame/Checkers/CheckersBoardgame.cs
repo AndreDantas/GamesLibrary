@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-// Make promotion
-// Highlight attack pieces
-// Checkers's rules
 
 [Serializable]
 public struct CheckersMoveInfo
@@ -48,6 +45,7 @@ public class CheckersBoardgame : Boardgame
     public AreaRangeRenderer captureRender;
     public AreaRangeRenderer lastMoveRender;
     public AreaRangeRenderer selectedPieceRender;
+    [Space(10)]
     public TextMeshProUGUI victoryMsg;
     public bool canClick = true;
     public List<CheckersMoveInfo> movesLog;
@@ -96,6 +94,10 @@ public class CheckersBoardgame : Boardgame
         selectedPiece = null;
 
         StartTurn();
+    }
+    public void ConfirmRestartMatch()
+    {
+        ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
     }
 
     public void PlacePieces()
@@ -200,7 +202,7 @@ public class CheckersBoardgame : Boardgame
 
             float columns = this.columns;
             float rows = this.rows;
-            float width = MathOperations.ScreenWidth;
+            float width = UtilityFunctions.ScreenWidth;
             tileRenderScale = (width * 1.0f) / (columns * 1.0f);
             transform.localScale = Vector3.one * ((width * 1.0f) / (columns * 1.0f));
             tiles = new CheckerTile[this.columns, this.rows];
@@ -238,7 +240,7 @@ public class CheckersBoardgame : Boardgame
             }
         }
     }
-
+    #region Save and Load
     public void SaveBoardState()
     {
         if (board == null)
@@ -255,14 +257,22 @@ public class CheckersBoardgame : Boardgame
         SaveLoad.SaveFile("/checkers_game1v1_data.dat", save);
     }
 
+    public void ConfirmBoardLoad()
+    {
+        ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
+    }
+
+
     public void LoadBoardState()
     {
         CheckerBoardSaveData load = SaveLoad.LoadFile<CheckerBoardSaveData>("/checkers_game1v1_data.dat");
-        if (load != null)
-            if (load.board != null)
-            {
-                ReconstructBoard(load);
-            }
+        if (load != null ? load.board != null : false)
+        {
+            ReconstructBoard(load);
+        }
+        else
+            ModalWindow.Message("Sem jogos salvos.");
+
     }
 
 
@@ -331,7 +341,7 @@ public class CheckersBoardgame : Boardgame
             canClick = true;
         }
     }
-
+    #endregion
     public bool ValidCoordinate(Position pos)
     {
         int x = pos.x;
@@ -450,7 +460,7 @@ public class CheckersBoardgame : Boardgame
 
                     yield return new WaitForSeconds(0.1f);
                     tiles[move.start.x, move.start.y].checkerPiece = null;
-                    Position delta = new Position(MathOperations.Sign(move.end.x - move.start.x), MathOperations.Sign(move.end.y - move.start.y));
+                    Position delta = new Position(UtilityFunctions.Sign(move.end.x - move.start.x), UtilityFunctions.Sign(move.end.y - move.start.y));
                     Position captured = move.end - delta;
                     if (tiles[captured.x, captured.y].checkerPiece != null)
                     {

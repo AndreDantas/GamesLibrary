@@ -45,7 +45,7 @@ public class ValueSelectUI : MonoBehaviour
                 return;
 
             _minValue = value;
-            _minValue = MathOperations.ClampMax(_minValue, _maxValue);
+            _minValue = UtilityFunctions.ClampMax(_minValue, _maxValue);
             UpdateUI();
         }
     }
@@ -74,7 +74,7 @@ public class ValueSelectUI : MonoBehaviour
     public OnValueSelectChanged OnValueChanged;
     private void OnValidate()
     {
-        minValue = MathOperations.ClampMax(minValue, maxValue);
+        minValue = UtilityFunctions.ClampMax(minValue, maxValue);
         value = Mathf.Clamp(value, minValue, maxValue);
         UpdateUI();
     }
@@ -96,17 +96,15 @@ public class ValueSelectUI : MonoBehaviour
 
         if (increaseButton)
         {
-            RectTransform rect = increaseButton.transform as RectTransform;
             increaseButton.SetActive(!(value == maxValue));
-            // rect.anchoredPosition = new Vector2(10f, 0f);
+
         }
         if (decreaseButton)
         {
-            RectTransform rect = decreaseButton.transform as RectTransform;
             decreaseButton.SetActive(!(value == minValue));
-            //rect.anchoredPosition = new Vector2(-10f, 0f);
+
         }
         if (valueText)
-            valueText.text = value.ToString() + valueUnit.Trim();
+            valueText.text = value.ToString() + valueUnit;
     }
 }

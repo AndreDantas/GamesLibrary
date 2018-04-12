@@ -50,8 +50,8 @@ public class ChessBoard : Board
 
     private void OnValidate()
     {
-        rows = MathOperations.ClampMin(rows, 1);
-        columns = MathOperations.ClampMin(columns, 1);
+        rows = UtilityFunctions.ClampMin(rows, 1);
+        columns = UtilityFunctions.ClampMin(columns, 1);
     }
 
 

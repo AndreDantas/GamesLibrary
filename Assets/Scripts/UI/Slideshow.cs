@@ -70,7 +70,7 @@ public class Slideshow : MonoBehaviour
         if (panels == null ? true : panels.Count == 0)
             return;
 
-        int dir = MathOperations.Sign(direction);
+        int dir = UtilityFunctions.Sign(direction);
         if (!cycle)
         {
             if (index + dir < panels.Count && index + dir >= 0)
