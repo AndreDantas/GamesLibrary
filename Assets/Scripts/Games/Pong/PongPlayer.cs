@@ -2,14 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RacketController : MonoBehaviour
+public class PongPlayer : MonoBehaviour
 {
+    /// <summary>
+    /// The player's racket.
+    /// </summary>
     public Racket racket;
+
     public float edgesDistance = 0.1f;
+    /// <summary>
+    /// The touch area for player movement.
+    /// </summary>
     [HideInInspector]
     public Bounds touchArea;
-
+    public bool controlOn { get; set; }
     Vector3 velocity;
+
+    private void Start()
+    {
+        if (racket)
+            racket.player = this;
+    }
     private void OnEnable()
     {
         StartCoroutine(IEOnEnable());
@@ -17,20 +30,29 @@ public class RacketController : MonoBehaviour
 
     private void OnDisable()
     {
-        ScreenTouch.instance.OnScreenTouch -= OnScreenTouch;
-        ScreenTouch.instance.OnScreenClickHold -= OnMouseHold;
+        if (Application.platform == RuntimePlatform.Android)
+            ScreenTouch.instance.OnScreenTouch -= OnScreenTouch;
+        else
+            ScreenTouch.instance.OnScreenClickHold -= OnMouseHold;
     }
 
     IEnumerator IEOnEnable()
     {
         yield return null;
-        ScreenTouch.instance.OnScreenTouch += OnScreenTouch;
-        ScreenTouch.instance.OnScreenClickHold += OnMouseHold;
+        if (Application.platform == RuntimePlatform.Android)
+            ScreenTouch.instance.OnScreenTouch += OnScreenTouch;
+        else
+            ScreenTouch.instance.OnScreenClickHold += OnMouseHold;
     }
 
-
+    /// <summary>
+    /// Moves the racket on the X axis.
+    /// </summary>
+    /// <param name="position"></param>
     public void MoveRacket(Vector2 position)
     {
+        if (!controlOn)
+            return;
         Vector3 movePos = new Vector3(Mathf.Clamp(position.x,
                                                       -UtilityFunctions.ScreenWidth / 2f + racket.transform.localScale.x / 2f + edgesDistance,
                                                       UtilityFunctions.ScreenWidth / 2f - racket.transform.localScale.x / 2f - edgesDistance),

@@ -52,7 +52,7 @@ public class ChangeToRandomColor : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         if (random)
         {

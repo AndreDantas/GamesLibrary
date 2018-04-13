@@ -19,4 +19,17 @@ public class SpriteSwap : MonoBehaviour
 
     }
 
+    public void SetSprite(int index)
+    {
+        if (sprites != null ? sprites.Count > 0 : false)
+        {
+            if (index >= 0 && index < sprites.Count)
+            {
+                image.sprite = sprites[index];
+            }
+
+        }
+    }
+
+
 }

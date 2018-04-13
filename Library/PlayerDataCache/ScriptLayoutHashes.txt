@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/Catchphrase/Builds/Pong v1.0.apk
+D:/Andre Dantas/Unity/Catchphrase/Builds/Pong v1.1.apk
 SceneListBegin?
 Assets/Scenes/Pong.unity
 SceneListEnd?
@@ -24,6 +24,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 95f3668a2dbe05788c12eb40b7a8f89c Assembly-CSharp.dll:.ChessPanel
 f67370d91662359dc6d9bbd124fbb624 Assembly-CSharp.dll:.CheckersPanel
 bc0e0ff8f430b648fb7011e37dec62dd Assembly-CSharp.dll:.PickAColor
+522a54c90041cdf6681e20f5e9bd75e8 Assembly-CSharp.dll:.Ball
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 49cd62a578efc0a599b810a2b66cd49c UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -156,7 +157,7 @@ e831d4d75df3b9952af6ac5127a97df5 Assembly-CSharp.dll:.BackgroundScroll
 50a0fa002cfc67638c87a901e46b763e Assembly-CSharp.dll:TMPro.Examples.TMP_TextSelector_B
 245ffd2bfae059384af51b496a3eb2bb Assembly-CSharp.dll:.ScorePanel
 767ebd513e0d9db138ba3cb80ce17486 Assembly-CSharp.dll:.CheckerTile
-28f77ad8c4e17b79dc84a04cf2c9aa8c Assembly-CSharp.dll:.ImageRandomColorChange
+0020613b61aab8a5e27233c4669b1ce5 Assembly-CSharp.dll:.ImageRandomColorChange
 020550babdb991365f61c5bffe1f4f52 Assembly-CSharp.dll:TMPro.Examples.Benchmark03
 56b19cd414a98339e6b6b737a7415a3d Assembly-CSharp.dll:.MenuPanel
 56b19cd414a98339e6b6b737a7415a3d Assembly-CSharp.dll:.GamePanel
@@ -242,12 +243,12 @@ e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 aa9d1bd0cc771545f2ae1f63a6d0ed6a Assembly-CSharp.dll:TMPro.Examples.TMP_TextEventCheck
-6145d3504737f929e3820125afad74dd Assembly-CSharp.dll:.RacketController
+6145d3504737f929e3820125afad74dd Assembly-CSharp.dll:.PongPlayer
 9e0ef5bf862444b5dc48b5a99554ce7c UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioListenerExtension
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-d0bccba90a9e1f3a6748f419e98de87c Assembly-CSharp.dll:.PongGameController
+5638c52dc9b2fd2408023c4a67df4ced Assembly-CSharp.dll:.PongGameController
 f0f0ab6b8a39d0572cfa4ea315d84fbf Assembly-CSharp.dll:TMPro.Examples.Benchmark04
 29273f491d11f6bdd02a43a9d8df84c7 Assembly-CSharp.dll:TMPro.Examples.TMP_ExampleScript_01
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
@@ -264,7 +265,7 @@ cd0b45d4db7647cb03c1c58b5daf1c2b Assembly-CSharp.dll:.CatchphraseController
 75cd0c6c744b9733ef29aa6c59ece2b1 Assembly-CSharp.dll:TMPro.Examples.VertexShakeB
 afc52d27c3ec0bd47909e81bd45fbffa Assembly-CSharp.dll:TMPro.TMP_TextEventHandler
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.Examples.VertexColorCycler
-34a2de343bf57976a62679446ac0b2e5 Assembly-CSharp.dll:.Racket
+908b6b09d7f6946d9c41cd57594f3342 Assembly-CSharp.dll:.Racket
 020550babdb991365f61c5bffe1f4f52 Assembly-CSharp.dll:TMPro.Examples.TextMeshSpawner
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ScreenTouch
 a69b3ee0402770d02d1c122324e4b00e Assembly-CSharp.dll:TMPro.Examples.SkewTextExample
@@ -273,4 +274,5 @@ c2f5ce41cd75e17442b437e3b9dbb6b0 Assembly-CSharp.dll:.SpriteOutline
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CUIColorPicker
 34e025057ef78b1bf238460cdf6583a3 Assembly-CSharp.dll:TMPro.Examples.ObjectSpin
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.Examples.SimpleScript
-744bafbab5aea62a9385af6be2c2513e Assembly-CSharp.dll:.Ball
+0b1f62d454477b16e7acfacdf18184b4 Assembly-CSharp.dll:.HitPlayerWall
+126b1cd4af68590bf3d9625c901b2211 Assembly-CSharp.dll:.PongPanel

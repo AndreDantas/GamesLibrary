@@ -2,23 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
-
+[RequireComponent(typeof(SpriteRenderer))]
 public class Ball : MonoBehaviour
 {
-    Rigidbody2D rb;
-
+    public Rigidbody2D rb { get; internal set; }
+    public SpriteRenderer spriteRender { get; internal set; }
     public float ballSpeed = 2f;
+    public PongPlayer currentPlayer;
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        Invoke("ResetBall", 1);
-
-    }
-    // Update is called once per frame
-    void Update()
-    {
+        spriteRender = GetComponent<SpriteRenderer>();
+        //Invoke("ResetBall", 1);
 
     }
 
@@ -30,11 +26,12 @@ public class Ball : MonoBehaviour
             Racket racket = collision.gameObject.GetComponent<Racket>();
             if (racket)
             {
-
+                currentPlayer = racket.player;
                 float x = HitFactor(transform.position, collision.gameObject.transform.position, collision.collider.bounds.size.x);
                 transform.position = new Vector3(transform.position.x, transform.position.y + 0.05f * -Mathf.Sign(rb.velocity.y), transform.position.z);
                 Vector2 dir = new Vector2(x, -Mathf.Sign(rb.velocity.y)).normalized;
                 rb.velocity = dir * ballSpeed;
+                spriteRender.color = racket.spriteRender.color;
             }
 
         }
@@ -54,15 +51,21 @@ public class Ball : MonoBehaviour
         return (ballPos.x - racketPos.x) / racketWidth;
     }
 
-    public void ResetBall(int direction)
+    public void ShootBall(int directionX, int directionY)
     {
-        transform.position = Vector3.zero;
-        rb.velocity = new Vector2(Mathf.Sign(Random.Range(-1, 1)), Mathf.Sign(direction)).normalized * ballSpeed;
+        transform.localPosition = Vector3.zero;
+        currentPlayer = null;
+        rb.velocity = new Vector2(Mathf.Sign(directionX), Mathf.Sign(directionY)).normalized * ballSpeed;
     }
-    public void ResetBall()
-    {
 
-        transform.position = Vector3.zero;
-        rb.velocity = new Vector2(Mathf.Sign(Random.Range(-1, 1)), Mathf.Sign(Random.Range(-1, 1))).normalized * ballSpeed;
+    public void ShootBall(int directionY)
+    {
+        ShootBall(Random.Range(-1, 1), directionY);
+    }
+
+
+    public void ShootBall()
+    {
+        ShootBall(Random.Range(-1, 1), Random.Range(-1, 1));
     }
 }
