@@ -91,8 +91,9 @@ public class SceneController : MonoBehaviour
         moving = true;
         if (current)
             yield return current.Exit();
-
+        yield return null;
         other.gameObject.SetActive(true);
+
         yield return other.Enter();
         current = other;
         moving = false;

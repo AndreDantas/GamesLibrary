@@ -10,23 +10,31 @@ public class PongPanel : GamePanel
     public GameObject background;
     public override IEnumerator Enter()
     {
+        Vector2 end = screenCenter;
         if (pongObjects)
         {
-            Vector2 end = screenCenter;
 
-            pongObjects.transform.position = new Vector3(end.x + UtilityFunctions.ScreenWidth, pongObjects.transform.position.y, pongObjects.transform.position.z);
+
             pongObjects.SetActive(true);
+            pongObjects.transform.position = new Vector3(end.x + UtilityFunctions.ScreenWidth, pongObjects.transform.position.y, pongObjects.transform.position.z);
+
             pongGame.controlOn = false;
-            if (pongGame != null)
+            if (pongGame != null ? !pongGame.gameRunning : false)
                 pongGame.PrepareGame();
 
             pongObjects.transform.MoveTo(new Vector3(end.x, pongObjects.transform.position.y, pongObjects.transform.position.z), animTime);
         }
         if (background)
             background.SetActive(false);
-        yield return base.Enter();
-        if (pongGame != null)
-            pongGame.BeginGame();
+        Vector2 start = DefaultStartPosition(1);
+        transform.localPosition = start;
+
+
+        yield return null;
+        transform.MoveToLocal(end, animTime);
+        yield return new WaitForSeconds(animTime);
+        //if (pongGame != null ? !pongGame.gameRunning : false)
+        // pongGame.BeginGame();
         pongGame.controlOn = true;
 
     }
@@ -45,8 +53,10 @@ public class PongPanel : GamePanel
         Vector2 start = screenCenter;
         if (pongGame)
         {
-            pongGame.ResetBall();
-            pongGame.controlOn = false;
+            if (pongGame.gameRunning)
+                pongGame.PauseGame();
+            pongGame.OnExitGame();
+            Time.timeScale = 1f;
         }
         if (pongObjects)
         {
@@ -56,7 +66,17 @@ public class PongPanel : GamePanel
 
         }
         yield return base.Exit();
+        pongObjects.SetActive(false);
         if (background)
             background.SetActive(true);
+    }
+
+
+    public override void OnBack()
+    {
+
+        pongGame.OnExitGame();
+
+        base.OnBack();
     }
 }

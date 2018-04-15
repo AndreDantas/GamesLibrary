@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/Catchphrase/Builds/Pong v1.1.apk
+D:/Andre Dantas/Unity/Catchphrase/Builds/Pong v1.2.apk
 SceneListBegin?
 Assets/Scenes/Pong.unity
 SceneListEnd?
@@ -24,7 +24,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 95f3668a2dbe05788c12eb40b7a8f89c Assembly-CSharp.dll:.ChessPanel
 f67370d91662359dc6d9bbd124fbb624 Assembly-CSharp.dll:.CheckersPanel
 bc0e0ff8f430b648fb7011e37dec62dd Assembly-CSharp.dll:.PickAColor
-522a54c90041cdf6681e20f5e9bd75e8 Assembly-CSharp.dll:.Ball
+07b7d5897faf1052ff2b9e30aa5fe956 Assembly-CSharp.dll:.Ball
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 49cd62a578efc0a599b810a2b66cd49c UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -162,6 +162,7 @@ e831d4d75df3b9952af6ac5127a97df5 Assembly-CSharp.dll:.BackgroundScroll
 56b19cd414a98339e6b6b737a7415a3d Assembly-CSharp.dll:.MenuPanel
 56b19cd414a98339e6b6b737a7415a3d Assembly-CSharp.dll:.GamePanel
 b9332c0eee630779376843b5343eb250 Assembly-CSharp.dll:TMPro.Examples.TMP_TextInfoDebugTool
+c00751d0fdd381a57f7dc5dc88984bee Assembly-CSharp.dll:.TrailRendererController
 b96b2f5dbd5ad52aef836f67e7f86d54 Assembly-CSharp.dll:.ChessTile
 f4bd1aee67eeef7953cce6c44588b3d7 TextMeshPro-2017.3-1.0.56-Runtime.dll:TMPro.TextContainer
 8e879b98cad4aa17a0beef746daecd35 TextMeshPro-2017.3-1.0.56-Runtime.dll:TMPro.TextMeshPro
@@ -205,6 +206,7 @@ b11448bc44f49db3e26525de9acc4a98 TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.Edit
 05524b8f659e7bfe5756d1335fec24ba TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.EditorUtilities.TMPro_TextContainerEditor
 52e798fc1397d1da5c7d6db8d91bb0fb Assembly-CSharp.dll:.CheckersBoardgame
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.TMP_DigitValidator
+0b1f62d454477b16e7acfacdf18184b4 Assembly-CSharp.dll:.HitPlayerWall
 ce15b8a067b5509d75c4416ba97f2819 Assembly-CSharp.dll:.ValueSelectUI
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.Examples.TeleType
 b2eb8cbb5793881e65dba317544e50c2 Assembly-CSharp.dll:TMPro.Examples.ShaderPropAnimator
@@ -236,6 +238,7 @@ ab58f03a521697c8e2b9792c5d1f5b8b Assembly-CSharp.dll:.ChangeToRandomColor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 96d0fbde9fd209878a0a291f82c9bcdd UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
 64eb32cc721b1cc68a91ed57461e188c UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.RemoteTestResultSender
+264dffe0c3cc1cbe814fb323f3ee9e6d Assembly-CSharp.dll:.PongBounds
 6e859d582d534be69952a982d7ca70b4 Assembly-CSharp.dll:.ModalWindow
 cc0e60c2d68beb0d8bd392d90360cdcb Assembly-CSharp.dll:.Teams2Panel
 9e0ef5bf862444b5dc48b5a99554ce7c UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioListenerExtension
@@ -248,9 +251,10 @@ aa9d1bd0cc771545f2ae1f63a6d0ed6a Assembly-CSharp.dll:TMPro.Examples.TMP_TextEven
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-5638c52dc9b2fd2408023c4a67df4ced Assembly-CSharp.dll:.PongGameController
+9473a6c685c7c5f8af029a6ded5ab671 Assembly-CSharp.dll:.PongGameController
 f0f0ab6b8a39d0572cfa4ea315d84fbf Assembly-CSharp.dll:TMPro.Examples.Benchmark04
 29273f491d11f6bdd02a43a9d8df84c7 Assembly-CSharp.dll:TMPro.Examples.TMP_ExampleScript_01
+126b1cd4af68590bf3d9625c901b2211 Assembly-CSharp.dll:.PongPanel
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
@@ -274,5 +278,3 @@ c2f5ce41cd75e17442b437e3b9dbb6b0 Assembly-CSharp.dll:.SpriteOutline
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CUIColorPicker
 34e025057ef78b1bf238460cdf6583a3 Assembly-CSharp.dll:TMPro.Examples.ObjectSpin
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.Examples.SimpleScript
-0b1f62d454477b16e7acfacdf18184b4 Assembly-CSharp.dll:.HitPlayerWall
-126b1cd4af68590bf3d9625c901b2211 Assembly-CSharp.dll:.PongPanel

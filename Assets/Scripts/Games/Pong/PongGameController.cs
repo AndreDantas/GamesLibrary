@@ -17,11 +17,10 @@ public class PongMatchSettings
 }
 
 // Set up match score indicator - text 
-// Create ball trail
 // increase ball velocity with hit
-// Add pause and quit button
 public class PongGameController : MonoBehaviour
 {
+
     /// <summary>
     /// The top Player.
     /// </summary>
@@ -36,12 +35,22 @@ public class PongGameController : MonoBehaviour
     public GameObject ballPrefab;
     GameObject ballObj;
     Ball ball;
-    public PongMatchSettings mathcSettings = new PongMatchSettings();
+    public PongMatchSettings matchSettings = new PongMatchSettings();
     public TextMeshProUGUI player1Score;
     public TextMeshProUGUI player2Score;
     public GameObject pauseButton;
+    public GameObject restartMatchButton;
+    public GameObject startMatchButton;
+
+    public GameObject pauseOverlay;
     public float initialBallSpeed = 5f;
+    public float currentBallSpeed { get; internal set; }
+    public float maxBallSpeed = 10f;
+    [Range(0, 99)]
+    public int ballHitsToMaxSpeed = 10;
+    int hitCount;
     public bool canPause = true;
+    public bool gameRunning { get; internal set; }
     bool isPaused;
     bool _controlOn;
     Vector2 ballVelocity;
@@ -65,7 +74,10 @@ public class PongGameController : MonoBehaviour
 
     private void Awake()
     {
-
+        if (startMatchButton)
+            startMatchButton.SetActive(false);
+        if (restartMatchButton)
+            restartMatchButton.SetActive(false);
     }
 
     /// <summary>
@@ -73,7 +85,18 @@ public class PongGameController : MonoBehaviour
     /// </summary>
     public void PrepareGame()
     {
-        ResumeGame();
+        isPaused = false;
+        gameRunning = false;
+
+        if (pauseButton)
+        {
+            pauseButton.gameObject.GetComponentInChildren<SpriteSwap>().SetSprite(0);
+            pauseButton.gameObject.SetActive(false);
+        }
+        if (pauseOverlay)
+            pauseOverlay.SetActive(false);
+
+        // Setting up Ball
         if (ballPrefab != null)
         {
             Destroy(ballObj);
@@ -82,7 +105,23 @@ public class PongGameController : MonoBehaviour
             ball = ballObj.GetComponent<Ball>();
             if (ball)
             {
+                TrailRendererController trc = ball.trailController;
+                if (trc)
+                {
+                    trc.SetTrailColor(Color.white);
+                    trc.trailTime = 0.3f;
+                    trc.startWidth = 0.15f;
+                    trc.endWidth = 0.05f;
+                    trc.SetTrailColor(Color.white);
+                    trc.UpdateTrail();
+                    trc.trailEnabled = false;
+
+                }
                 ResetBall();
+                currentBallSpeed = initialBallSpeed;
+                ball.ballSpeed = currentBallSpeed;
+                ball.OnHitRacket += OnBallHitRacket;
+                ball.gameObject.SetActive(false);
             }
         }
 
@@ -91,7 +130,7 @@ public class PongGameController : MonoBehaviour
             bounds.CreateWalls();
         }
 
-        mathcSettings.player1Score = mathcSettings.player2Score = 0;
+        matchSettings.player1Score = matchSettings.player2Score = 0;
         if (player1Score)
             player1Score.text = "0";
         if (player2Score)
@@ -129,14 +168,54 @@ public class PongGameController : MonoBehaviour
         }
 
         canPause = true;
+        if (startMatchButton)
+            startMatchButton.SetActive(true);
+        if (restartMatchButton)
+            restartMatchButton.SetActive(false);
 
     }
 
-
+    /// <summary>
+    /// Begins the game.
+    /// </summary>
     public void BeginGame()
     {
 
+        if (startMatchButton)
+            startMatchButton.SetActive(false);
+        if (pauseButton)
+            pauseButton.SetActive(true);
+        if (restartMatchButton)
+            restartMatchButton.SetActive(true);
+        if (ball)
+            ball.gameObject.SetActive(true);
         StartCoroutine(StartRound());
+
+    }
+
+    /// <summary>
+    /// When the game ends.
+    /// </summary>
+    public void EndGame()
+    {
+        gameRunning = false;
+        ball.gameObject.SetActive(false);
+    }
+
+    public void RestartGame()
+    {
+        PauseGame();
+        ModalWindow.Choice("Reiniciar partida?", PrepareGame);
+    }
+
+    public void OnExitGame()
+    {
+        if (ball)
+        {
+
+            ball.trailController.trailRender.enabled = false;
+            ball.trailController.trailEnabled = false;
+        }
     }
 
     /// <summary>
@@ -153,6 +232,9 @@ public class PongGameController : MonoBehaviour
         isPaused = true;
         if (pauseButton)
             pauseButton.gameObject.GetComponentInChildren<SpriteSwap>().SetSprite(1);
+        if (pauseOverlay)
+            pauseOverlay.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     public void TogglePause()
@@ -175,8 +257,16 @@ public class PongGameController : MonoBehaviour
         ball.rb.velocity = ballVelocity;
         ball.rb.isKinematic = false;
         isPaused = false;
+        if (ball)
+        {
+            ball.trailController.trailRender.enabled = true;
+            ball.trailController.trailEnabled = true;
+        }
         if (pauseButton)
             pauseButton.gameObject.GetComponentInChildren<SpriteSwap>().SetSprite(0);
+        if (pauseOverlay)
+            pauseOverlay.SetActive(false);
+        Time.timeScale = 1f;
     }
 
 
@@ -189,17 +279,25 @@ public class PongGameController : MonoBehaviour
         if (ball)
         {
             ball.spriteRender.color = Color.white;
+            ball.trailController.SetTrailColor(Color.white);
             ball.gameObject.transform.localPosition = Vector3.zero;
             ball.rb.velocity = Vector3.zero;
         }
     }
 
+    /// <summary>
+    /// Start of the round.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator StartRound()
     {
 
         //canPause = false;
         ResetBall();
         yield return WaitForSecondsOrPause(1f);
+        if (ball.trailController)
+            ball.trailController.trailEnabled = true;
+        gameRunning = true;
         ball.ShootBall();
         //canPause = true;
 
@@ -218,16 +316,39 @@ public class PongGameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// End of the round. (The ball touched a wall behind a player)
+    /// </summary>
+    /// <returns></returns>
     IEnumerator EndRound()
     {
 
         // Update scores and check for winner;
+        if (ball.trailController)
+            ball.trailController.trailEnabled = false;
+        hitCount = 0;
+        currentBallSpeed = initialBallSpeed;
+        ball.ballSpeed = currentBallSpeed;
         yield return null;
         yield return StartRound();
     }
 
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+        {
+            PauseGame();
+        }
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+            PauseGame();
+    }
+
     /// <summary>
-    /// When the ball hits a wall behind the player:
+    /// When the ball hits a wall behind the player.
     /// </summary>
     /// <param name="hit"></param>
     /// <param name="wall"></param>
@@ -238,7 +359,32 @@ public class PongGameController : MonoBehaviour
             {
                 // Add Score and Match end
                 StartCoroutine(EndRound());
-
+                if (wall.player == bottomPlayer)
+                    matchSettings.player1Score++;
+                else
+                    matchSettings.player2Score++;
+                UpdateScores();
             }
+    }
+
+    /// <summary>
+    /// When the ball hits a racket.
+    /// </summary>
+    /// <param name="racket"></param>
+    public void OnBallHitRacket(Ball ball, Racket racket)
+    {
+        hitCount++;
+        hitCount = UtilityFunctions.ClampMax(hitCount, ballHitsToMaxSpeed);
+        float progress = UtilityFunctions.Map(0, ballHitsToMaxSpeed, 0f, 1f, hitCount);
+        float newSpeed = Mathf.Lerp(initialBallSpeed, maxBallSpeed, Mathf.Lerp(0f, 1f, progress));
+        ball.ChangeSpeed(newSpeed);
+    }
+
+    public void UpdateScores()
+    {
+        if (player1Score)
+            player1Score.text = matchSettings.player1Score.ToString();
+        if (player2Score)
+            player2Score.text = matchSettings.player2Score.ToString();
     }
 }

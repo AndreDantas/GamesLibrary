@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(SpriteRenderer))]
 public class Ball : MonoBehaviour
 {
     public Rigidbody2D rb { get; internal set; }
-    public SpriteRenderer spriteRender { get; internal set; }
+    public SpriteRenderer spriteRender;
     public float ballSpeed = 2f;
     public PongPlayer currentPlayer;
+    public TrailRendererController trailController;
+    public delegate void OnHitRacketEventHandler(Ball ball, Racket racket);
+    public event OnHitRacketEventHandler OnHitRacket;
     // Use this for initialization
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRender = GetComponent<SpriteRenderer>();
+        if (spriteRender)
+            spriteRender = GetComponent<SpriteRenderer>();
+        trailController = GetComponent<TrailRendererController>();
+        trailController.trailRender.sortingLayerName = "Game";
+        trailController.trailRender.sortingOrder = 2;
         //Invoke("ResetBall", 1);
 
     }
@@ -32,6 +38,9 @@ public class Ball : MonoBehaviour
                 Vector2 dir = new Vector2(x, -Mathf.Sign(rb.velocity.y)).normalized;
                 rb.velocity = dir * ballSpeed;
                 spriteRender.color = racket.spriteRender.color;
+                trailController.SetTrailColor(racket.spriteRender.color);
+                if (OnHitRacket != null)
+                    OnHitRacket(this, racket);
             }
 
         }
@@ -56,6 +65,12 @@ public class Ball : MonoBehaviour
         transform.localPosition = Vector3.zero;
         currentPlayer = null;
         rb.velocity = new Vector2(Mathf.Sign(directionX), Mathf.Sign(directionY)).normalized * ballSpeed;
+    }
+
+    public void ChangeSpeed(float speed)
+    {
+        ballSpeed = speed;
+        rb.velocity = rb.velocity.normalized * ballSpeed;
     }
 
     public void ShootBall(int directionY)
