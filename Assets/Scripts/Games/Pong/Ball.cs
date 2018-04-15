@@ -62,7 +62,6 @@ public class Ball : MonoBehaviour
 
     public void ShootBall(int directionX, int directionY)
     {
-        transform.localPosition = Vector3.zero;
         currentPlayer = null;
         rb.velocity = new Vector2(Mathf.Sign(directionX), Mathf.Sign(directionY)).normalized * ballSpeed;
     }

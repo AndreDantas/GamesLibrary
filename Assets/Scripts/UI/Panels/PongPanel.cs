@@ -22,6 +22,8 @@ public class PongPanel : GamePanel
             if (pongGame != null ? !pongGame.gameRunning : false)
                 pongGame.PrepareGame();
 
+            if (pongGame)
+                pongGame.canPause = false;
             pongObjects.transform.MoveTo(new Vector3(end.x, pongObjects.transform.position.y, pongObjects.transform.position.z), animTime);
         }
         if (background)
@@ -35,8 +37,12 @@ public class PongPanel : GamePanel
         yield return new WaitForSeconds(animTime);
         //if (pongGame != null ? !pongGame.gameRunning : false)
         // pongGame.BeginGame();
-        pongGame.controlOn = true;
 
+        if (pongGame)
+        {
+            pongGame.controlOn = true;
+            pongGame.canPause = true;
+        }
     }
 
     protected override void OnDisable()
@@ -53,8 +59,12 @@ public class PongPanel : GamePanel
         Vector2 start = screenCenter;
         if (pongGame)
         {
+
             if (pongGame.gameRunning)
+            {
                 pongGame.PauseGame();
+                pongGame.canPause = false;
+            }
             pongGame.OnExitGame();
             Time.timeScale = 1f;
         }
