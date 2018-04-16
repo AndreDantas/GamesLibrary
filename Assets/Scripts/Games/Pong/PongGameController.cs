@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+[System.Serializable]
 public class PongMatchSettings
 {
     public int scoreTarget = 5;
@@ -36,6 +37,8 @@ public class PongGameController : MonoBehaviour
     GameObject ballObj;
     Ball ball;
     public PongMatchSettings matchSettings = new PongMatchSettings();
+    public AudioClip hitRacketSound;
+    public AudioClip hitWallSound;
     public TextMeshProUGUI player1Score;
     public TextMeshProUGUI player2Score;
     public Image topPlayerGrid;
@@ -83,6 +86,8 @@ public class PongGameController : MonoBehaviour
             startMatchButton.SetActive(false);
         if (restartMatchButton)
             restartMatchButton.SetActive(false);
+        gameObject.AddAudio(hitRacketSound, false, false, 0.6f);
+        gameObject.AddAudio(hitWallSound, false, false, 0.6f);
     }
 
     private void Update()
@@ -246,7 +251,9 @@ public class PongGameController : MonoBehaviour
     {
         gameRunning = false;
         ball.gameObject.SetActive(false);
+        PrepareGame();
     }
+
 
     public void RestartGame()
     {
@@ -353,6 +360,11 @@ public class PongGameController : MonoBehaviour
     IEnumerator EndRound()
     {
         ResetBall();
+        if (matchSettings.bottomPlayerScore >= matchSettings.scoreTarget || matchSettings.topPlayerScore >= matchSettings.scoreTarget)
+        {
+            EndGame();
+            yield break;
+        }
         // Update scores and check for winner;
         if (ball.trailController)
             ball.trailController.trailEnabled = false;
@@ -387,13 +399,15 @@ public class PongGameController : MonoBehaviour
         if (ball)
             if (hit == ball.gameObject)
             {
-                // Add Score and Match end
-                StartCoroutine(EndRound());
                 if (wall.player == bottomPlayer)
                     matchSettings.topPlayerScore++;
                 else
                     matchSettings.bottomPlayerScore++;
+
+                StartCoroutine(EndRound());
+
                 UpdateScores();
+                gameObject.PlayAudio(hitWallSound);
             }
     }
 
@@ -408,6 +422,7 @@ public class PongGameController : MonoBehaviour
         float progress = UtilityFunctions.Map(0, ballHitsToMaxSpeed, 0f, 1f, hitCount);
         float newSpeed = Mathf.Lerp(initialBallSpeed, maxBallSpeed, Mathf.Lerp(0f, 1f, progress));
         ball.ChangeSpeed(newSpeed);
+        gameObject.PlayAudio(hitRacketSound);
     }
 
     public void UpdateScores()

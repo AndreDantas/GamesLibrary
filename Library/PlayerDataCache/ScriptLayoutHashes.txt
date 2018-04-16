@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/Catchphrase/Builds/Pong v1.2.apk
+D:/Andre Dantas/Unity/Catchphrase/Builds/Pong v1.3.apk
 SceneListBegin?
 Assets/Scenes/Pong.unity
 SceneListEnd?
@@ -251,7 +251,7 @@ aa9d1bd0cc771545f2ae1f63a6d0ed6a Assembly-CSharp.dll:TMPro.Examples.TMP_TextEven
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-1039b093eccf9c0ca08618f254de52bd Assembly-CSharp.dll:.PongGameController
+97ac88a69470f691b5095b89571d318b Assembly-CSharp.dll:.PongGameController
 f0f0ab6b8a39d0572cfa4ea315d84fbf Assembly-CSharp.dll:TMPro.Examples.Benchmark04
 29273f491d11f6bdd02a43a9d8df84c7 Assembly-CSharp.dll:TMPro.Examples.TMP_ExampleScript_01
 126b1cd4af68590bf3d9625c901b2211 Assembly-CSharp.dll:.PongPanel
@@ -263,6 +263,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BringToFront
 1cd4893b18ef6c9e1612214d23ea08a3 Assembly-CSharp.dll:.ChatController
 cd0b45d4db7647cb03c1c58b5daf1c2b Assembly-CSharp.dll:.CatchphraseController
+22bf0dfaf3626d0f8c0061e6a0eb1da7 Assembly-CSharp.dll:.PongMatchSettingsPanel
 48a9dee325686d1924a2646b71c83f08 Assembly-CSharp.dll:TMPro.Examples.Benchmark01
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.Examples.TextConsoleSimulator
@@ -271,6 +272,7 @@ afc52d27c3ec0bd47909e81bd45fbffa Assembly-CSharp.dll:TMPro.TMP_TextEventHandler
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.Examples.VertexColorCycler
 908b6b09d7f6946d9c41cd57594f3342 Assembly-CSharp.dll:.Racket
 020550babdb991365f61c5bffe1f4f52 Assembly-CSharp.dll:TMPro.Examples.TextMeshSpawner
+44e7dd2c847d20ccc76316d5843da831 Assembly-CSharp.dll:.TestingAudio
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ScreenTouch
 a69b3ee0402770d02d1c122324e4b00e Assembly-CSharp.dll:TMPro.Examples.SkewTextExample
 5533103eefe87788710da496b1293a84 Assembly-CSharp.dll:.CheckersSettings

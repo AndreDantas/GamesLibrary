@@ -27,7 +27,14 @@ public class PongPanel : GamePanel
             pongObjects.transform.MoveTo(new Vector3(end.x, pongObjects.transform.position.y, pongObjects.transform.position.z), animTime);
         }
         if (background)
-            background.SetActive(false);
+        {
+            Image i = background.GetComponent<Image>();
+            if (i)
+            {
+                Color c = i.color;
+                i.ChangeColorTo(new Color(c.r, c.g, c.b, 0f));
+            }
+        }
         Vector2 start = DefaultStartPosition(1);
         transform.localPosition = start;
 
@@ -78,7 +85,14 @@ public class PongPanel : GamePanel
         yield return base.Exit();
         pongObjects.SetActive(false);
         if (background)
-            background.SetActive(true);
+        {
+            Image i = background.GetComponent<Image>();
+            if (i)
+            {
+                Color c = i.color;
+                i.ChangeColorTo(new Color(c.r, c.g, c.b, 0.5f));
+            }
+        }
     }
 
 
