@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 public class PongPanel : GamePanel
 {
 
@@ -19,8 +20,7 @@ public class PongPanel : GamePanel
             pongObjects.transform.position = new Vector3(end.x + UtilityFunctions.ScreenWidth, pongObjects.transform.position.y, pongObjects.transform.position.z);
 
             pongGame.controlOn = false;
-            if (pongGame != null ? !pongGame.gameRunning : false)
-                pongGame.PrepareGame();
+            pongGame.PrepareGame();
 
             if (pongGame)
                 pongGame.canPause = false;
@@ -42,14 +42,7 @@ public class PongPanel : GamePanel
         yield return null;
         transform.MoveToLocal(end, animTime);
         yield return new WaitForSeconds(animTime);
-        //if (pongGame != null ? !pongGame.gameRunning : false)
-        // pongGame.BeginGame();
 
-        if (pongGame)
-        {
-            pongGame.controlOn = true;
-            pongGame.canPause = true;
-        }
     }
 
     protected override void OnDisable()
@@ -99,8 +92,14 @@ public class PongPanel : GamePanel
     public override void OnBack()
     {
 
-        pongGame.OnExitGame();
-
+        if (pongGame)
+        {
+            pongGame.PauseGame();
+            ModalWindow.Choice("Sair da partida?", base.OnBack);
+            return;
+        }
         base.OnBack();
     }
+
+
 }

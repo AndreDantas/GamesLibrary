@@ -59,7 +59,7 @@ public static class AudioUtilities
         }
         if (addIfNotFound)
         {
-            // Add and play if doesn't exist.
+            // Add and play if not found.
             gameObject.AddAudio(clip);
             gameObject.PlayAudio(clip);
         }

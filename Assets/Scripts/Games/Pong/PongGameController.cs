@@ -17,8 +17,6 @@ public class PongMatchSettings
     }
 }
 
-// Set up match score indicator - text 
-// Make players grid on pong bounds.
 public class PongGameController : MonoBehaviour
 {
 
@@ -39,13 +37,14 @@ public class PongGameController : MonoBehaviour
     public PongMatchSettings matchSettings = new PongMatchSettings();
     public AudioClip hitRacketSound;
     public AudioClip hitWallSound;
-    public TextMeshProUGUI player1Score;
-    public TextMeshProUGUI player2Score;
+    public TextMeshProUGUI bottomPlayerScore;
+    public TextMeshProUGUI topPlayerScore;
     public Image topPlayerGrid;
     public Image bottomPlayerGrid;
     public GameObject pauseButton;
     public GameObject restartMatchButton;
-    public GameObject startMatchButton;
+    public Button middleButton;
+    public GameObject ballShootIndicator;
     public PongBounds pongBounds;
     public GameObject pauseOverlay;
     public float initialBallSpeed = 5f;
@@ -60,7 +59,7 @@ public class PongGameController : MonoBehaviour
     bool _controlOn;
     Vector2 ballVelocity;
     bool starting = false;
-    float timeToStart = 1f;
+    float timeToStart = 3f;
     float timeToStartCount = 0;
     public bool controlOn
     {
@@ -82,10 +81,12 @@ public class PongGameController : MonoBehaviour
 
     private void Awake()
     {
-        if (startMatchButton)
-            startMatchButton.SetActive(false);
+        if (middleButton)
+            middleButton.gameObject.SetActive(false);
         if (restartMatchButton)
             restartMatchButton.SetActive(false);
+        if (ballShootIndicator)
+            ballShootIndicator.SetActive(false);
         gameObject.AddAudio(hitRacketSound, false, false, 0.6f);
         gameObject.AddAudio(hitWallSound, false, false, 0.6f);
     }
@@ -109,6 +110,8 @@ public class PongGameController : MonoBehaviour
         }
         else
         {
+            if (ballShootIndicator ? ballShootIndicator.activeSelf == true : false)
+                ballShootIndicator.SetActive(false);
             timeToStartCount = 0f;
         }
     }
@@ -117,6 +120,14 @@ public class PongGameController : MonoBehaviour
     /// </summary>
     public void PrepareGame()
     {
+        if (middleButton)
+            middleButton.gameObject.SetActive(false);
+        StartCoroutine(SetUpGame());
+    }
+
+    IEnumerator SetUpGame()
+    {
+        yield return null;
         ResumeGame();
         isPaused = false;
         gameRunning = false;
@@ -165,15 +176,15 @@ public class PongGameController : MonoBehaviour
         }
 
         matchSettings.bottomPlayerScore = matchSettings.topPlayerScore = 0;
-        if (player1Score)
+        if (bottomPlayerScore)
         {
-            player1Score.text = "0";
-            player1Score.color = bottomPlayer.racket.spriteRender.color;
+            bottomPlayerScore.text = "0";
+            bottomPlayerScore.color = bottomPlayer.racket.spriteRender.color;
         }
-        if (player2Score)
+        if (topPlayerScore)
         {
-            player2Score.text = "0";
-            player2Score.color = topPlayer.racket.spriteRender.color;
+            topPlayerScore.text = "0";
+            topPlayerScore.color = topPlayer.racket.spriteRender.color;
         }
 
         if (topPlayer)
@@ -217,11 +228,20 @@ public class PongGameController : MonoBehaviour
         }
 
         canPause = true;
-        if (startMatchButton)
-            startMatchButton.SetActive(true);
+        if (middleButton)
+        {
+            middleButton.gameObject.SetActive(true);
+            middleButton.onClick.RemoveAllListeners();
+            middleButton.onClick.AddListener(BeginGame);
+            TextMeshProUGUI text = middleButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (text)
+            {
+                text.text = "Começar";
+            }
+        }
         if (restartMatchButton)
             restartMatchButton.SetActive(false);
-
+        controlOn = false;
     }
 
     /// <summary>
@@ -230,8 +250,8 @@ public class PongGameController : MonoBehaviour
     public void BeginGame()
     {
 
-        if (startMatchButton)
-            startMatchButton.SetActive(false);
+        if (middleButton)
+            middleButton.gameObject.SetActive(false);
         if (pauseButton)
             pauseButton.SetActive(true);
         if (restartMatchButton)
@@ -240,8 +260,9 @@ public class PongGameController : MonoBehaviour
             ball.gameObject.SetActive(true);
         ResetBall();
         gameRunning = true;
-        starting = true;
-
+        controlOn = true;
+        canPause = true;
+        PrepareToShootBall();
     }
 
     /// <summary>
@@ -251,14 +272,40 @@ public class PongGameController : MonoBehaviour
     {
         gameRunning = false;
         ball.gameObject.SetActive(false);
-        PrepareGame();
+        //PrepareGame();
+        if (matchSettings.topPlayerScore >= matchSettings.scoreTarget)
+        {
+            topPlayerScore.text = "Venceu!";
+        }
+        else
+        {
+            bottomPlayerScore.text = "Venceu!";
+        }
+        if (restartMatchButton)
+            restartMatchButton.SetActive(false);
+        if (pauseButton)
+        {
+            pauseButton.gameObject.GetComponentInChildren<SpriteSwap>().SetSprite(0);
+            pauseButton.gameObject.SetActive(false);
+        }
+        if (middleButton)
+        {
+            middleButton.gameObject.SetActive(true);
+            middleButton.onClick.RemoveAllListeners();
+            middleButton.onClick.AddListener(PrepareGame);
+            TextMeshProUGUI text = middleButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (text)
+            {
+                text.text = "Recomeçar";
+            }
+        }
     }
 
 
     public void RestartGame()
     {
         PauseGame();
-        ModalWindow.Choice("Reiniciar partida?", PrepareGame);
+        ModalWindow.Choice("Recomeçar partida?", PrepareGame);
     }
 
     public void OnExitGame()
@@ -339,6 +386,24 @@ public class PongGameController : MonoBehaviour
         }
     }
 
+    void PrepareToShootBall()
+    {
+        if (ball.trailController)
+            ball.trailController.trailEnabled = false;
+
+        hitCount = 0;
+        currentBallSpeed = initialBallSpeed;
+        ball.ballSpeed = currentBallSpeed;
+        if (ballShootIndicator)
+        {
+            ballShootIndicator.SetActive(true);
+            ballShootIndicator.transform.localPosition = Vector3.zero;
+            ballShootIndicator.transform.localScale = Vector3.one;
+            ballShootIndicator.transform.ScaleTo(Vector3.zero, timeToStart * 1.2f);
+        }
+        starting = true;
+    }
+
 
     IEnumerator WaitForSecondsOrPause(float time)
     {
@@ -366,13 +431,9 @@ public class PongGameController : MonoBehaviour
             yield break;
         }
         // Update scores and check for winner;
-        if (ball.trailController)
-            ball.trailController.trailEnabled = false;
-        hitCount = 0;
-        currentBallSpeed = initialBallSpeed;
-        ball.ballSpeed = currentBallSpeed;
+        PrepareToShootBall();
         yield return null;
-        starting = true;
+
     }
 
     void OnApplicationFocus(bool hasFocus)
@@ -403,11 +464,11 @@ public class PongGameController : MonoBehaviour
                     matchSettings.topPlayerScore++;
                 else
                     matchSettings.bottomPlayerScore++;
-
-                StartCoroutine(EndRound());
-
                 UpdateScores();
                 gameObject.PlayAudio(hitWallSound);
+                StartCoroutine(EndRound());
+
+
             }
     }
 
@@ -427,9 +488,9 @@ public class PongGameController : MonoBehaviour
 
     public void UpdateScores()
     {
-        if (player1Score)
-            player1Score.text = matchSettings.bottomPlayerScore.ToString();
-        if (player2Score)
-            player2Score.text = matchSettings.topPlayerScore.ToString();
+        if (bottomPlayerScore)
+            bottomPlayerScore.text = matchSettings.bottomPlayerScore.ToString();
+        if (topPlayerScore)
+            topPlayerScore.text = matchSettings.topPlayerScore.ToString();
     }
 }

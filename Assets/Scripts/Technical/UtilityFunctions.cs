@@ -89,6 +89,7 @@ public static class UtilityFunctions
         }
         return t;
     }
+
     public static float Map(float OldMin, float OldMax, float NewMin, float NewMax, float OldValue)
     {
 
@@ -99,7 +100,13 @@ public static class UtilityFunctions
         return (NewValue);
     }
 
-    public static List<T> ToList<T>(T[] array)
+    /// <summary>
+    /// Converts an array to a list.
+    /// </summary>
+    /// <typeparam name="T">The object Type.</typeparam>
+    /// <param name="array">The array to convert to a list.</param>
+    /// <returns></returns>
+    public static List<T> ToList<T>(this T[] array)
     {
         List<T> result = new List<T>();
         foreach (T t in array)
@@ -109,15 +116,34 @@ public static class UtilityFunctions
         return result;
     }
 
+    /// <summary>
+    /// Tries to get a component in GameObject, adds new one if not found.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="g"></param>
+    /// <returns></returns>
+    public static Component GetOrAddComponent<T>(this GameObject g) where T : Component
+    {
+        if (g.GetComponent<T>() == null)
+            return g.AddComponent<T>();
+        else
+            return g.GetComponent<T>();
+    }
+
     public static Vector3 RoundVector3(Vector3 v)
     {
         return new Vector3(Mathf.Round(v.x), Mathf.Round(v.y), Mathf.Round(v.z));
     }
+
     public static Vector2 RoundVector2(Vector2 v)
     {
         return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
     }
 
+    /// <summary>
+    /// Destroys all child objects on transform.
+    /// </summary>
+    /// <param name="parent"></param>
     public static void DestroyChildren(this Transform parent)
     {
         List<GameObject> destroyList = new List<GameObject>();
@@ -132,6 +158,8 @@ public static class UtilityFunctions
         }
 
     }
+
+
 
     /// <summary>
     /// Checks if the pointer was over a UI element.

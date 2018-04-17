@@ -9,10 +9,8 @@ public class OnValueSelectChanged : UnityEvent<int>
 {
 
 }
-
-public class ValueSelectUI : MonoBehaviour
+public class ValueSelectUI : SelectUI
 {
-    public TextMeshProUGUI valueText;
     public string valueUnit = "";
     [SerializeField]
     int _maxValue;
@@ -68,10 +66,9 @@ public class ValueSelectUI : MonoBehaviour
             UpdateUI();
         }
     }
-    public GameObject decreaseButton;
-    public GameObject increaseButton;
     [Space(15)]
     public OnValueSelectChanged OnValueChanged;
+
     private void OnValidate()
     {
         minValue = UtilityFunctions.ClampMax(minValue, maxValue);
@@ -90,7 +87,7 @@ public class ValueSelectUI : MonoBehaviour
             OnValueChanged.Invoke(value);
     }
 
-    public virtual void UpdateUI()
+    public override void UpdateUI()
     {
         value = Mathf.Clamp(value, minValue, maxValue);
 

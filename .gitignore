@@ -1,6 +1,5 @@
 ExportedObj/
 Temp/
-Builds/
 *.svd
 *.userprefs
 *.csproj

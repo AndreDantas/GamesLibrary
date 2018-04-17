@@ -39,14 +39,16 @@ public class ModalWindow : MonoBehaviour
         {
             instance.yesButton.gameObject.SetActive(true);
             instance.yesButton.onClick.RemoveAllListeners();
+            instance.yesButton.onClick.AddListener(instance.CloseWindow);
             if (yesAction != null)
                 instance.yesButton.onClick.AddListener(yesAction);
-            instance.yesButton.onClick.AddListener(instance.CloseWindow);
+
         }
         if (instance.noButton)
         {
             instance.noButton.gameObject.SetActive(true);
             instance.noButton.onClick.RemoveAllListeners();
+            instance.yesButton.onClick.AddListener(instance.CloseWindow);
             if (noAction != null)
                 instance.noButton.onClick.AddListener(noAction);
             instance.noButton.onClick.AddListener(instance.CloseWindow);
@@ -61,6 +63,52 @@ public class ModalWindow : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(instance.window.GetComponentInChildren<LayoutGroup>().gameObject.transform as RectTransform);
         SceneController.LockPanel();
 
+    }
+
+    public static void Choice(string choiceText, List<UnityAction> yesActions, List<UnityAction> noActions)
+    {
+        if (instance.window == null)
+            return;
+        instance.window.SetActive(true);
+
+        if (instance.yesButton)
+        {
+            instance.yesButton.gameObject.SetActive(true);
+            instance.yesButton.onClick.RemoveAllListeners();
+            instance.yesButton.onClick.AddListener(instance.CloseWindow);
+            if (yesActions != null)
+                foreach (UnityAction action in yesActions)
+                {
+                    if (action != null)
+                    {
+
+                        instance.yesButton.onClick.AddListener(action);
+                    }
+                }
+
+        }
+        if (instance.noButton)
+        {
+            instance.noButton.gameObject.SetActive(true);
+            instance.noButton.onClick.RemoveAllListeners();
+            instance.noButton.onClick.AddListener(instance.CloseWindow);
+            if (noActions != null)
+                foreach (UnityAction action in noActions)
+                {
+                    if (action != null)
+                        instance.noButton.onClick.AddListener(action);
+                }
+
+        }
+        if (instance.closeButton)
+        {
+            instance.closeButton.gameObject.SetActive(false);
+        }
+
+        if (instance.windowText)
+            instance.windowText.text = choiceText;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(instance.window.GetComponentInChildren<LayoutGroup>().gameObject.transform as RectTransform);
+        SceneController.LockPanel();
     }
 
     public static void Message(string msg, UnityAction closeAction = null)
@@ -81,6 +129,35 @@ public class ModalWindow : MonoBehaviour
             instance.closeButton.onClick.RemoveAllListeners();
             if (closeAction != null)
                 instance.closeButton.onClick.AddListener(closeAction);
+            instance.closeButton.onClick.AddListener(instance.CloseWindow);
+        }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(instance.window.GetComponentInChildren<LayoutGroup>().gameObject.transform as RectTransform);
+        if (instance.windowText)
+            instance.windowText.text = msg;
+    }
+
+    public static void Message(string msg, List<UnityAction> closeAction)
+    {
+        if (instance.window == null)
+            return;
+        if (instance.yesButton)
+        {
+            instance.yesButton.gameObject.SetActive(false);
+        }
+        if (instance.noButton)
+        {
+            instance.noButton.gameObject.SetActive(false);
+        }
+        if (instance.closeButton)
+        {
+            instance.closeButton.gameObject.SetActive(true);
+            instance.closeButton.onClick.RemoveAllListeners();
+            if (closeAction != null)
+                foreach (UnityAction action in closeAction)
+                {
+                    if (action != null)
+                        instance.closeButton.onClick.AddListener(action);
+                }
             instance.closeButton.onClick.AddListener(instance.CloseWindow);
         }
         LayoutRebuilder.ForceRebuildLayoutImmediate(instance.window.GetComponentInChildren<LayoutGroup>().gameObject.transform as RectTransform);
