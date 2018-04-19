@@ -11,19 +11,19 @@ MonoBehaviour:
   m_Script: {fileID: -667331979, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
   m_Name: Sabo-Filled
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -814573604
   material: {fileID: 21351136385754692}
-  materialHashCode: 0
+  materialHashCode: -1668547369
   fontAssetType: 2
   m_fontInfo:
     Name: Sabo
     PointSize: 52
-    Scale: 0
+    Scale: 1
     CharacterCount: 134
     LineHeight: 62
     Baseline: 0
     Ascender: 51
-    CapHeight: 0
+    CapHeight: 36
     Descender: -12
     CenterLine: 0
     SuperscriptOffset: 51
@@ -33,7 +33,7 @@ MonoBehaviour:
     UnderlineThickness: 2.6000001
     strikethrough: 14.181818
     strikethroughThickness: 2.6000001
-    TabWidth: 0
+    TabWidth: 230
     Padding: 5
     AtlasWidth: 512
     AtlasHeight: 512
@@ -42,10 +42,10 @@ MonoBehaviour:
   - id: 32
     x: 5
     y: 507
-    width: 0
-    height: 0
+    width: 23
+    height: 63
     xOffset: 0
-    yOffset: 0
+    yOffset: 51
     xAdvance: 23
     scale: 1
   - id: 33

@@ -11,19 +11,19 @@ MonoBehaviour:
   m_Script: {fileID: -667331979, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
   m_Name: Masaaki-Regular
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -2071969590
   material: {fileID: 21886287012039862}
-  materialHashCode: 0
+  materialHashCode: 570002945
   fontAssetType: 2
   m_fontInfo:
     Name: Masaaki
     PointSize: 72
-    Scale: 0
+    Scale: 1
     CharacterCount: 134
     LineHeight: 86
     Baseline: 0
     Ascender: 76
-    CapHeight: 0
+    CapHeight: 33
     Descender: -11
     CenterLine: 0
     SuperscriptOffset: 76
@@ -33,7 +33,7 @@ MonoBehaviour:
     UnderlineThickness: 3.6000001
     strikethrough: 23.636364
     strikethroughThickness: 3.6000001
-    TabWidth: 0
+    TabWidth: 320
     Padding: 5
     AtlasWidth: 512
     AtlasHeight: 512
@@ -42,10 +42,10 @@ MonoBehaviour:
   - id: 32
     x: 5
     y: 507
-    width: 0
-    height: 0
+    width: 32
+    height: 87
     xOffset: 0
-    yOffset: 0
+    yOffset: 76
     xAdvance: 32
     scale: 1
   - id: 33

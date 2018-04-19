@@ -108,6 +108,7 @@ public static class ImageExtensions
     public static Tweener FadeIn(this SpriteRenderer i, float duration, Func<float, float, float, float> equation)
     {
         SpriteRendererTweener tweener = i.gameObject.AddComponent<SpriteRendererTweener>();
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 0f);
         tweener.sprite = i;
         tweener.startColor = new Color(i.color.r, i.color.g, i.color.b, 0f);
         tweener.endColor = new Color(i.color.r, i.color.g, i.color.b, 1f);
@@ -130,6 +131,7 @@ public static class ImageExtensions
     public static Tweener FadeOut(this SpriteRenderer i, float duration, Func<float, float, float, float> equation)
     {
         SpriteRendererTweener tweener = i.gameObject.AddComponent<SpriteRendererTweener>();
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 1f);
         tweener.sprite = i;
         tweener.startColor = new Color(i.color.r, i.color.g, i.color.b, 1f);
         tweener.endColor = new Color(i.color.r, i.color.g, i.color.b, 0f);

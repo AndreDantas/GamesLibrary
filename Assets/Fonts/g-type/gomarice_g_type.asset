@@ -18,12 +18,12 @@ MonoBehaviour:
   m_fontInfo:
     Name: G-Type
     PointSize: 151
-    Scale: 0
+    Scale: 1
     CharacterCount: 208
     LineHeight: 151
     Baseline: 0
     Ascender: 130
-    CapHeight: 0
+    CapHeight: 113
     Descender: -22
     CenterLine: 0
     SuperscriptOffset: 130
@@ -33,7 +33,7 @@ MonoBehaviour:
     UnderlineThickness: 7.078125
     strikethrough: 39.272728
     strikethroughThickness: 7.078125
-    TabWidth: 0
+    TabWidth: 590
     Padding: 5
     AtlasWidth: 1024
     AtlasHeight: 1024
@@ -42,10 +42,10 @@ MonoBehaviour:
   - id: 32
     x: 5
     y: 1019
-    width: 0
-    height: 0
+    width: 59
+    height: 152
     xOffset: 0
-    yOffset: 0
+    yOffset: 130
     xAdvance: 59
     scale: 1
   - id: 33

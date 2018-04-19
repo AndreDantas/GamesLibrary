@@ -130,6 +130,12 @@ public static class UtilityFunctions
             return g.GetComponent<T>();
     }
 
+    public static void DrawBounds(Bounds b)
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(b.center, b.size);
+    }
+
     public static Vector3 RoundVector3(Vector3 v)
     {
         return new Vector3(Mathf.Round(v.x), Mathf.Round(v.y), Mathf.Round(v.z));

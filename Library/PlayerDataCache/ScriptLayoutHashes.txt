@@ -264,7 +264,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BringToFront
 1cd4893b18ef6c9e1612214d23ea08a3 Assembly-CSharp.dll:.ChatController
 cd0b45d4db7647cb03c1c58b5daf1c2b Assembly-CSharp.dll:.CatchphraseController
-22bf0dfaf3626d0f8c0061e6a0eb1da7 Assembly-CSharp.dll:.PongMatchSettingsPanel
+887433844ba0a32afcce19ecf1cfe9f9 Assembly-CSharp.dll:.PongMatchSettingsPanel
 48a9dee325686d1924a2646b71c83f08 Assembly-CSharp.dll:TMPro.Examples.Benchmark01
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.Examples.TextConsoleSimulator
@@ -281,3 +281,8 @@ c2f5ce41cd75e17442b437e3b9dbb6b0 Assembly-CSharp.dll:.SpriteOutline
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CUIColorPicker
 34e025057ef78b1bf238460cdf6583a3 Assembly-CSharp.dll:TMPro.Examples.ObjectSpin
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.Examples.SimpleScript
+1cb40c746a01332eb78618e045b0b5a9 Assembly-CSharp.dll:.Reporter
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ReporterMessageReceiver
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ReporterGUI
+922dde826533f20a40eadb188df86725 Assembly-CSharp.dll:.TestReporter
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Rotate

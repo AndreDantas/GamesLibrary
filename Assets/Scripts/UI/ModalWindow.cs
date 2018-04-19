@@ -13,8 +13,13 @@ public class ModalWindow : MonoBehaviour
     public Button noButton;
     public Button closeButton;
 
+    private void Start()
+    {
+        CloseWindow();
+    }
     private void Awake()
     {
+
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
@@ -22,11 +27,6 @@ public class ModalWindow : MonoBehaviour
         }
 
         instance = this;
-    }
-
-    private void Start()
-    {
-        CloseWindow();
     }
 
     public static void Choice(string choiceText, UnityAction yesAction = null, UnityAction noAction = null)

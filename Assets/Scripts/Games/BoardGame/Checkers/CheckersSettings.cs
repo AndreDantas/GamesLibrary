@@ -8,8 +8,8 @@ public class CheckersSettingsData
     public int rows = 8;
     public int piecesByRow = 3;
     public int pieceMoveDistance = 1;
-    public bool kingInfiniteMoveDistance = false;
-    public bool multiDirectionalCapture = false;
+    public bool kingInfiniteMoveDistance = true;
+    public bool multiDirectionalCapture = true;
 
     public CheckersSettingsData()
     {
@@ -17,8 +17,8 @@ public class CheckersSettingsData
         rows = 8;
         piecesByRow = 3;
         pieceMoveDistance = 1;
-        kingInfiniteMoveDistance = false;
-        multiDirectionalCapture = false;
+        kingInfiniteMoveDistance = true;
+        multiDirectionalCapture = true;
     }
     public CheckersSettingsData(CheckersSettingsData other)
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+
 [System.Serializable]
 public class PongMatchSettings
 {
@@ -270,6 +271,7 @@ public class PongGameController : MonoBehaviour
     /// </summary>
     public void EndGame()
     {
+        canPause = false;
         gameRunning = false;
         ball.gameObject.SetActive(false);
         //PrepareGame();
@@ -396,7 +398,11 @@ public class PongGameController : MonoBehaviour
         ball.ballSpeed = currentBallSpeed;
         if (ballShootIndicator)
         {
+
             ballShootIndicator.SetActive(true);
+            SpriteRenderer sr = ballShootIndicator.GetComponent<SpriteRenderer>();
+            sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0f);
+            sr.FadeIn(timeToStart);
             ballShootIndicator.transform.localPosition = Vector3.zero;
             ballShootIndicator.transform.localScale = Vector3.one;
             ballShootIndicator.transform.ScaleTo(Vector3.zero, timeToStart * 1.2f);
@@ -432,7 +438,6 @@ public class PongGameController : MonoBehaviour
         }
         // Update scores and check for winner;
         PrepareToShootBall();
-        yield return null;
 
     }
 

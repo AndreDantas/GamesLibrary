@@ -13,15 +13,21 @@ public class PongPlayer : MonoBehaviour
     /// <summary>
     /// The touch area for player movement.
     /// </summary>
-    [HideInInspector]
+
     public Bounds touchArea;
     public bool controlOn { get; set; }
+    int touchId = -1;
     Vector3 velocity;
 
     private void Start()
     {
         if (racket)
             racket.player = this;
+    }
+
+    private void OnDrawGizmos()
+    {
+        UtilityFunctions.DrawBounds(touchArea);
     }
     private void OnEnable()
     {
@@ -68,13 +74,29 @@ public class PongPlayer : MonoBehaviour
 
         for (int i = 0; i < touches.Count; i++)
         {
-            Vector2 touchPos = Camera.main.ScreenToWorldPoint(touches[i].position);
-            if (touchArea.Contains(touchPos))
+            Touch touch = touches[i];
+            Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+            if (Mathf.Sign(touchPos.y) == Mathf.Sign(racket.orientation))
             {
-                MoveRacket(touchPos);
-                return;
+                if (touch.phase == TouchPhase.Began)
+                {
+                    touchId = touch.fingerId;
+                }
+                else
+                {
+                    if (touchId == touch.fingerId)
+                    {
+                        if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+                            touchId = -1;
+                        MoveRacket(touchPos);
+                        return;
+                    }
+
+                }
+
             }
         }
+
     }
 
 
