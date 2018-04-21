@@ -1186,6 +1186,11 @@ RectTransform:
   m_PrefabParentObject: {fileID: 224278646739077982, guid: 0f6a6435a2a4dbd46a7a73e5e0fb463f,
     type: 2}
   m_PrefabInternal: {fileID: 140036659}
+--- !u!224 &214840892 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+    type: 2}
+  m_PrefabInternal: {fileID: 430171082}
 --- !u!1 &258698708
 GameObject:
   m_ObjectHideFlags: 0
@@ -2213,6 +2218,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 224705402251266238, guid: 54b339b1d30417d49a8a457e4e9d4e04,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 54b339b1d30417d49a8a457e4e9d4e04, type: 2}
   m_IsPrefabParent: 0
@@ -2358,6 +2368,106 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!1001 &430171082
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1125280330}
+    m_Modifications:
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224061941709979408, guid: 6466f29f5f69c694c975446f3f865014,
+        type: 2}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 6466f29f5f69c694c975446f3f865014, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &432095740
 GameObject:
   m_ObjectHideFlags: 0
@@ -3285,8 +3395,10 @@ MonoBehaviour:
   onBackPanel: {fileID: 869026766}
   panelObjects: []
   pongGame: {fileID: 376106812}
+  mainMenuButton: {fileID: 214840892}
   pongObjects: {fileID: 1648045830}
   background: {fileID: 1122616215}
+  hideMainMenuButtonDistance: 135
 --- !u!1 &676916287
 GameObject:
   m_ObjectHideFlags: 0
@@ -4519,7 +4631,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -4825,7 +4937,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -5944,7 +6056,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -6492,7 +6604,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:

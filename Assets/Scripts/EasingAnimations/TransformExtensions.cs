@@ -108,4 +108,46 @@ public static class TransformExtensions
         tweener.easingControl.Play();
         return tweener;
     }
+
+    public static Tweener MoveTo(this RectTransform t, Vector2 position)
+    {
+        return MoveTo(t, position, Tweener.DefaultDuration);
+    }
+
+    public static Tweener MoveTo(this RectTransform t, Vector2 position, float duration)
+    {
+        return MoveTo(t, position, duration, Tweener.DefaultEquation);
+    }
+
+    public static Tweener MoveTo(this RectTransform t, Vector2 position, float duration, Func<float, float, float, float> equation)
+    {
+        RectTransformAnchoredPositionTweener tweener = t.gameObject.AddComponent<RectTransformAnchoredPositionTweener>();
+        tweener.startValue = t.anchoredPosition;
+        tweener.endValue = position;
+        tweener.easingControl.duration = duration;
+        tweener.easingControl.equation = equation;
+        tweener.easingControl.Play();
+        return tweener;
+    }
+
+    public static Tweener ScaleTo(this RectTransform t, Vector2 size)
+    {
+        return ScaleTo(t, size, Tweener.DefaultDuration);
+    }
+
+    public static Tweener ScaleTo(this RectTransform t, Vector2 size, float duration)
+    {
+        return ScaleTo(t, size, duration, Tweener.DefaultEquation);
+    }
+
+    public static Tweener ScaleTo(this RectTransform t, Vector2 size, float duration, Func<float, float, float, float> equation)
+    {
+        RectTransformSizeTweener tweener = t.gameObject.AddComponent<RectTransformSizeTweener>();
+        tweener.startValue = t.sizeDelta;
+        tweener.endValue = size;
+        tweener.easingControl.duration = duration;
+        tweener.easingControl.equation = equation;
+        tweener.easingControl.Play();
+        return tweener;
+    }
 }

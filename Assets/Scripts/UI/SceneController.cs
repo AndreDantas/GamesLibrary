@@ -25,6 +25,8 @@ public class SceneController : MonoBehaviour
         }
         BeginFade(-1);
         instance = this;
+
+        FindObjectOfType<EventSystem>().pixelDragThreshold = 20;
     }
     private void Start()
     {

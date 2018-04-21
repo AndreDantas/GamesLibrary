@@ -130,10 +130,41 @@ public static class UtilityFunctions
             return g.GetComponent<T>();
     }
 
+    /// <summary>
+    /// Draws bounds on a DrawGizmos function.
+    /// </summary>
+    /// <param name="b"></param>
     public static void DrawBounds(Bounds b)
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(b.center, b.size);
+    }
+
+    /// <summary>
+    /// Checks if a component is present on GameObject.
+    /// </summary>
+    /// <typeparam name="T">The component type.</typeparam>
+    /// <param name="g"></param>
+    /// <returns></returns>
+    public static bool CheckForComponent<T>(this GameObject g) where T : Component
+    {
+        bool hasComponent = false;
+        foreach (Component comp in g.GetComponents<Component>())
+        {
+
+            if (comp is T)
+            {
+                hasComponent = true;
+                break;
+            }
+        }
+
+        return hasComponent;
+    }
+
+    public static void DestroySelf(this Object c)
+    {
+        Object.Destroy(c);
     }
 
     public static Vector3 RoundVector3(Vector3 v)

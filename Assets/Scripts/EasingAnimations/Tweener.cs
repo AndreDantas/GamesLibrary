@@ -46,9 +46,22 @@ public abstract class Vector3Tweener : Tweener
     public Vector3 startValue;
     public Vector3 endValue;
     public Vector3 currentValue { get; private set; }
+
+    public delegate void Vector3TweenerEventHandler();
+    public event Vector3TweenerEventHandler OnAnimationComplete;
+    public event Vector3TweenerEventHandler OnUpdateAnimation;
     protected override void OnUpdate(object sender, System.EventArgs e)
     {
         currentValue = (endValue - startValue) * easingControl.currentValue + startValue;
+        if (OnUpdateAnimation != null)
+            OnUpdateAnimation();
+    }
+
+    protected override void OnComplete(object sender, EventArgs e)
+    {
+        if (OnAnimationComplete != null)
+            OnAnimationComplete();
+        base.OnComplete(sender, e);
     }
 }
 
@@ -83,6 +96,24 @@ public class TransformRotationTweener : Vector3Tweener
     {
         base.OnUpdate(sender, e);
         transform.eulerAngles = currentValue;
+    }
+}
+
+public class RectTransformAnchoredPositionTweener : Vector3Tweener
+{
+    protected override void OnUpdate(object sender, EventArgs e)
+    {
+        base.OnUpdate(sender, e);
+        ((RectTransform)transform).anchoredPosition = currentValue;
+    }
+}
+
+public class RectTransformSizeTweener : Vector3Tweener
+{
+    protected override void OnUpdate(object sender, EventArgs e)
+    {
+        base.OnUpdate(sender, e);
+        ((RectTransform)transform).sizeDelta = currentValue;
     }
 }
 
