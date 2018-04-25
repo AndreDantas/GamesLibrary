@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
+using System.Linq;
 [System.Serializable]
 public enum LerpMode
 {
@@ -41,6 +42,32 @@ public static class UtilityFunctions
         if (value < minValue)
             value = minValue;
         return value;
+    }
+    public static void ClampToWindow(this RectTransform panelRectTransform, RectTransform parentRectTransform)
+    {
+        if (parentRectTransform == null)
+            return;
+        Vector3 pos = panelRectTransform.localPosition;
+
+        Vector3 minPosition = parentRectTransform.rect.min - panelRectTransform.rect.min;
+        Vector3 maxPosition = parentRectTransform.rect.max - panelRectTransform.rect.max;
+
+        pos.x = Mathf.Clamp(panelRectTransform.localPosition.x, minPosition.x, maxPosition.x);
+        pos.y = Mathf.Clamp(panelRectTransform.localPosition.y, minPosition.y, maxPosition.y);
+
+        panelRectTransform.localPosition = pos;
+    }
+
+    public static void ClampToCanvas(this RectTransform panel)
+    {
+
+        Canvas[] components = panel.gameObject.GetComponentsInParent<Canvas>();
+        if (components != null ? components.Length > 0 : false)
+        {
+            Canvas canvas = components[components.Length - 1];
+            if (canvas)
+                ClampToWindow(panel, canvas.transform as RectTransform);
+        }
     }
 
     public static int Sign(int value)

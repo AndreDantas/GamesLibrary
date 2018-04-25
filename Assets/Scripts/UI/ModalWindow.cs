@@ -33,6 +33,7 @@ public class ModalWindow : MonoBehaviour
     {
         if (instance.window == null)
             return;
+
         instance.window.SetActive(true);
 
         if (instance.yesButton)

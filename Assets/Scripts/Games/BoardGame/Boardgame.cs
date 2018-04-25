@@ -7,6 +7,13 @@ public abstract class Boardgame : MonoBehaviour
     [Header("Board Settings")]
     public int columns = 8;
     public int rows = 8;
+    [ReadOnly]
+    public float boardWidth;
+    [ReadOnly]
+    public float boardHeight;
+
+    public GameObject playerTurnIndicator;
+    public GameObject playerTurnBorder;
 
 
     /// <summary>

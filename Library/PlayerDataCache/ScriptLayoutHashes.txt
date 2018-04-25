@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/GamesLibrary/Builds/GamesLibrary v1.0.5.apk
+D:/Andre Dantas/Unity/GamesLibrary/Builds/GamesLibrary v1.0.6.apk
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/Catchphrase.unity
@@ -168,8 +168,9 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 e831d4d75df3b9952af6ac5127a97df5 Assembly-CSharp.dll:.BackgroundScroll
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MainMenuManager
 50a0fa002cfc67638c87a901e46b763e Assembly-CSharp.dll:TMPro.Examples.TMP_TextSelector_B
-245ffd2bfae059384af51b496a3eb2bb Assembly-CSharp.dll:.ScorePanel
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ChangeTextLanguage
+2bd94a4975a5d259ba1d98981a019446 Assembly-CSharp.dll:.CatchphraseScorePanel
+a049a7edcb46afa471e9b603fa09e165 Assembly-CSharp.dll:.ChangeTextLanguage
+56b19cd414a98339e6b6b737a7415a3d Assembly-CSharp.dll:.StartScreenPanel
 767ebd513e0d9db138ba3cb80ce17486 Assembly-CSharp.dll:.CheckerTile
 0020613b61aab8a5e27233c4669b1ce5 Assembly-CSharp.dll:.ImageRandomColorChange
 020550babdb991365f61c5bffe1f4f52 Assembly-CSharp.dll:TMPro.Examples.Benchmark03
@@ -200,7 +201,7 @@ d672cee35261f9935d5ce974c746730f TextMeshPro-2017.3-1.0.56-Runtime.dll:TMPro.TMP
 b900ead596b2fb1093b31cb63a678767 Assembly-CSharp.dll:TMPro.Examples.TextMeshProFloatingText
 b31fb4a57268364c8fb959f14168923e Assembly-CSharp.dll:.BoardgameTile
 dad1c1272dfe1898bb613dcb2631bcce Assembly-CSharp.dll:TMPro.Examples.Benchmark02
-86a9c213ba0688a8c4447e0563c9abf9 Assembly-CSharp.dll:.CatchphrasePanel
+fcedc16f16e9aa2c9f889c4c5fd357e3 Assembly-CSharp.dll:.CatchphrasePanel
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GameQualitySettings
 05524b8f659e7bfe5756d1335fec24ba TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.EditorUtilities.DropdownEditor
 05524b8f659e7bfe5756d1335fec24ba TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.EditorUtilities.TMP_ColorGradientEditor
@@ -218,7 +219,7 @@ b11448bc44f49db3e26525de9acc4a98 TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.Edit
 537843cf8c7f8ab266c7cd1191ca22fb TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.EditorUtilities.TMPro_FontAssetCreatorWindow
 05524b8f659e7bfe5756d1335fec24ba TextMeshPro-2017.3-1.0.56-Editor.dll:.TMPro_SDFMaterialEditor
 05524b8f659e7bfe5756d1335fec24ba TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.EditorUtilities.TMPro_TextContainerEditor
-52e798fc1397d1da5c7d6db8d91bb0fb Assembly-CSharp.dll:.CheckersBoardgame
+ca6652afa0cd443c9f50f15ad5f15eb7 Assembly-CSharp.dll:.CheckersBoardgame
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:TMPro.TMP_DigitValidator
 0b1f62d454477b16e7acfacdf18184b4 Assembly-CSharp.dll:.HitPlayerWall
 e5d83b2c4134c082c858666fbf18a34e Assembly-CSharp.dll:.ValueSelectUI
@@ -244,7 +245,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 e67c69142364927f641f1b5fa7d54cc7 Assembly-CSharp.dll:.BuildGridUI
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ShowFps
-b68e4558b2a45a2baccb4b39f9f58ef0 Assembly-CSharp.dll:.ChessBoardgame
+00ab498906255c5a05790eab78478669 Assembly-CSharp.dll:.ChessBoardgame
 ab58f03a521697c8e2b9792c5d1f5b8b Assembly-CSharp.dll:.ChangeToRandomColor
 80ece8d56f65378a94a83b8753638885 Assembly-CSharp.dll:.SceneController
 62229a3e4d53ca59bec192e89627ed52 Assembly-CSharp.dll:TMPro.Examples.CameraController
@@ -254,7 +255,7 @@ ab58f03a521697c8e2b9792c5d1f5b8b Assembly-CSharp.dll:.ChangeToRandomColor
 64eb32cc721b1cc68a91ed57461e188c UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.RemoteTestResultSender
 264dffe0c3cc1cbe814fb323f3ee9e6d Assembly-CSharp.dll:.PongBounds
 6e859d582d534be69952a982d7ca70b4 Assembly-CSharp.dll:.ModalWindow
-cc0e60c2d68beb0d8bd392d90360cdcb Assembly-CSharp.dll:.Teams2Panel
+7989353c90fad9417652b7fa7a31f01e Assembly-CSharp.dll:.Teams2Panel
 9e0ef5bf862444b5dc48b5a99554ce7c UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioListenerExtension
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension

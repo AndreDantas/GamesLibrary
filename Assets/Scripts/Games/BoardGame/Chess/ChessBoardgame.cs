@@ -461,6 +461,42 @@ public class ChessBoardgame : Boardgame
 
     }
 
+    void IndicateTurnPlayer(int orientation)
+    {
+        if (!playerTurnIndicator)
+            return;
+        float indicatorScale = 0.4f;
+        playerTurnIndicator.SetActive(true);
+        playerTurnIndicator.transform.SetParent(transform);
+        playerTurnIndicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, 1f);
+
+        SpriteRenderer sr = playerTurnIndicator.GetComponent<SpriteRenderer>();
+        if (sr)
+        {
+            sr.color = Mathf.Sign(orientation) >= 1 ? darkPieceColor : lightPieceColor;
+        }
+        playerTurnIndicator.transform.localPosition = new Vector3(0f, (rows / 2f + playerTurnIndicator.transform.localScale.y / 2f) * Mathf.Sign(orientation), 0f);
+        playerTurnIndicator.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
+
+        if (playerTurnBorder)
+        {
+            playerTurnBorder.SetActive(true);
+            playerTurnBorder.transform.SetParent(transform);
+            playerTurnBorder.transform.localScale = new Vector3(columns, indicatorScale, 1f);
+            playerTurnBorder.transform.localPosition = new Vector3(0f, (rows / 2f + playerTurnBorder.transform.localScale.y / 2f) * Mathf.Sign(orientation), 0f);
+            playerTurnBorder.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
+
+            sr = playerTurnBorder.GetComponent<SpriteRenderer>();
+
+            if (sr)
+            {
+                sr.color = Mathf.Sign(orientation) >= 1 ? darkPieceColor : lightPieceColor;
+            }
+        }
+
+
+
+    }
 
     public void StartTurn()
     {
@@ -469,7 +505,7 @@ public class ChessBoardgame : Boardgame
 
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
-
+        IndicateTurnPlayer(turnPlayer.orientation == Orientation.DOWN ? -1 : 1);
         if (CheckForCheckmate())
         {
             EndGame();
@@ -553,7 +589,10 @@ public class ChessBoardgame : Boardgame
             victoryMsg.text = winner + " venceu!";
             victoryMsg.gameObject.SetActive(true);
         }
-
+        if (playerTurnIndicator)
+            playerTurnIndicator.SetActive(false);
+        if (playerTurnBorder)
+            playerTurnBorder.SetActive(false);
         if (OnEnd != null)
             OnEnd();
     }

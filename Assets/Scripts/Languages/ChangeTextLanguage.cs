@@ -3,9 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+[System.Serializable]
+public class PairLanguageText
+{
+    public SystemLanguage language;
+    public string text;
+}
 public class ChangeTextLanguage : MonoBehaviour
 {
+    protected TextMeshProUGUI text;
+    public List<PairLanguageText> languagesAndText = new List<PairLanguageText>();
+    private void Start()
+    {
+        text = GetComponent<TextMeshProUGUI>();
+        ChangeLanguage();
+    }
 
+
+
+    public void ChangeLanguage()
+    {
+        if (languagesAndText != null ? languagesAndText.Count > 0 : false)
+        {
+            foreach (PairLanguageText lt in languagesAndText)
+            {
+                if (lt.language == GameLanguage.language.systLanguage)
+                {
+                    text.text = lt.text;
+                    break;
+                }
+            }
+        }
+
+    }
 
 
 #if UNITY_EDITOR
@@ -15,7 +45,7 @@ public class ChangeTextLanguage : MonoBehaviour
         bool hasText = false;
         foreach (var component in components)
         {
-            if (component is Text || component is TextMeshProUGUI)
+            if (component is TextMeshProUGUI)
                 hasText = true;
 
 

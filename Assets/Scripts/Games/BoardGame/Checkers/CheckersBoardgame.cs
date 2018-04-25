@@ -38,6 +38,7 @@ public class CheckersBoardgame : Boardgame
     [Space(10)]
     [HideInInspector]
     public CheckersBoard board;
+
     public CheckerPlayer turnPlayer { get; internal set; }
     protected Checker selectedPiece;
     [Header("Renders")]
@@ -60,6 +61,7 @@ public class CheckersBoardgame : Boardgame
     private bool capturing;
     private void Start()
     {
+
         //PrepareGame();
     }
     private void OnValidate()
@@ -68,6 +70,26 @@ public class CheckersBoardgame : Boardgame
         ChangePiecesColor(false);
         ChangeTileColor();
     }
+#if UNITY_EDITOR
+    protected void OnDrawGizmosSelected()
+    {
+
+        Gizmos.color = Color.red;
+
+
+        Vector3 scale = Vector3.one * (6.25f / columns);
+
+        for (int i = 0; i < columns; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                Gizmos.DrawWireCube(new Vector2(i + 0.5f + transform.position.x - columns / 2, j + 0.5f + transform.position.y - rows / 2) * scale.x, scale);
+            }
+
+        }
+
+    }
+#endif
     public void PrepareGame()
     {
         gameSettings = new CheckersSettingsData(CheckersSettings.instance.settings);
@@ -203,6 +225,7 @@ public class CheckersBoardgame : Boardgame
             float columns = this.columns;
             float rows = this.rows;
             float width = UtilityFunctions.ScreenWidth;
+            boardWidth = boardHeight = width;
             tileRenderScale = (width * 1.0f) / (columns * 1.0f);
             transform.localScale = Vector3.one * ((width * 1.0f) / (columns * 1.0f));
             tiles = new CheckerTile[this.columns, this.rows];
@@ -495,6 +518,43 @@ public class CheckersBoardgame : Boardgame
         return board.GetPossibleMovements(turnPlayer).Count == 0;
 
     }
+
+    void IndicateTurnPlayer(int orientation)
+    {
+        if (!playerTurnIndicator)
+            return;
+        float indicatorScale = 0.4f;
+        playerTurnIndicator.SetActive(true);
+        playerTurnIndicator.transform.SetParent(transform);
+        playerTurnIndicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, 1f);
+
+        SpriteRenderer sr = playerTurnIndicator.GetComponent<SpriteRenderer>();
+        if (sr)
+        {
+            sr.color = Mathf.Sign(orientation) >= 1 ? topPlayerColor : bottomPlayerColor;
+        }
+        playerTurnIndicator.transform.localPosition = new Vector3(0f, (rows / 2f + playerTurnIndicator.transform.localScale.y / 2f) * Mathf.Sign(orientation), 0f);
+        playerTurnIndicator.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
+
+        if (playerTurnBorder)
+        {
+            playerTurnBorder.SetActive(true);
+            playerTurnBorder.transform.SetParent(transform);
+            playerTurnBorder.transform.localScale = new Vector3(columns, indicatorScale, 1f);
+            playerTurnBorder.transform.localPosition = new Vector3(0f, (rows / 2f + playerTurnBorder.transform.localScale.y / 2f) * Mathf.Sign(orientation), 0f);
+            playerTurnBorder.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
+
+            sr = playerTurnBorder.GetComponent<SpriteRenderer>();
+
+            if (sr)
+            {
+                sr.color = Mathf.Sign(orientation) >= 1 ? topPlayerColor : bottomPlayerColor;
+            }
+        }
+
+
+
+    }
     public void StartTurn()
     {
         RenderLastTurn();
@@ -510,7 +570,7 @@ public class CheckersBoardgame : Boardgame
         }
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
-
+        IndicateTurnPlayer(turnPlayer.orientation == Orientation.DOWN ? -1 : 1);
         if (CheckForDefeat())
         {
             EndGame();
@@ -524,6 +584,10 @@ public class CheckersBoardgame : Boardgame
     public void EndGame()
     {
         canClick = false;
+        if (playerTurnIndicator)
+            playerTurnIndicator.SetActive(false);
+        if (playerTurnBorder)
+            playerTurnBorder.SetActive(false);
         if (victoryMsg)
         {
             string winner = turnPlayer == board.playerTop ? "Jogador 1" : "Jogador 2";
@@ -762,9 +826,11 @@ public class CheckersBoardgame : Boardgame
                         RenderMoves(possibleMoves);
                         selectedPiece = piece;
                         RenderSelectedPiece(selectedPiece.pos);
+
                     }
                     else
                     {
+                        //Indicate invalid move.
                         movementsRender.Clear();
                         selectedPieceRender.Clear();
                     }

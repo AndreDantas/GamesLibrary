@@ -41,8 +41,13 @@ public class SetUpLanguage : MonoBehaviour
         }
     }
 
-    public void SaveLanguage()
+    public static void SaveLanguage()
     {
         SaveLoad.SaveFile("/language.lng", GameLanguage.language);
+    }
+
+    public static void ChangeObjectsLanguage()
+    {
+
     }
 }

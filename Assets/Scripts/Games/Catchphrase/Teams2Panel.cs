@@ -14,6 +14,8 @@ public class Teams2Panel : GamePanel
 
     public TeamInputInfo team1;
     public TeamInputInfo team2;
+    public Button mainMenuButton;
+    public float hideMainMenuButtonDistance = 135f;
     public ValueSelectUI roundsInput;
     public ValueSelectUI roundTimeInput;
     public CatchphrasePanel gamePanel;
@@ -58,6 +60,12 @@ public class Teams2Panel : GamePanel
         temp.teamName = team2.teamInput.text;
         team.Add(temp);
 
+        if (mainMenuButton)
+        {
+            mainMenuButton.interactable = false;
+            RectTransform rect = mainMenuButton.transform as RectTransform;
+            rect.MoveTo(new Vector2(rect.anchoredPosition.x, rect.anchoredPosition.y + hideMainMenuButtonDistance), 0.2f);
+        }
 
         //Set game panel teams
         gamePanel.SetGameStats(team, rounds, roundTime);

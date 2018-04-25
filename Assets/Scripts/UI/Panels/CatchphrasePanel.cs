@@ -16,7 +16,7 @@ public class CatchphrasePanel : GamePanel
 
     public static int MAX_ROUNDS = 10;
     public CatchphraseController catchphraseController;
-    public ScorePanel scorePanel;
+    public CatchphraseScorePanel scorePanel;
     public List<TeamInfo> teams = new List<TeamInfo>();
     public TextMeshProUGUI roundText;
     public TextMeshProUGUI wordText;

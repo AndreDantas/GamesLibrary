@@ -56,6 +56,8 @@ public class SceneController : MonoBehaviour
     IEnumerator GoMainMenu()
     {
         BeginFade(1);
+        canMove = false;
+        moving = true;
         yield return new WaitForSeconds(MainMenuManager.fadeTime);
         SceneManager.LoadScene(MainMenuManager.MainMenuLevelBuild);
     }
@@ -86,6 +88,12 @@ public class SceneController : MonoBehaviour
             }
         }
         yield return null;
+
+        if (current == null)
+        {
+            if (panels != null ? panels.Count > 0 : false)
+                current = panels[0];
+        }
         if (current)
         {
             current.gameObject.SetActive(true);
