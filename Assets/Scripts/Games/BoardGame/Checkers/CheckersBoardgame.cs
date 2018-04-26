@@ -523,7 +523,7 @@ public class CheckersBoardgame : Boardgame
     {
         if (!playerTurnIndicator)
             return;
-        float indicatorScale = 0.4f;
+
         playerTurnIndicator.SetActive(true);
         playerTurnIndicator.transform.SetParent(transform);
         playerTurnIndicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, 1f);

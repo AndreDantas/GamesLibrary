@@ -7,19 +7,12 @@ public class PongPanel : GamePanel
 {
 
     public PongGameController pongGame;
-    public RectTransform mainMenuButton;
     public GameObject pongObjects;
     public GameObject background;
-    public float hideMainMenuButtonDistance = 120f;
     public override IEnumerator Enter()
     {
         Vector2 end = screenCenter;
-        if (mainMenuButton)
-        {
-
-            mainMenuButton.MoveTo(new Vector2(mainMenuButton.anchoredPosition.x, mainMenuButton.anchoredPosition.y + hideMainMenuButtonDistance), 0.2f);
-
-        }
+        SceneController.HideMainMenuButton();
         if (pongObjects)
         {
 
@@ -64,10 +57,7 @@ public class PongPanel : GamePanel
     }
     public override IEnumerator Exit()
     {
-        if (mainMenuButton)
-        {
-            mainMenuButton.MoveTo(new Vector2(mainMenuButton.anchoredPosition.x, mainMenuButton.anchoredPosition.y - hideMainMenuButtonDistance), 0.2f);
-        }
+        SceneController.ShowMainMenuButton();
         Vector2 start = screenCenter;
         if (pongGame)
         {

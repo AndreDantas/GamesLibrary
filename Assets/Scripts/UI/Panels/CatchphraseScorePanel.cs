@@ -24,8 +24,6 @@ public class CatchphraseScorePanel : GamePanel
     public TeamInfo team2Result;
     public TeamScoreInfo team1;
     public TeamScoreInfo team2;
-    public float hideMainMenuButtonDistance = 135f;
-    public Button mainMenuButton;
     public Color wordListColor = Color.black;
     public Color correctWord = Color.green;
     public Color wrongWord = Color.red;
@@ -41,12 +39,7 @@ public class CatchphraseScorePanel : GamePanel
         team2.teamName.text = team2Result.teamName;
         team2.teamScore.text = team2Result.teamScore.ToString();
         SetWordList(wordList);
-        if (mainMenuButton)
-        {
-            mainMenuButton.interactable = true;
-            RectTransform rect = mainMenuButton.transform as RectTransform;
-            rect.MoveTo(new Vector2(rect.anchoredPosition.x, rect.anchoredPosition.y - hideMainMenuButtonDistance), 0.2f);
-        }
+        SceneController.ShowMainMenuButton();
         yield return base.Enter();
     }
 

@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class SceneController : MonoBehaviour
 {
     public static SceneController instance;
     public List<GamePanel> panels = new List<GamePanel>();
     public delegate void OnBackEventHandler();
     public static OnBackEventHandler OnBack;
+    bool mainMenuButtonShowing = true;
+    public float hideMainMenuButtonDistance = 135f;
+    public Button mainMenuButton { get; internal set; }
     public GamePanel current;
     bool canMove;
     bool moving;
@@ -25,8 +29,8 @@ public class SceneController : MonoBehaviour
         }
         BeginFade(-1);
         instance = this;
-
-        FindObjectOfType<EventSystem>().pixelDragThreshold = 20;
+        mainMenuButton = GameObject.FindGameObjectWithTag("MainMenuButton").GetComponent<Button>();
+        FindObjectOfType<EventSystem>().pixelDragThreshold = 30;
     }
     private void Start()
     {
@@ -46,6 +50,27 @@ public class SceneController : MonoBehaviour
             sr.FadeIn(MainMenuManager.fadeTime);
     }
 
+    public static void HideMainMenuButton()
+    {
+        if (instance.mainMenuButton != null && instance.mainMenuButtonShowing)
+        {
+            instance.mainMenuButton.interactable = false;
+            RectTransform rect = instance.mainMenuButton.transform as RectTransform;
+            rect.MoveTo(new Vector2(rect.anchoredPosition.x, rect.anchoredPosition.y + instance.hideMainMenuButtonDistance), 0.2f);
+            instance.mainMenuButtonShowing = false;
+        }
+
+    }
+    public static void ShowMainMenuButton()
+    {
+        if (instance.mainMenuButton != null && !instance.mainMenuButtonShowing)
+        {
+            instance.mainMenuButton.interactable = true;
+            RectTransform rect = instance.mainMenuButton.transform as RectTransform;
+            rect.MoveTo(new Vector2(rect.anchoredPosition.x, rect.anchoredPosition.y - instance.hideMainMenuButtonDistance), 0.2f);
+            instance.mainMenuButtonShowing = true;
+        }
+    }
 
     public void GoToMainMenu()
     {

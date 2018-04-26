@@ -80,6 +80,34 @@ public class CatchphrasePanel : GamePanel
         IntroPhase();
     }
 
+    public void ConfirmExitGame()
+    {
+        PauseGame();
+        ModalWindow.Choice("Sair da partida?", ForceExitGame, ResumeGame);
+    }
+
+    void ForceExitGame()
+    {
+        teamBackground.color = backgroundOldColor;
+        ResumeGame();
+        if (onBackPanel != null)
+            SceneController.instance.ChangePanel(onBackPanel);
+        else
+            SceneController.instance.ChangePanel(scorePanel);
+
+        SceneController.ShowMainMenuButton();
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+    }
+
     void HideUI()
     {
         catchphraseController.HideTimer();
@@ -145,7 +173,7 @@ public class CatchphrasePanel : GamePanel
         scorePanel.team1Result = teams[0];
         scorePanel.team2Result = teams[1];
         scorePanel.wordList = wordList;
-        FindObjectOfType<SceneController>().ChangePanel(scorePanel);
+        SceneController.instance.ChangePanel(scorePanel);
     }
 
     IEnumerator NextRound()
@@ -195,5 +223,9 @@ public class CatchphrasePanel : GamePanel
         this.teams = teams;
         this.rounds = rounds;
         this.roundTime = roundTime;
+    }
+    public override void OnBack()
+    {
+
     }
 }

@@ -6,7 +6,7 @@ public class MainMenuManager : MonoBehaviour
 {
     public static MainMenuManager instance;
     public static int MainMenuLevelBuild = 0;
-    public static float fadeTime = 0.5f;  // the fading speed
+    public static float fadeTime = 0.3f;  // the fading speed
     GameObject fadeImage;
     private void Awake()
     {

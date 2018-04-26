@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PongBall
   - PongRacket
+  - MainMenuButton
   layers:
   - Default
   - TransparentFX

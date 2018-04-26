@@ -4,7 +4,8 @@ using UnityEngine;
 [System.Serializable]
 public static class GameLanguage
 {
-    public static LanguageObj language = new LanguageObj(SystemLanguage.Portuguese);
+    public static LanguageObj language;
+    public static readonly SystemLanguage DEFAULT_LANGUAGE = SystemLanguage.Portuguese;
 }
 [System.Serializable]
 public class LanguageObj
@@ -33,7 +34,8 @@ public class SetUpLanguage : MonoBehaviour
         LanguageObj l = SaveLoad.LoadFile<LanguageObj>("/language.lng");
         if (l == null)
         {
-            GameLanguage.language = new LanguageObj(SystemLanguage.Portuguese);
+            GameLanguage.language = new LanguageObj(GameLanguage.DEFAULT_LANGUAGE);
+            SaveLanguage();
         }
         else
         {

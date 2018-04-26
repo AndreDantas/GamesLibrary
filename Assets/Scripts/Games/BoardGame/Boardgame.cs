@@ -14,7 +14,7 @@ public abstract class Boardgame : MonoBehaviour
 
     public GameObject playerTurnIndicator;
     public GameObject playerTurnBorder;
-
+    public float indicatorScale = 0.6f;
 
     /// <summary>
     /// Function to render the map. 
