@@ -64,4 +64,20 @@ public static class AudioUtilities
             gameObject.PlayAudio(clip);
         }
     }
+
+    public static void MuteGameObject(this GameObject g)
+    {
+        foreach (AudioSource s in g.GetComponents<AudioSource>())
+        {
+            s.mute = true;
+        }
+    }
+
+    public static void UnMuteGameObject(this GameObject g)
+    {
+        foreach (AudioSource s in g.GetComponents<AudioSource>())
+        {
+            s.mute = false;
+        }
+    }
 }

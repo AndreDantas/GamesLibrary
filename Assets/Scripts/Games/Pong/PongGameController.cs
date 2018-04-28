@@ -33,8 +33,12 @@ public class PongGameController : MonoBehaviour
     /// The prefab of the ball. 
     /// </summary>
     public GameObject ballPrefab;
+    public bool gameMuted
+    {
+        get; set;
+    }
     GameObject ballObj;
-    Ball ball;
+    PongBall ball;
     public PongMatchSettings matchSettings = new PongMatchSettings();
     public AudioClip hitRacketSound;
     public AudioClip hitWallSound;
@@ -126,6 +130,12 @@ public class PongGameController : MonoBehaviour
         StartCoroutine(SetUpGame());
     }
 
+    public void SetAIPlayer(bool isAi = false)
+    {
+        if (topPlayer)
+            topPlayer.isAI = isAi;
+    }
+
     IEnumerator SetUpGame()
     {
         yield return null;
@@ -148,7 +158,7 @@ public class PongGameController : MonoBehaviour
             Destroy(ballObj);
             ballObj = Instantiate(ballPrefab, transform.parent);
 
-            ball = ballObj.GetComponent<Ball>();
+            ball = ballObj.GetComponent<PongBall>();
             if (ball)
             {
                 TrailRendererController trc = ball.trailController;
@@ -207,6 +217,9 @@ public class PongGameController : MonoBehaviour
                 Color color = topPlayer.racket.spriteRender.color;
                 topPlayerGrid.color = new Color(color.r, color.g, color.b, topPlayerGrid.color.a);
             }
+
+            if (topPlayer.isAI)
+                topPlayer.ball = ball;
         }
         if (bottomPlayer)
         {
@@ -226,6 +239,9 @@ public class PongGameController : MonoBehaviour
                 Color color = bottomPlayer.racket.spriteRender.color;
                 bottomPlayerGrid.color = new Color(color.r, color.g, color.b, bottomPlayerGrid.color.a);
             }
+
+            if (bottomPlayer.isAI)
+                bottomPlayer.ball = ball;
         }
 
         canPause = true;
@@ -470,7 +486,8 @@ public class PongGameController : MonoBehaviour
                 else
                     matchSettings.bottomPlayerScore++;
                 UpdateScores();
-                gameObject.PlayAudio(hitWallSound);
+                if (!gameMuted)
+                    gameObject.PlayAudio(hitWallSound);
                 StartCoroutine(EndRound());
 
 
@@ -481,14 +498,15 @@ public class PongGameController : MonoBehaviour
     /// When the ball hits a racket.
     /// </summary>
     /// <param name="racket"></param>
-    public void OnBallHitRacket(Ball ball, Racket racket)
+    public void OnBallHitRacket(PongBall ball, Racket racket)
     {
         hitCount++;
         hitCount = UtilityFunctions.ClampMax(hitCount, ballHitsToMaxSpeed);
         float progress = UtilityFunctions.Map(0, ballHitsToMaxSpeed, 0f, 1f, hitCount);
         float newSpeed = Mathf.Lerp(initialBallSpeed, maxBallSpeed, Mathf.Lerp(0f, 1f, progress));
         ball.ChangeSpeed(newSpeed);
-        gameObject.PlayAudio(hitRacketSound);
+        if (!gameMuted)
+            gameObject.PlayAudio(hitRacketSound);
     }
 
     public void UpdateScores()

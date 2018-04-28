@@ -43,32 +43,7 @@ public static class UtilityFunctions
             value = minValue;
         return value;
     }
-    public static void ClampToWindow(this RectTransform panelRectTransform, RectTransform parentRectTransform)
-    {
-        if (parentRectTransform == null)
-            return;
-        Vector3 pos = panelRectTransform.localPosition;
 
-        Vector3 minPosition = parentRectTransform.rect.min - panelRectTransform.rect.min;
-        Vector3 maxPosition = parentRectTransform.rect.max - panelRectTransform.rect.max;
-
-        pos.x = Mathf.Clamp(panelRectTransform.localPosition.x, minPosition.x, maxPosition.x);
-        pos.y = Mathf.Clamp(panelRectTransform.localPosition.y, minPosition.y, maxPosition.y);
-
-        panelRectTransform.localPosition = pos;
-    }
-
-    public static void ClampToCanvas(this RectTransform panel)
-    {
-
-        Canvas[] components = panel.gameObject.GetComponentsInParent<Canvas>();
-        if (components != null ? components.Length > 0 : false)
-        {
-            Canvas canvas = components[components.Length - 1];
-            if (canvas)
-                ClampToWindow(panel, canvas.transform as RectTransform);
-        }
-    }
 
     public static int Sign(int value)
     {
@@ -115,6 +90,10 @@ public static class UtilityFunctions
                 break;
         }
         return t;
+    }
+    public static float RandomSign()
+    {
+        return Random.Range(0, 2) * 2 - 1;
     }
 
     public static float Map(float OldMin, float OldMax, float NewMin, float NewMax, float OldValue)

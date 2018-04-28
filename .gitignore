@@ -1,5 +1,6 @@
 ExportedObj/
 Temp/
+Plugins/
 *.svd
 *.userprefs
 *.csproj

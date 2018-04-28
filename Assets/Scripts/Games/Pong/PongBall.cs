@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
-public class Ball : MonoBehaviour
+public class PongBall : MonoBehaviour
 {
     public Rigidbody2D rb { get; internal set; }
     public SpriteRenderer spriteRender;
     public float ballSpeed = 2f;
     public PongPlayer currentPlayer;
     public TrailRendererController trailController;
-    public delegate void OnHitRacketEventHandler(Ball ball, Racket racket);
+    public delegate void OnHitRacketEventHandler(PongBall ball, Racket racket);
     public event OnHitRacketEventHandler OnHitRacket;
     // Use this for initialization
     void Awake()
@@ -53,11 +53,11 @@ public class Ball : MonoBehaviour
         // ascii art:
         // || -1 <- left 
         // ||
-        // ||  0 <- middle 
+        // ||  Random <- middle 
         // ||
         // ||  1 <- right
-
-        return (ballPos.x - racketPos.x) / racketWidth;
+        float hitFactor = (ballPos.x - racketPos.x) / racketWidth;
+        return Mathf.Approximately(hitFactor, 0) ? UtilityFunctions.RandomSign() * 0.5f : UtilityFunctions.Map(-1, 1, -1.5f, 1.5f, hitFactor);
     }
 
     public void ShootBall(int directionX, int directionY)

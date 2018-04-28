@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-public static class ImageExtensions
+public static class UIExtensions
 {
+    #region Tweener
     public static Tweener ChangeColorTo(this Image i, Color color)
     {
         return ChangeColorTo(i, color, Tweener.DefaultDuration);
@@ -140,5 +141,76 @@ public static class ImageExtensions
         tweener.easingControl.Play();
         return tweener;
     }
+    public static Tweener ScrollVerticalTo(this ScrollRect s, float scrollValue)
+    {
+        return ScrollVerticalTo(s, scrollValue, Tweener.DefaultDuration, Tweener.DefaultEquation);
+    }
+    public static Tweener ScrollVerticalTo(this ScrollRect s, float scrollValue, float duration)
+    {
+        return ScrollVerticalTo(s, scrollValue, duration, Tweener.DefaultEquation);
+    }
 
+    public static Tweener ScrollVerticalTo(this ScrollRect s, float scrollValue, float duration, Func<float, float, float, float> equation)
+    {
+        ScrollRectTweener tweener = s.gameObject.AddComponent<ScrollRectTweener>();
+        tweener.scroll = s;
+        tweener.verticalScroll = true;
+        tweener.startValue = s.verticalNormalizedPosition;
+        tweener.endValue = Mathf.Clamp01(scrollValue);
+        tweener.easingControl.duration = duration;
+        tweener.easingControl.equation = equation;
+        tweener.easingControl.Play();
+        return tweener;
+
+    }
+
+    public static Tweener ScrollHorizontalTo(this ScrollRect s, float scrollValue)
+    {
+        return ScrollHorizontalTo(s, scrollValue, Tweener.DefaultDuration, Tweener.DefaultEquation);
+    }
+    public static Tweener ScrollHorizontalTo(this ScrollRect s, float scrollValue, float duration)
+    {
+        return ScrollHorizontalTo(s, scrollValue, duration, Tweener.DefaultEquation);
+    }
+
+    public static Tweener ScrollHorizontalTo(this ScrollRect s, float scrollValue, float duration, Func<float, float, float, float> equation)
+    {
+        ScrollRectTweener tweener = s.gameObject.AddComponent<ScrollRectTweener>();
+        tweener.scroll = s;
+        tweener.verticalScroll = false;
+        tweener.startValue = s.horizontalNormalizedPosition;
+        tweener.endValue = Mathf.Clamp01(scrollValue);
+        tweener.easingControl.duration = duration;
+        tweener.easingControl.equation = equation;
+        tweener.easingControl.Play();
+        return tweener;
+
+    }
+    #endregion
+    public static void ClampToWindow(this RectTransform panelRectTransform, RectTransform parentRectTransform)
+    {
+        if (parentRectTransform == null)
+            return;
+        Vector3 pos = panelRectTransform.localPosition;
+
+        Vector3 minPosition = parentRectTransform.rect.min - panelRectTransform.rect.min;
+        Vector3 maxPosition = parentRectTransform.rect.max - panelRectTransform.rect.max;
+
+        pos.x = Mathf.Clamp(panelRectTransform.localPosition.x, minPosition.x, maxPosition.x);
+        pos.y = Mathf.Clamp(panelRectTransform.localPosition.y, minPosition.y, maxPosition.y);
+
+        panelRectTransform.localPosition = pos;
+    }
+
+    public static void ClampToCanvas(this RectTransform panel)
+    {
+
+        Canvas[] components = panel.gameObject.GetComponentsInParent<Canvas>();
+        if (components != null ? components.Length > 0 : false)
+        {
+            Canvas canvas = components[components.Length - 1];
+            if (canvas)
+                ClampToWindow(panel, canvas.transform as RectTransform);
+        }
+    }
 }

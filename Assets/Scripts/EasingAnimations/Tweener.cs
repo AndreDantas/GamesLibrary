@@ -154,5 +154,35 @@ public class SpriteRendererTweener : ColorTweener
 }
 
 
+public class FloatTweener : Tweener
+{
+    public float startValue;
+    public float currentValue;
+    public float endValue;
+
+    protected override void OnUpdate(object sender, EventArgs e)
+    {
+        currentValue = (endValue - startValue) * easingControl.currentValue + startValue;
+    }
+}
+
+public class ScrollRectTweener : FloatTweener
+{
+    public ScrollRect scroll;
+    public bool verticalScroll = true;
+    protected override void OnUpdate(object sender, EventArgs e)
+    {
+        Canvas.ForceUpdateCanvases();
+        base.OnUpdate(sender, e);
+        if (scroll)
+        {
+            if (verticalScroll)
+                scroll.verticalNormalizedPosition = currentValue;
+            else
+                scroll.horizontalNormalizedPosition = currentValue;
+        }
+    }
+}
+
 
 

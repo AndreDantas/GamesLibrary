@@ -7,6 +7,8 @@ public class PongMatchSettingsPanel : GamePanel
 {
     public ValueSelectUI scoreTarget;
     public OptionSelectUI matchSpeed;
+    public Toggle muteSound;
+    public Toggle versusAI;
     public PongGameController pongGame;
 
     private void Awake()
@@ -25,6 +27,21 @@ public class PongMatchSettingsPanel : GamePanel
             matchSpeed.UpdateUI();
             matchSpeed.OnOptionChanged.AddListener(OnOptionChanged);
         }
+        if (muteSound)
+        {
+            muteSound.onValueChanged.AddListener((bool v) => pongGame.gameMuted = v);
+
+            muteSound.isOn = false;
+
+        }
+        if (versusAI)
+        {
+            versusAI.onValueChanged.AddListener((bool v) => pongGame.SetAIPlayer(v));
+            versusAI.isOn = false;
+
+        }
+
+        OnOptionChanged(1);
     }
     protected override void OnEnable()
     {
@@ -56,6 +73,7 @@ public class PongMatchSettingsPanel : GamePanel
                 pongGame.maxBallSpeed = 15f;
                 pongGame.ballHitsToMaxSpeed = 15;
                 pongGame.topPlayer.racket.racketSpeed = pongGame.bottomPlayer.racket.racketSpeed = 1f;
+                pongGame.topPlayer.aiSpeed = pongGame.bottomPlayer.aiSpeed = 0.11f;
             }
             else
             {
@@ -63,6 +81,7 @@ public class PongMatchSettingsPanel : GamePanel
                 pongGame.maxBallSpeed = 10f;
                 pongGame.ballHitsToMaxSpeed = 10;
                 pongGame.topPlayer.racket.racketSpeed = pongGame.bottomPlayer.racket.racketSpeed = 0.13f;
+                pongGame.topPlayer.aiSpeed = pongGame.bottomPlayer.aiSpeed = 0.19f;
             }
         }
     }

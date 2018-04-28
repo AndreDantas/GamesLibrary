@@ -21,7 +21,8 @@ public class Racket : MonoBehaviour
     public float racketPositionY = 2.5f;
     public PlatformEffector2D platformEffector { get; internal set; }
     public SpriteRenderer spriteRender { get; internal set; }
-
+    public delegate void OnBallHitEventHandler(PongBall ball);
+    public event OnBallHitEventHandler OnBallHit;
     // Use this for initialization
     void Awake()
     {
@@ -63,4 +64,12 @@ public class Racket : MonoBehaviour
 
     }
 
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<PongBall>())
+        {
+            OnBallHit?.Invoke(collision.gameObject.GetComponent<PongBall>());
+        }
+    }
 }

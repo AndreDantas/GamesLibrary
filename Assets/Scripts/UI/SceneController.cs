@@ -86,7 +86,7 @@ public class SceneController : MonoBehaviour
         yield return new WaitForSeconds(MainMenuManager.fadeTime);
         SceneManager.LoadScene(MainMenuManager.MainMenuLevelBuild);
     }
-    private void LateUpdate()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {

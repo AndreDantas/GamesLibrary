@@ -29,12 +29,21 @@ public class ModalWindow : MonoBehaviour
         instance = this;
     }
 
+
+    void ShowWindow()
+    {
+        if (window == null)
+            return;
+
+        window.SetActive(true);
+
+    }
     public static void Choice(string choiceText, UnityAction yesAction = null, UnityAction noAction = null)
     {
         if (instance.window == null)
             return;
 
-        instance.window.SetActive(true);
+        instance.ShowWindow();
 
         if (instance.yesButton)
         {
@@ -65,12 +74,11 @@ public class ModalWindow : MonoBehaviour
         SceneController.LockPanel();
 
     }
-
     public static void Choice(string choiceText, List<UnityAction> yesActions, List<UnityAction> noActions)
     {
         if (instance.window == null)
             return;
-        instance.window.SetActive(true);
+        instance.ShowWindow();
 
         if (instance.yesButton)
         {
@@ -116,6 +124,7 @@ public class ModalWindow : MonoBehaviour
     {
         if (instance.window == null)
             return;
+        instance.ShowWindow();
         if (instance.yesButton)
         {
             instance.yesButton.gameObject.SetActive(false);
@@ -141,6 +150,7 @@ public class ModalWindow : MonoBehaviour
     {
         if (instance.window == null)
             return;
+        instance.ShowWindow();
         if (instance.yesButton)
         {
             instance.yesButton.gameObject.SetActive(false);
@@ -172,6 +182,7 @@ public class ModalWindow : MonoBehaviour
         {
             window.SetActive(false);
             SceneController.UnlockPanel();
+
         }
     }
 

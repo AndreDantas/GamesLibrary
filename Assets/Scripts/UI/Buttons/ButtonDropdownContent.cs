@@ -30,6 +30,7 @@ public class ButtonDropdownContent : ButtonContent
         if (group)
         {
             tweener.OnUpdateAnimation += group.UpdateGroupLayout;
+            tweener.OnAnimationComplete += FocusAfterOpen;
             group.OnContentOpen(this);
         }
     }
@@ -48,6 +49,15 @@ public class ButtonDropdownContent : ButtonContent
             tweener.OnUpdateAnimation += group.UpdateGroupLayout;
         }
         open = false;
+    }
+
+    void FocusAfterOpen()
+    {
+        ScrollRectEnsureVisible s = GetComponentInParent<ScrollRectEnsureVisible>();
+        if (s)
+        {
+            s.CenterOnItem(transform as RectTransform);
+        }
     }
 
     void OnClose()

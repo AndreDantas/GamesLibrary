@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class MainMenuManager : MonoBehaviour
 {
     public static MainMenuManager instance;
@@ -18,6 +21,22 @@ public class MainMenuManager : MonoBehaviour
         }
         BeginFade(-1);
         instance = this;
+    }
+    private void LateUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ModalWindow.Choice("Fechar aplicação?", QuitApp);
+        }
+    }
+
+    void QuitApp()
+    {
+#if UNITY_EDITOR    
+        EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
     }
 
     public void BeginFade(int direction)

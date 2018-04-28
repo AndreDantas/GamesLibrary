@@ -8,67 +8,172 @@ public class PongPlayer : MonoBehaviour
     /// The player's racket.
     /// </summary>
     public Racket racket;
-
+    protected Rigidbody2D racketRb;
     public float edgesDistance = 0.1f;
     /// <summary>
     /// The touch area for player movement.
     /// </summary>
-
     public Bounds touchArea;
     public bool controlOn { get; set; }
-    int touchId = -1;
-    Vector3 velocity;
-
-    private void Start()
+    public bool isAI = false;
+    protected int touchId = -1;
+    protected Vector3 velocity;
+    protected PongBall _ball;
+    protected float random;
+    public float aiSpeed;
+    protected float lerpSpeed = 1f;
+    public PongBall ball
+    {
+        get
+        {
+            return _ball;
+        }
+        set
+        {
+            _ball = value;
+            ballRb = _ball?.GetComponent<Rigidbody2D>();
+        }
+    }
+    protected Rigidbody2D ballRb;
+    protected virtual void Start()
     {
         if (racket)
+        {
             racket.player = this;
+            racketRb = racket.GetComponent<Rigidbody2D>();
+        }
     }
 
-    private void OnDrawGizmos()
+    private void FixedUpdate()
+    {
+        if (isAI && ball != null && racket != null)
+        {
+            //AIMovement();
+            racket.transform.localPosition = new Vector3(Vector3.SmoothDamp(racket.transform.localPosition, ball.transform.position, ref velocity, aiSpeed).x,
+                                                        racket.transform.localPosition.y,
+                                                        racket.transform.localPosition.z);
+            ClampRacketMovement();
+        }
+    }
+
+    protected virtual void ClampRacketMovement()
+    {
+        if (racket)
+            racket.transform.localPosition = new Vector3(Mathf.Clamp(racket.transform.localPosition.x,
+                                                         -UtilityFunctions.ScreenWidth / 2f + racket.transform.localScale.x / 2f + edgesDistance,
+                                                         UtilityFunctions.ScreenWidth / 2f - racket.transform.localScale.x / 2f - edgesDistance),
+                                                         racket.transform.localPosition.y,
+                                                         racket.transform.localPosition.z);
+    }
+
+    protected void AIMovement()
+    {
+        if (!racketRb || !ballRb)
+            return;
+        float balPosX = ball.transform.position.x;
+        float balVelX = ballRb.velocity.x;
+
+        if (balPosX > transform.localPosition.x + 0.2f)
+        {
+            racketRb.velocity = Vector2.Lerp(racketRb.velocity, Vector2.right * aiSpeed, lerpSpeed * Time.deltaTime);
+        }
+        else if (balPosX < transform.localPosition.x - 0.2f)
+        {
+            if (racketRb.velocity.x > 0) racketRb.velocity = Vector2.zero;
+            racketRb.velocity = Vector2.Lerp(racketRb.velocity, Vector2.left * aiSpeed, lerpSpeed * Time.deltaTime);
+        }
+        else
+        {
+            racketRb.velocity = Vector2.Lerp(racketRb.velocity, Vector2.zero * aiSpeed, lerpSpeed * Time.deltaTime);
+        }
+        //// if the ball is moving...
+        //if (balVelX != 0)
+        //{
+        //    if (balPosX > racketRb.position.x + 0.2f)
+        //    {
+        //        racketRb.velocity = new Vector2(aiSpeed, 0);
+        //    }
+        //    else if (balPosX < racketRb.position.x - 0.2f)
+        //    {
+        //        racketRb.velocity = new Vector2(-aiSpeed, 0);
+        //    }
+        //    else
+        //    {
+        //        racketRb.velocity = Vector2.zero;
+        //    }
+        //}
+        //// Get the AI to move back towards the center when a new round begins
+        //else
+        //{
+        //    if (racketRb.position.x > 0.2f)
+        //    {
+        //        racketRb.velocity = new Vector2(-aiSpeed, 0);
+        //    }
+        //    else if (racketRb.position.x < -0.2f)
+        //    {
+        //        racketRb.velocity = new Vector2(aiSpeed, 0);
+        //    }
+        //    else
+        //        racketRb.velocity = Vector2.zero;
+        //}
+
+        ClampRacketMovement();
+    }
+
+    protected virtual void OnBallHit(PongBall ball)
+    {
+        random = Random.Range(-0.4f, 0.4f);
+    }
+
+    protected virtual void OnDrawGizmos()
     {
         UtilityFunctions.DrawBounds(touchArea);
     }
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         StartCoroutine(IEOnEnable());
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if (Application.platform == RuntimePlatform.Android)
             ScreenTouch.instance.OnScreenTouch -= OnScreenTouch;
         else
             ScreenTouch.instance.OnScreenClickHold -= OnMouseHold;
+        racket.OnBallHit -= OnBallHit;
     }
 
-    IEnumerator IEOnEnable()
+    protected virtual IEnumerator IEOnEnable()
     {
         yield return null;
         if (Application.platform == RuntimePlatform.Android)
             ScreenTouch.instance.OnScreenTouch += OnScreenTouch;
         else
             ScreenTouch.instance.OnScreenClickHold += OnMouseHold;
+        racket.OnBallHit += OnBallHit;
     }
 
     /// <summary>
     /// Moves the racket on the X axis.
     /// </summary>
     /// <param name="position"></param>
-    public void MoveRacket(Vector2 position)
+    public virtual void MoveRacket(Vector2 position)
     {
-        if (!controlOn)
+        if (!racket)
+            return;
+
+        if (!controlOn || isAI)
             return;
         Vector3 movePos = new Vector3(Mathf.Clamp(position.x,
                                                       -UtilityFunctions.ScreenWidth / 2f + racket.transform.localScale.x / 2f + edgesDistance,
                                                       UtilityFunctions.ScreenWidth / 2f - racket.transform.localScale.x / 2f - edgesDistance),
-                                                      racket.transform.position.y,
-                                                      racket.transform.position.z);
+                                                      racket.transform.localPosition.y,
+                                                      racket.transform.localPosition.z);
         //racket.transform.position = Vector3.SmoothDamp(racket.transform.position, movePos, ref velocity, 0.1f);
-        racket.transform.position = Vector3.MoveTowards(racket.transform.position, movePos, racket.racketSpeed);
+        racket.transform.localPosition = Vector3.MoveTowards(racket.transform.localPosition, movePos, racket.racketSpeed);
     }
 
-    void OnScreenTouch(List<Touch> touches)
+    protected virtual void OnScreenTouch(List<Touch> touches)
     {
         // Move racket if in touch area
 
@@ -101,7 +206,7 @@ public class PongPlayer : MonoBehaviour
 
 
 
-    void OnMouseHold(Vector2 pos)
+    protected virtual void OnMouseHold(Vector2 pos)
     {
         if (touchArea.Contains(pos))
         {
