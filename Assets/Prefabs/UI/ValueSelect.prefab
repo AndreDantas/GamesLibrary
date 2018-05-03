@@ -187,6 +187,7 @@ MonoBehaviour:
   valueText: {fileID: 114563606949142206}
   decreaseButton: {fileID: 1540186346780808}
   increaseButton: {fileID: 1532981492531512}
+  cycle: 0
   valueUnit: 
   _maxValue: 5
   _minValue: 1

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Sirenix.OdinInspector;
 [Serializable]
 public struct ChessMoveInfo
 {
@@ -21,12 +22,17 @@ class ChessBoardSaveData
 public class ChessBoardgame : Boardgame
 {
     public ChessBoard board;
+    [Space]
+    [Header("Tiles")]
     public GameObject tilePrefab;
-    public bool darkPiecesFlipped;
     public Color lightTileColor = Color.white;
     public Color darkTileColor = Color.black;
+    [SerializeField]
+    private float tileRenderScale = 0.89f;
     public ChessPlayer turnPlayer { get; internal set; }
     protected ChessPiece selectedPiece;
+    [Space(10)]
+    [Header("Pieces")]
     public GameObject pawnPrefab;
     public GameObject rookPrefab;
     public GameObject bishopPrefab;
@@ -35,13 +41,19 @@ public class ChessBoardgame : Boardgame
     public GameObject queenPrefab;
     public Color lightPieceColor = Color.white;
     public Color darkPieceColor = Color.black;
+    public bool darkPiecesFlipped;
+    [Space(10)]
+    public AudioClip pieceMovement;
+    [Space(10)]
+    [Header("Renders")]
     public AreaRangeRenderer movementsRender;
     public AreaRangeRenderer checkRender;
     public AreaRangeRenderer lastMoveRender;
+    [Space(10)]
     public TextMeshProUGUI victoryMsg;
     public GameObject promotionObj;
-    [SerializeField]
-    private float tileRenderScale = 0.89f;
+
+    [ReadOnly]
     public List<ChessMoveInfo> movesLog;
     public ChessTile[,] tiles { get; internal set; }
     private List<ChessPiece> pieces = new List<ChessPiece>();
@@ -50,7 +62,7 @@ public class ChessBoardgame : Boardgame
     private GameObject piecesParentObj;
     private GameObject darkPiecesParent;
     private GameObject lightPiecesParent;
-
+    private GameObject indicatorParent;
     public bool canClick = true;
     private bool waitingPromotion = false;
     private Position promotionPos;
@@ -60,6 +72,7 @@ public class ChessBoardgame : Boardgame
 
     protected void Start()
     {
+        gameObject.AddAudio(pieceMovement);
         //PrepareGame();
     }
 
@@ -117,6 +130,16 @@ public class ChessBoardgame : Boardgame
     {
         ModalWindow.Choice("Reiniciar jogo?", PrepareGame1vs1);
     }
+
+    public void ToggleMuteGame()
+    {
+        gameObject.ToggleMute();
+    }
+
+    public void ToggleFlipDarkSidesPieces()
+    {
+        FlipDarkSidePieces(!darkPiecesFlipped);
+    }
     public void FlipDarkSidePieces(bool flip)
     {
         if (darkPiecesParent == null)
@@ -162,6 +185,13 @@ public class ChessBoardgame : Boardgame
             lightPiecesParent.transform.SetParent(piecesParentObj.transform);
             lightPiecesParent.transform.localScale = Vector3.one;
             lightPiecesParent.transform.localPosition = Vector3.zero;
+
+
+            if (!indicatorParent)
+                indicatorParent = new GameObject("Indicator");
+            indicatorParent.transform.SetParent(transform.parent);
+            indicatorParent.transform.localScale = Vector3.one;
+            indicatorParent.transform.localPosition = Vector3.zero;
 
             bool tileColor = false;
             SpriteRenderer sr;
@@ -435,6 +465,7 @@ public class ChessBoardgame : Boardgame
                 tiles[move.start.x, move.start.y].chessPiece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
 
                 yield return new WaitForSeconds(0.1f);
+                gameObject.PlayAudio(pieceMovement);
                 tiles[move.start.x, move.start.y].chessPiece = null;
                 if (tiles[move.end.x, move.end.y].chessPiece != null)
                 {
@@ -466,7 +497,7 @@ public class ChessBoardgame : Boardgame
         if (!playerTurnIndicator)
             return;
         playerTurnIndicator.SetActive(true);
-        playerTurnIndicator.transform.SetParent(transform);
+        playerTurnIndicator.transform.SetParent(indicatorParent.transform);
         playerTurnIndicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, 1f);
 
         SpriteRenderer sr = playerTurnIndicator.GetComponent<SpriteRenderer>();
@@ -474,15 +505,15 @@ public class ChessBoardgame : Boardgame
         {
             sr.color = Mathf.Sign(orientation) >= 1 ? darkPieceColor : lightPieceColor;
         }
-        playerTurnIndicator.transform.localPosition = new Vector3(0f, (rows / 2f + playerTurnIndicator.transform.localScale.y / 2f) * Mathf.Sign(orientation), 0f);
+        playerTurnIndicator.transform.localPosition = new Vector3(0f, (rows * tileRenderScale / 2f + playerTurnIndicator.transform.localScale.y / 2f) * Mathf.Sign(orientation) + transform.position.y, 0f);
         playerTurnIndicator.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
 
         if (playerTurnBorder)
         {
             playerTurnBorder.SetActive(true);
-            playerTurnBorder.transform.SetParent(transform);
-            playerTurnBorder.transform.localScale = new Vector3(columns, indicatorScale, 1f);
-            playerTurnBorder.transform.localPosition = new Vector3(0f, (rows / 2f + playerTurnBorder.transform.localScale.y / 2f) * Mathf.Sign(orientation), 0f);
+            playerTurnBorder.transform.SetParent(indicatorParent.transform);
+            playerTurnBorder.transform.localScale = new Vector3(columns * tileRenderScale, indicatorScale, 1f);
+            playerTurnBorder.transform.localPosition = new Vector3(0f, (rows * tileRenderScale / 2f + playerTurnBorder.transform.localScale.y / 2f) * Mathf.Sign(orientation) + transform.position.y, 0f);
             playerTurnBorder.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
 
             sr = playerTurnBorder.GetComponent<SpriteRenderer>();
@@ -492,7 +523,6 @@ public class ChessBoardgame : Boardgame
                 sr.color = Mathf.Sign(orientation) >= 1 ? darkPieceColor : lightPieceColor;
             }
         }
-
 
 
     }

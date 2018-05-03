@@ -48,11 +48,7 @@ public class PongPlayer : MonoBehaviour
     {
         if (isAI && ball != null && racket != null)
         {
-            //AIMovement();
-            racket.transform.localPosition = new Vector3(Vector3.SmoothDamp(racket.transform.localPosition, ball.transform.position, ref velocity, aiSpeed).x,
-                                                        racket.transform.localPosition.y,
-                                                        racket.transform.localPosition.z);
-            ClampRacketMovement();
+            AIMovement();
         }
     }
 
@@ -68,55 +64,9 @@ public class PongPlayer : MonoBehaviour
 
     protected void AIMovement()
     {
-        if (!racketRb || !ballRb)
-            return;
-        float balPosX = ball.transform.position.x;
-        float balVelX = ballRb.velocity.x;
-
-        if (balPosX > transform.localPosition.x + 0.2f)
-        {
-            racketRb.velocity = Vector2.Lerp(racketRb.velocity, Vector2.right * aiSpeed, lerpSpeed * Time.deltaTime);
-        }
-        else if (balPosX < transform.localPosition.x - 0.2f)
-        {
-            if (racketRb.velocity.x > 0) racketRb.velocity = Vector2.zero;
-            racketRb.velocity = Vector2.Lerp(racketRb.velocity, Vector2.left * aiSpeed, lerpSpeed * Time.deltaTime);
-        }
-        else
-        {
-            racketRb.velocity = Vector2.Lerp(racketRb.velocity, Vector2.zero * aiSpeed, lerpSpeed * Time.deltaTime);
-        }
-        //// if the ball is moving...
-        //if (balVelX != 0)
-        //{
-        //    if (balPosX > racketRb.position.x + 0.2f)
-        //    {
-        //        racketRb.velocity = new Vector2(aiSpeed, 0);
-        //    }
-        //    else if (balPosX < racketRb.position.x - 0.2f)
-        //    {
-        //        racketRb.velocity = new Vector2(-aiSpeed, 0);
-        //    }
-        //    else
-        //    {
-        //        racketRb.velocity = Vector2.zero;
-        //    }
-        //}
-        //// Get the AI to move back towards the center when a new round begins
-        //else
-        //{
-        //    if (racketRb.position.x > 0.2f)
-        //    {
-        //        racketRb.velocity = new Vector2(-aiSpeed, 0);
-        //    }
-        //    else if (racketRb.position.x < -0.2f)
-        //    {
-        //        racketRb.velocity = new Vector2(aiSpeed, 0);
-        //    }
-        //    else
-        //        racketRb.velocity = Vector2.zero;
-        //}
-
+        racket.transform.localPosition = new Vector3(Vector3.SmoothDamp(racket.transform.localPosition, ball.transform.position, ref velocity, aiSpeed).x,
+                                                       racket.transform.localPosition.y,
+                                                       racket.transform.localPosition.z);
         ClampRacketMovement();
     }
 

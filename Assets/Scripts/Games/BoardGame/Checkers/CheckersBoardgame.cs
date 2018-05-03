@@ -31,6 +31,7 @@ public class CheckersBoardgame : Boardgame
     public Color lightTile = Color.white;
     public Color darkTile = Color.cyan;
     [Space(10)]
+    [Header("Pieces")]
     public GameObject checkerPrefab;
     public GameObject checkerKingPrefab;
     public Color topPlayerColor = Color.red;
@@ -47,6 +48,8 @@ public class CheckersBoardgame : Boardgame
     public AreaRangeRenderer lastMoveRender;
     public AreaRangeRenderer selectedPieceRender;
     [Space(10)]
+    public AudioClip pieceMovement;
+    [Space(10)]
     public TextMeshProUGUI victoryMsg;
     public bool canClick = true;
     public List<CheckersMoveInfo> movesLog;
@@ -56,14 +59,20 @@ public class CheckersBoardgame : Boardgame
     private GameObject piecesParentObj;
     private GameObject player1PiecesParent;
     private GameObject player2PiecesParent;
+    private GameObject indicatorParent;
     public CheckerTile[,] tiles { get; internal set; }
     private CheckerMove previousCaptureMove;
     private bool capturing;
     private void Start()
     {
-
+        gameObject.AddAudio(pieceMovement);
         //PrepareGame();
     }
+    public void ToggleMuteGame()
+    {
+        gameObject.ToggleMute();
+    }
+
     private void OnValidate()
     {
         ChangePiecesColor(true);
@@ -94,6 +103,10 @@ public class CheckersBoardgame : Boardgame
     {
         gameSettings = new CheckersSettingsData(CheckersSettings.instance.settings);
         // Board settings
+        lightTile = gameSettings.lightTileColor;
+        darkTile = gameSettings.darkTileColor;
+        topPlayerColor = gameSettings.topPieceColor;
+        bottomPlayerColor = gameSettings.bottomPieceColor;
         columns = gameSettings.columns;
         rows = gameSettings.rows;
         board = new CheckersBoard();
@@ -218,6 +231,11 @@ public class CheckersBoardgame : Boardgame
             player2PiecesParent.transform.localScale = Vector3.one;
             player2PiecesParent.transform.localPosition = Vector3.zero;
 
+            if (!indicatorParent)
+                indicatorParent = new GameObject("Indicator");
+            indicatorParent.transform.SetParent(transform.parent);
+            indicatorParent.transform.localScale = Vector3.one;
+            indicatorParent.transform.localPosition = Vector3.zero;
             bool tileColor = false;
             SpriteRenderer sr;
             GameObject tile;
@@ -227,7 +245,9 @@ public class CheckersBoardgame : Boardgame
             float width = UtilityFunctions.ScreenWidth;
             boardWidth = boardHeight = width;
             tileRenderScale = (width * 1.0f) / (columns * 1.0f);
+
             transform.localScale = Vector3.one * ((width * 1.0f) / (columns * 1.0f));
+
             tiles = new CheckerTile[this.columns, this.rows];
             for (int i = 0; i < this.columns; i++)
             {
@@ -306,6 +326,10 @@ public class CheckersBoardgame : Boardgame
         {
             board = data.board;
 
+            lightTile = gameSettings.lightTileColor;
+            darkTile = gameSettings.darkTileColor;
+            topPlayerColor = gameSettings.topPieceColor;
+            bottomPlayerColor = gameSettings.bottomPieceColor;
             gameSettings = data.settings;
             columns = gameSettings.columns;
             rows = gameSettings.rows;
@@ -454,6 +478,7 @@ public class CheckersBoardgame : Boardgame
                 tiles[move.start.x, move.start.y].checkerPiece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
 
                 yield return new WaitForSeconds(0.1f);
+                gameObject.PlayAudio(pieceMovement);
                 tiles[move.start.x, move.start.y].checkerPiece = null;
                 tiles[move.end.x, move.end.y].checkerPiece = temp;
                 canClick = true;
@@ -482,6 +507,7 @@ public class CheckersBoardgame : Boardgame
                     tiles[move.start.x, move.start.y].checkerPiece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
 
                     yield return new WaitForSeconds(0.1f);
+                    gameObject.PlayAudio(pieceMovement);
                     tiles[move.start.x, move.start.y].checkerPiece = null;
                     Position delta = new Position(UtilityFunctions.Sign(move.end.x - move.start.x), UtilityFunctions.Sign(move.end.y - move.start.y));
                     Position captured = move.end - delta;
@@ -525,7 +551,7 @@ public class CheckersBoardgame : Boardgame
             return;
 
         playerTurnIndicator.SetActive(true);
-        playerTurnIndicator.transform.SetParent(transform);
+        playerTurnIndicator.transform.SetParent(indicatorParent.transform);
         playerTurnIndicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, 1f);
 
         SpriteRenderer sr = playerTurnIndicator.GetComponent<SpriteRenderer>();
@@ -533,15 +559,15 @@ public class CheckersBoardgame : Boardgame
         {
             sr.color = Mathf.Sign(orientation) >= 1 ? topPlayerColor : bottomPlayerColor;
         }
-        playerTurnIndicator.transform.localPosition = new Vector3(0f, (rows / 2f + playerTurnIndicator.transform.localScale.y / 2f) * Mathf.Sign(orientation), 0f);
+        playerTurnIndicator.transform.localPosition = new Vector3(0f, (rows * tileRenderScale / 2f + playerTurnIndicator.transform.localScale.y / 2f) * Mathf.Sign(orientation) + transform.position.y, 0f);
         playerTurnIndicator.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
 
         if (playerTurnBorder)
         {
             playerTurnBorder.SetActive(true);
-            playerTurnBorder.transform.SetParent(transform);
-            playerTurnBorder.transform.localScale = new Vector3(columns, indicatorScale, 1f);
-            playerTurnBorder.transform.localPosition = new Vector3(0f, (rows / 2f + playerTurnBorder.transform.localScale.y / 2f) * Mathf.Sign(orientation), 0f);
+            playerTurnBorder.transform.SetParent(indicatorParent.transform);
+            playerTurnBorder.transform.localScale = new Vector3(columns * tileRenderScale, indicatorScale, 1f);
+            playerTurnBorder.transform.localPosition = new Vector3(0f, (rows * tileRenderScale / 2f + playerTurnBorder.transform.localScale.y / 2f) * Mathf.Sign(orientation) + transform.position.y, 0f);
             playerTurnBorder.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
 
             sr = playerTurnBorder.GetComponent<SpriteRenderer>();

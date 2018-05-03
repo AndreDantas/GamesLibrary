@@ -65,7 +65,7 @@ public static class AudioUtilities
         }
     }
 
-    public static void MuteGameObject(this GameObject g)
+    public static void Mute(this GameObject g)
     {
         foreach (AudioSource s in g.GetComponents<AudioSource>())
         {
@@ -73,7 +73,26 @@ public static class AudioUtilities
         }
     }
 
-    public static void UnMuteGameObject(this GameObject g)
+    public static bool IsMute(this GameObject g)
+    {
+        bool mute = true;
+        foreach (AudioSource s in g?.GetComponents<AudioSource>())
+        {
+            if (!s.mute)
+                mute = false;
+        }
+        return mute;
+    }
+
+    public static void ToggleMute(this GameObject g)
+    {
+        foreach (AudioSource s in g.GetComponents<AudioSource>())
+        {
+            s.mute = !s.mute;
+        }
+    }
+
+    public static void Unmute(this GameObject g)
     {
         foreach (AudioSource s in g.GetComponents<AudioSource>())
         {

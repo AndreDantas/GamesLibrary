@@ -4,13 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using TMPro;
+using Sirenix.OdinInspector;
 public class CheckersEditPanel : GamePanel
 {
     public ScrollRect scrollRect;
     [SerializeField]
     private CheckersSettingsData settings = new CheckersSettingsData();
     public TMP_Dropdown boardSizeDropdown;
-    public BuildGridUI boardPreview;
+    public CheckerBoardImage boardPreview;
+    [ShowInInspector, HorizontalGroup("ColorGroup")]
+    public List<Color> topPlayerColors { get { return new List<Color> { Color.red, Colors.PersianRed, Colors.BlizzardBlue, Colors.OrangeCrayola, Colors.GreenLizard }; } }
+    [ShowInInspector, HorizontalGroup("ColorGroup")]
+    public List<Color> bottomplayerColors { get { return new List<Color> { Colors.BlackLeatherJacket, Colors.YellowMunsell, Colors.PersianPink, Colors.PurpleHeart, Colors.DutchWhite }; } }
+
     private readonly Dictionary<string, int> boardSize = new Dictionary<string, int>()
     {
         { "6x6", 6},
@@ -22,51 +28,14 @@ public class CheckersEditPanel : GamePanel
     public Toggle multiDirectionCaptureToggle;
     public ValueSelectUI piecesMovement;
     public Toggle kingInfiniteMovementDistance;
+    [SceneObjectsOnly]
+    public ColorSelectUI topPlayerColorSelect;
+    [SceneObjectsOnly]
+    public ColorSelectUI bottomPlayerColorSelect;
     private void Start()
     {
-        settings = new CheckersSettingsData(CheckersSettings.instance.settings);
-        boardSizeIndex.Clear();
-        foreach (var item in boardSize.ToList())
-        {
-            boardSizeIndex.Add(item.Value);
-        }
-        if (boardSizeDropdown != null)
-        {
-            boardSizeDropdown.ClearOptions();
-            boardSizeDropdown.AddOptions(boardSize.Keys.ToList());
-            boardSizeDropdown.value = boardSizeIndex.IndexOf(settings.columns);
-            boardSizeDropdown.onValueChanged.AddListener(DropdownValueChanged);
-        }
-        if (boardPreview)
-        {
-            boardPreview.columns = settings.columns;
-            boardPreview.rows = settings.rows;
-            boardPreview.CreateGrid();
-        }
-        if (piecesByRow)
-        {
-            piecesByRow.maxValue = settings.columns / 2 - 1;
-            piecesByRow.minValue = 1;
-            piecesByRow.value = settings.piecesByRow;
-            piecesByRow.OnValueChanged.AddListener(PiecesByRowChanged);
-        }
-        if (multiDirectionCaptureToggle)
-        {
-            multiDirectionCaptureToggle.isOn = settings.multiDirectionalCapture;
-            multiDirectionCaptureToggle.onValueChanged.AddListener(MultiDirValueChanged);
-        }
-        if (piecesMovement)
-        {
-            piecesMovement.value = settings.pieceMoveDistance;
-            piecesMovement.OnValueChanged.AddListener(PiecesMovementDistanceChanged);
-        }
-        if (kingInfiniteMovementDistance)
-        {
-            kingInfiniteMovementDistance.isOn = settings.kingInfiniteMoveDistance;
-            kingInfiniteMovementDistance.onValueChanged.AddListener(KingInfiniteMovement);
-        }
+        Init();
     }
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -82,6 +51,74 @@ public class CheckersEditPanel : GamePanel
         CheckersSettings.instance.settings = new CheckersSettingsData(settings);
         CheckersSettings.instance.SaveSettings();
     }
+    void Init()
+    {
+        settings = new CheckersSettingsData(CheckersSettings.instance.settings);
+        boardSizeIndex.Clear();
+        foreach (var item in boardSize.ToList())
+        {
+            boardSizeIndex.Add(item.Value);
+        }
+        if (boardSizeDropdown != null)
+        {
+            boardSizeDropdown.ClearOptions();
+            boardSizeDropdown.AddOptions(boardSize.Keys.ToList());
+            boardSizeDropdown.value = boardSizeIndex.IndexOf(settings.columns);
+            boardSizeDropdown.onValueChanged.RemoveAndAddListener(DropdownValueChanged);
+        }
+        if (topPlayerColorSelect)
+        {
+            topPlayerColorSelect.selectColors = topPlayerColors;
+            topPlayerColorSelect.SetCurrentColor(0);
+            topPlayerColorSelect.UpdateUI();
+            topPlayerColorSelect.OnColorSelect.RemoveAndAddListener(TopPlayerColorChanged);
+
+        }
+        if (bottomPlayerColorSelect)
+        {
+            bottomPlayerColorSelect.selectColors = bottomplayerColors;
+            bottomPlayerColorSelect.SetCurrentColor(0);
+            bottomPlayerColorSelect.UpdateUI();
+            bottomPlayerColorSelect.OnColorSelect.RemoveAndAddListener(BottomPlayerColorChanged);
+
+        }
+        if (boardPreview)
+        {
+            boardPreview.columns = settings.columns;
+            boardPreview.rows = settings.rows;
+            boardPreview.darkTile = settings.darkTileColor;
+            boardPreview.lightTile = settings.lightTileColor;
+            boardPreview.topPieceColor = settings.topPieceColor;
+            boardPreview.bottomPieceColor = settings.bottomPieceColor;
+            boardPreview.CreateGrid();
+            boardPreview.rowsWithPieces = settings.piecesByRow;
+            boardPreview.PlacePieces();
+
+        }
+        if (piecesByRow)
+        {
+            piecesByRow.maxValue = settings.columns / 2 - 1;
+            piecesByRow.minValue = 1;
+            piecesByRow.value = settings.piecesByRow;
+            piecesByRow.OnValueChanged.RemoveAndAddListener(PiecesByRowChanged);
+        }
+        if (multiDirectionCaptureToggle)
+        {
+            multiDirectionCaptureToggle.isOn = settings.multiDirectionalCapture;
+            multiDirectionCaptureToggle.onValueChanged.RemoveAndAddListener(MultiDirValueChanged);
+        }
+        if (piecesMovement)
+        {
+            piecesMovement.value = settings.pieceMoveDistance;
+            piecesMovement.OnValueChanged.RemoveAndAddListener(PiecesMovementDistanceChanged);
+        }
+        if (kingInfiniteMovementDistance)
+        {
+            kingInfiniteMovementDistance.isOn = settings.kingInfiniteMoveDistance;
+            kingInfiniteMovementDistance.onValueChanged.RemoveAndAddListener(KingInfiniteMovement);
+        }
+    }
+
     private void DropdownValueChanged(int newPosition)
     {
         int realValue = boardSize.Values.ElementAt(newPosition);
@@ -95,6 +132,7 @@ public class CheckersEditPanel : GamePanel
         {
             boardPreview.columns = boardPreview.rows = realValue;
             boardPreview.CreateGrid();
+            boardPreview.PlacePieces();
         }
     }
 
@@ -102,10 +140,33 @@ public class CheckersEditPanel : GamePanel
     {
         settings.piecesByRow = value;
         settings.piecesByRow = UtilityFunctions.ClampMin(settings.piecesByRow, 1);
+        if (boardPreview)
+        {
+            boardPreview.rowsWithPieces = value;
+            boardPreview.PlacePieces();
+        }
     }
 
+    private void TopPlayerColorChanged(Color c)
+    {
+        if (boardPreview)
+        {
+            boardPreview.topPieceColor = c;
+            boardPreview.UpdateGrid();
 
+        }
+        settings.topPieceColor = c;
+    }
+    private void BottomPlayerColorChanged(Color c)
+    {
+        if (boardPreview)
+        {
+            boardPreview.bottomPieceColor = c;
+            boardPreview.UpdateGrid();
 
+        }
+        settings.bottomPieceColor = c;
+    }
     private void MultiDirValueChanged(bool toggle)
     {
         settings.multiDirectionalCapture = toggle;
@@ -122,36 +183,9 @@ public class CheckersEditPanel : GamePanel
 
     public void ResetSettings()
     {
-        settings = new CheckersSettingsData();
-        if (boardSizeDropdown != null)
-        {
-            boardSizeDropdown.ClearOptions();
-            boardSizeDropdown.AddOptions(boardSize.Keys.ToList());
-            boardSizeDropdown.value = boardSizeIndex.IndexOf(settings.columns);
-
-        }
-        if (piecesByRow)
-        {
-            piecesByRow.value = settings.piecesByRow;
-
-        }
-        if (multiDirectionCaptureToggle)
-        {
-            multiDirectionCaptureToggle.isOn = settings.multiDirectionalCapture;
-
-        }
-        if (piecesMovement)
-        {
-            piecesMovement.value = settings.pieceMoveDistance;
-
-        }
-        if (kingInfiniteMovementDistance)
-        {
-            kingInfiniteMovementDistance.isOn = settings.kingInfiniteMoveDistance;
-
-        }
 
         CheckersSettings.instance.settings = new CheckersSettingsData();
+        Init();
         CheckersSettings.instance.SaveSettings();
     }
 }

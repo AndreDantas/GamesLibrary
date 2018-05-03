@@ -81,7 +81,7 @@ public class PongMatchSettingsPanel : GamePanel
                 pongGame.maxBallSpeed = 10f;
                 pongGame.ballHitsToMaxSpeed = 10;
                 pongGame.topPlayer.racket.racketSpeed = pongGame.bottomPlayer.racket.racketSpeed = 0.13f;
-                pongGame.topPlayer.aiSpeed = pongGame.bottomPlayer.aiSpeed = 0.19f;
+                pongGame.topPlayer.aiSpeed = pongGame.bottomPlayer.aiSpeed = 0.17f;
             }
         }
     }

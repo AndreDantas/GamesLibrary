@@ -69,7 +69,7 @@ public class ValueSelectUI : SelectUI
     [Space(15)]
     public OnValueSelectChanged OnValueChanged;
 
-    private void OnValidate()
+    protected override void OnValidate()
     {
         minValue = UtilityFunctions.ClampMax(minValue, maxValue);
         value = Mathf.Clamp(value, minValue, maxValue);

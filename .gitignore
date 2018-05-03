@@ -1,6 +1,5 @@
 ExportedObj/
 Temp/
-Plugins/
 *.svd
 *.userprefs
 *.csproj
@@ -12,3 +11,4 @@ Plugins/
 *.booproj
 *.apk
 *.sublime-project
+*.meta

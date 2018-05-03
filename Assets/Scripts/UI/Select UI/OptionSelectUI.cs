@@ -23,16 +23,12 @@ public class OnOptionSelectChanged : UnityEvent<object>
 }
 public class OptionSelectUI : SelectUI
 {
-    protected int index = 0;
-    public bool cycle;
+
     public List<StringObjectPair> options = new List<StringObjectPair>();
     [Space(15)]
     public OnOptionSelectChanged OnOptionChanged;
 
-    private void OnValidate()
-    {
-        UpdateUI();
-    }
+
     public virtual void ChangeOption(int direction)
     {
         if (options != null ? options.Count > 0 : false)
@@ -107,7 +103,7 @@ public class OptionSelectUI : SelectUI
         UpdateUI();
     }
 
-    public void ClearOptions()
+    public virtual void ClearOptions()
     {
         options.Clear();
         UpdateUI();

@@ -240,7 +240,7 @@ PlayerSettings:
   androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
-  AndroidTVCompatibility: 1
+  AndroidTVCompatibility: 0
   AndroidIsGame: 1
   AndroidEnableTango: 0
   androidEnableBanner: 1
@@ -635,7 +635,8 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 1
   webGLLinkerTarget: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    7: ODIN_INSPECTOR
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}
@@ -725,7 +726,7 @@ PlayerSettings:
   apiCompatibilityLevel: 3
   cloudProjectId: 455b9b84-5cb6-4180-b452-4b005c129ec8
   projectName: Catchphrase
-  organizationId: andre-dantas-27909507-06b2-4d84-9d1d-181368717934
+  organizationId: andre-dantas-edfac27a-909e-440f-82b7-21df16dee987
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
