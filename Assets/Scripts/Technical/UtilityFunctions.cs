@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
+using System;
+using Sirenix.OdinInspector;
 using System.Linq;
 [System.Serializable]
 public enum LerpMode
@@ -79,7 +81,7 @@ public static class UtilityFunctions
     /// <returns></returns>
     public static float RandomSign()
     {
-        return Random.Range(0, 2) * 2 - 1;
+        return UnityEngine.Random.Range(0, 2) * 2 - 1;
     }
 
     /// <summary>
@@ -181,6 +183,22 @@ public static class UtilityFunctions
         return l;
     }
 
+    public static T PickRandom<T>(this IEnumerable<T> source)
+    {
+        return source.PickRandom(1).Single();
+    }
+
+    public static IEnumerable<T> PickRandom<T>(this IEnumerable<T> source, int count)
+    {
+        return source.Shuffle().Take(count);
+    }
+
+    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
+    {
+        return source.OrderBy(x => Guid.NewGuid());
+    }
+
+
     /// <summary>
     /// Returns a list with all the items of the bidimensional array.
     /// </summary>
@@ -201,6 +219,23 @@ public static class UtilityFunctions
             }
         }
         return result;
+    }
+
+    /// <summary>
+    /// Checks if the (x,y) coordinate is valid in the bidimensional array.
+    /// </summary>
+    /// <typeparam name="T">The object Type.</typeparam>
+    /// <param name="bidimensionalArray"></param>
+    /// <param name="x">X coordinate.</param>
+    /// <param name="y">Y coordinate</param>
+    /// <returns></returns>
+    public static bool ValidCoordinate<T>(this T[,] bidimensionalArray, int x, int y)
+    {
+        if (bidimensionalArray == null)
+            return false;
+
+        return (x >= 0 && x < bidimensionalArray.GetLength(0) &&
+                y >= 0 && y < bidimensionalArray.GetLength(1));
     }
 
     /// <summary>
@@ -251,9 +286,9 @@ public static class UtilityFunctions
         return hasComponent;
     }
 
-    public static void DestroySelf(this Object c)
+    public static void DestroySelf(this UnityEngine.Object c)
     {
-        Object.Destroy(c);
+        UnityEngine.Object.Destroy(c);
     }
     /// <summary>
     /// Destroys all child objects on transform.
@@ -269,7 +304,7 @@ public static class UtilityFunctions
 
         for (int i = destroyList.Count - 1; i >= 0; i--)
         {
-            Object.Destroy(destroyList[i]);
+            UnityEngine.Object.Destroy(destroyList[i]);
         }
 
     }

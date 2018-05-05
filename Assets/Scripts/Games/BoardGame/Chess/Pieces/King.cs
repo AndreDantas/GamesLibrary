@@ -23,7 +23,7 @@ public class King : ChessPiece
     public override void MoveToPos(Move move)
     {
 
-        if (move.end.x == pos.x + 2) // Castling
+        if (move.end.x == pos.x + 2) // Castling right
         {
             ChessPiece rook = board.GetPiece(new Position(board.nodes.GetLength(0) - 1, pos.y));
             if (rook != null)
@@ -35,7 +35,7 @@ public class King : ChessPiece
 
             }
         }
-        else if (move.end.x == pos.x - 2)
+        else if (move.end.x == pos.x - 2) // Castling left
         {
             ChessPiece rook = board.GetPiece(new Position(0, pos.y));
             if (rook != null)

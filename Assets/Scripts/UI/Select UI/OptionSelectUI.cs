@@ -87,6 +87,29 @@ public class OptionSelectUI : SelectUI
         }
     }
 
+    public virtual void SetCurrentOption(string s)
+    {
+        foreach (StringObjectPair sp in options)
+        {
+            if (sp.name == s)
+            {
+
+                index = options.IndexOf(sp);
+                UpdateUI();
+                return;
+            }
+        }
+    }
+    public void SetCurrentOption(int index)
+    {
+        if (options == null)
+            return;
+        if (index >= 0 && index < options.Count)
+        {
+            this.index = index;
+            UpdateUI();
+        }
+    }
     public virtual object GetCurrentValue()
     {
         if (options != null ? options.Count > 0 : false)

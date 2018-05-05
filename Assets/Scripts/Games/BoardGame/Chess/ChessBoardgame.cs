@@ -18,9 +18,18 @@ class ChessBoardSaveData
     public ChessBoard board;
     public List<ChessMoveInfo> movesLog;
     public ChessPlayer turnPlayer;
+    public ChessSettingsData settings;
+}
+[Serializable]
+public enum ChessGameMode
+{
+    Mini,
+    Normal,
+    Omega
 }
 public class ChessBoardgame : Boardgame
 {
+    private ChessSettingsData gameSettings;
     public ChessBoard board;
     [Space]
     [Header("Tiles")]
@@ -110,8 +119,15 @@ public class ChessBoardgame : Boardgame
     }
 #endif
 
-    public virtual void PrepareGame1vs1()
+    public virtual void PrepareGame()
     {
+        gameSettings = new ChessSettingsData(ChessSettings.instance.settings);
+        columns = gameSettings.columns;
+        rows = gameSettings.rows;
+        darkPieceColor = gameSettings.topPieceColor;
+        lightPieceColor = gameSettings.bottomPieceColor;
+        darkTileColor = gameSettings.darkTileColor;
+        lightTileColor = gameSettings.lightTileColor;
         waitingPromotion = false;
         board = new ChessBoard(columns, rows);
         board.InitBoard();
@@ -119,43 +135,223 @@ public class ChessBoardgame : Boardgame
         board.player2 = new ChessPlayer(Orientation.UP);
         turnPlayer = board.player1;
         RenderMap();
-        PlacePieces();
+        pieces = new List<ChessPiece>();
+        switch (gameSettings.gameMode)
+        {
+            case ChessGameMode.Mini:
+                PlacePiecesMini();
+                break;
+            case ChessGameMode.Normal:
+                PlacePiecesNormal();
+                break;
+            case ChessGameMode.Omega:
+                PlacePiecesOmega();
+                break;
+        }
         ClearRenders();
         movesLog = new List<ChessMoveInfo>();
         canClick = true;
         FlipDarkSidePieces(darkPiecesFlipped);
         StartTurn();
     }
-    public void ConfirmRestartMatch()
-    {
-        ModalWindow.Choice("Reiniciar jogo?", PrepareGame1vs1);
-    }
 
-    public void ToggleMuteGame()
+    #region Place Pieces
+    public virtual void PlacePiecesNormal()
     {
-        gameObject.ToggleMute();
-    }
 
-    public void ToggleFlipDarkSidesPieces()
-    {
-        FlipDarkSidePieces(!darkPiecesFlipped);
-    }
-    public void FlipDarkSidePieces(bool flip)
-    {
-        if (darkPiecesParent == null)
-            return;
-        foreach (Transform g in darkPiecesParent.transform)
+        // First Player
+        for (int i = 0; i < columns; i++)
         {
-            SpriteRenderer sr = g.gameObject.GetComponent<SpriteRenderer>();
-            if (sr != null)
-            {
-                sr.flipX = flip;
-                sr.flipY = flip;
-            }
+            Position pos = new Position(i, 1);
+            PlacePiece(Instantiate(pawnPrefab), pos, new Pawn(pos), board.player1);
         }
 
-        darkPiecesFlipped = flip;
+        PlacePiece(Instantiate(rookPrefab), new Position(0, 0), new Rook(new Position(0, 0)), board.player1);
+        PlacePiece(Instantiate(rookPrefab), new Position(7, 0), new Rook(new Position(7, 0)), board.player1);
+
+        PlacePiece(Instantiate(knightPrefab), new Position(1, 0), new Knight(new Position(1, 0)), board.player1);
+        PlacePiece(Instantiate(knightPrefab), new Position(6, 0), new Knight(new Position(6, 0)), board.player1);
+
+        PlacePiece(Instantiate(bishopPrefab), new Position(2, 0), new Bishop(new Position(2, 0)), board.player1);
+        PlacePiece(Instantiate(bishopPrefab), new Position(5, 0), new Bishop(new Position(5, 0)), board.player1);
+
+        PlacePiece(Instantiate(queenPrefab), new Position(columns / 2 - 1, 0), new Queen(new Position(columns / 2 - 1, 0)), board.player1);
+        PlacePiece(Instantiate(kingPrefab), new Position(columns / 2, 0), new King(new Position(columns / 2, 0)), board.player1);
+
+
+        // Second Player
+        for (int i = 0; i < columns; i++)
+        {
+            Position pos = new Position(i, 6);
+            PlacePiece(Instantiate(pawnPrefab), pos, new Pawn(pos), board.player2, false);
+        }
+
+        PlacePiece(Instantiate(rookPrefab), new Position(0, 7), new Rook(new Position(0, 7)), board.player2, false);
+        PlacePiece(Instantiate(rookPrefab), new Position(7, 7), new Rook(new Position(7, 7)), board.player2, false);
+
+        PlacePiece(Instantiate(knightPrefab), new Position(1, 7), new Knight(new Position(1, 7)), board.player2, false);
+        PlacePiece(Instantiate(knightPrefab), new Position(6, 7), new Knight(new Position(6, 7)), board.player2, false);
+
+        PlacePiece(Instantiate(bishopPrefab), new Position(2, 7), new Bishop(new Position(2, 7)), board.player2, false);
+        PlacePiece(Instantiate(bishopPrefab), new Position(5, 7), new Bishop(new Position(5, 7)), board.player2, false);
+
+        PlacePiece(Instantiate(queenPrefab), new Position(columns / 2 - 1, 7), new Queen(new Position(columns / 2 - 1, 7)), board.player2, false);
+        PlacePiece(Instantiate(kingPrefab), new Position(columns / 2, 7), new King(new Position(columns / 2, 7)), board.player2, false);
+
     }
+
+    public virtual void PlacePiecesMini()
+    {
+        // First Player
+        for (int i = 0; i < columns; i++)
+        {
+            Position pos = new Position(i, 1);
+            PlacePiece(Instantiate(pawnPrefab), pos, new Pawn(pos), board.player1);
+        }
+        int counter = 1;
+        if (gameSettings.removedPiece != "rook")
+        {
+            PlacePiece(Instantiate(rookPrefab), new Position(counter - 1, 0), new Rook(new Position(counter - 1, 0)), board.player1);
+            PlacePiece(Instantiate(rookPrefab), new Position(columns - counter, 0), new Rook(new Position(columns - counter, 0)), board.player1);
+            counter++;
+        }
+        if (gameSettings.removedPiece != "knight")
+        {
+            PlacePiece(Instantiate(knightPrefab), new Position(counter - 1, 0), new Knight(new Position(counter - 1, 0)), board.player1);
+            PlacePiece(Instantiate(knightPrefab), new Position(columns - counter, 0), new Knight(new Position(columns - counter, 0)), board.player1);
+            counter++;
+        }
+        if (gameSettings.removedPiece != "bishop")
+        {
+            PlacePiece(Instantiate(bishopPrefab), new Position(counter - 1, 0), new Bishop(new Position(counter - 1, 0)), board.player1);
+            PlacePiece(Instantiate(bishopPrefab), new Position(columns - counter, 0), new Bishop(new Position(columns - counter, 0)), board.player1);
+            counter++;
+        }
+        PlacePiece(Instantiate(queenPrefab), new Position(columns / 2 - 1, 0), new Queen(new Position(columns / 2 - 1, 0)), board.player1);
+        PlacePiece(Instantiate(kingPrefab), new Position(columns / 2, 0), new King(new Position(columns / 2, 0)), board.player1);
+
+
+        // Second Player     
+        for (int i = 0; i < columns; i++)
+        {
+            Position pos = new Position(i, rows - 2);
+            PlacePiece(Instantiate(pawnPrefab), pos, new Pawn(pos), board.player2, false);
+        }
+        counter = 1;
+        if (gameSettings.removedPiece != "rook")
+        {
+            PlacePiece(Instantiate(rookPrefab), new Position(counter - 1, rows - 1), new Rook(new Position(counter - 1, rows - 1)), board.player2, false);
+            PlacePiece(Instantiate(rookPrefab), new Position(columns - counter, rows - 1), new Rook(new Position(columns - counter, rows - 1)), board.player2, false);
+            counter++;
+        }
+        if (gameSettings.removedPiece != "knight")
+        {
+            PlacePiece(Instantiate(knightPrefab), new Position(counter - 1, rows - 1), new Knight(new Position(counter - 1, rows - 1)), board.player2, false);
+            PlacePiece(Instantiate(knightPrefab), new Position(columns - counter, rows - 1), new Knight(new Position(columns - counter, rows - 1)), board.player2, false);
+            counter++;
+        }
+        if (gameSettings.removedPiece != "bishop")
+        {
+            PlacePiece(Instantiate(bishopPrefab), new Position(counter - 1, rows - 1), new Bishop(new Position(counter - 1, rows - 1)), board.player2, false);
+            PlacePiece(Instantiate(bishopPrefab), new Position(columns - counter, rows - 1), new Bishop(new Position(columns - counter, rows - 1)), board.player2, false);
+            counter++;
+        }
+        PlacePiece(Instantiate(queenPrefab), new Position(columns / 2 - 1, rows - 1), new Queen(new Position(columns / 2 - 1, rows - 1)), board.player2, false);
+        PlacePiece(Instantiate(kingPrefab), new Position(columns / 2, rows - 1), new King(new Position(columns / 2, rows - 1)), board.player2, false);
+
+
+
+
+    }
+
+    public virtual void PlacePiecesOmega()
+    {
+        // First Player
+        for (int i = 0; i < columns; i++)
+        {
+            Position pos = new Position(i, 1);
+            PlacePiece(Instantiate(pawnPrefab), pos, new Pawn(pos), board.player1);
+        }
+        int counter = 1;
+
+        PlacePiece(Instantiate(rookPrefab), new Position(counter - 1, 0), new Rook(new Position(counter - 1, 0)), board.player1);
+        PlacePiece(Instantiate(rookPrefab), new Position(columns - counter, 0), new Rook(new Position(columns - counter, 0)), board.player1);
+        counter++;
+        if (gameSettings.addedPiece == "rook")
+        {
+            PlacePiece(Instantiate(rookPrefab), new Position(counter - 1, 0), new Rook(new Position(counter - 1, 0)), board.player1);
+            PlacePiece(Instantiate(rookPrefab), new Position(columns - counter, 0), new Rook(new Position(columns - counter, 0)), board.player1);
+            counter++;
+        }
+
+        PlacePiece(Instantiate(knightPrefab), new Position(counter - 1, 0), new Knight(new Position(counter - 1, 0)), board.player1);
+        PlacePiece(Instantiate(knightPrefab), new Position(columns - counter, 0), new Knight(new Position(columns - counter, 0)), board.player1);
+        counter++;
+        if (gameSettings.addedPiece == "knight")
+        {
+            PlacePiece(Instantiate(knightPrefab), new Position(counter - 1, 0), new Knight(new Position(counter - 1, 0)), board.player1);
+            PlacePiece(Instantiate(knightPrefab), new Position(columns - counter, 0), new Knight(new Position(columns - counter, 0)), board.player1);
+            counter++;
+        }
+
+        PlacePiece(Instantiate(bishopPrefab), new Position(counter - 1, 0), new Bishop(new Position(counter - 1, 0)), board.player1);
+        PlacePiece(Instantiate(bishopPrefab), new Position(columns - counter, 0), new Bishop(new Position(columns - counter, 0)), board.player1);
+        counter++;
+        if (gameSettings.addedPiece == "bishop")
+        {
+            PlacePiece(Instantiate(bishopPrefab), new Position(counter - 1, 0), new Bishop(new Position(counter - 1, 0)), board.player1);
+            PlacePiece(Instantiate(bishopPrefab), new Position(columns - counter, 0), new Bishop(new Position(columns - counter, 0)), board.player1);
+            counter++;
+        }
+        PlacePiece(Instantiate(queenPrefab), new Position(columns / 2 - 1, 0), new Queen(new Position(columns / 2 - 1, 0)), board.player1);
+        PlacePiece(Instantiate(kingPrefab), new Position(columns / 2, 0), new King(new Position(columns / 2, 0)), board.player1);
+
+
+        // Second Player     
+        for (int i = 0; i < columns; i++)
+        {
+            Position pos = new Position(i, rows - 2);
+            PlacePiece(Instantiate(pawnPrefab), pos, new Pawn(pos), board.player2, false);
+        }
+        counter = 1;
+
+        PlacePiece(Instantiate(rookPrefab), new Position(counter - 1, rows - 1), new Rook(new Position(counter - 1, rows - 1)), board.player2, false);
+        PlacePiece(Instantiate(rookPrefab), new Position(columns - counter, rows - 1), new Rook(new Position(columns - counter, rows - 1)), board.player2, false);
+        counter++;
+        if (gameSettings.addedPiece == "rook")
+        {
+            PlacePiece(Instantiate(rookPrefab), new Position(counter - 1, rows - 1), new Rook(new Position(counter - 1, rows - 1)), board.player2, false);
+            PlacePiece(Instantiate(rookPrefab), new Position(columns - counter, rows - 1), new Rook(new Position(columns - counter, rows - 1)), board.player2, false);
+            counter++;
+        }
+
+        PlacePiece(Instantiate(knightPrefab), new Position(counter - 1, rows - 1), new Knight(new Position(counter - 1, rows - 1)), board.player2, false);
+        PlacePiece(Instantiate(knightPrefab), new Position(columns - counter, rows - 1), new Knight(new Position(columns - counter, rows - 1)), board.player2, false);
+        counter++;
+        if (gameSettings.addedPiece == "knight")
+        {
+            PlacePiece(Instantiate(knightPrefab), new Position(counter - 1, rows - 1), new Knight(new Position(counter - 1, rows - 1)), board.player2, false);
+            PlacePiece(Instantiate(knightPrefab), new Position(columns - counter, rows - 1), new Knight(new Position(columns - counter, rows - 1)), board.player2, false);
+            counter++;
+        }
+
+        PlacePiece(Instantiate(bishopPrefab), new Position(counter - 1, rows - 1), new Bishop(new Position(counter - 1, rows - 1)), board.player2, false);
+        PlacePiece(Instantiate(bishopPrefab), new Position(columns - counter, rows - 1), new Bishop(new Position(columns - counter, rows - 1)), board.player2, false);
+        counter++;
+        if (gameSettings.addedPiece == "bishop")
+        {
+            PlacePiece(Instantiate(bishopPrefab), new Position(counter - 1, rows - 1), new Bishop(new Position(counter - 1, rows - 1)), board.player2, false);
+            PlacePiece(Instantiate(bishopPrefab), new Position(columns - counter, rows - 1), new Bishop(new Position(columns - counter, rows - 1)), board.player2, false);
+            counter++;
+        }
+        PlacePiece(Instantiate(queenPrefab), new Position(columns / 2 - 1, rows - 1), new Queen(new Position(columns / 2 - 1, rows - 1)), board.player2, false);
+        PlacePiece(Instantiate(kingPrefab), new Position(columns / 2, rows - 1), new King(new Position(columns / 2, rows - 1)), board.player2, false);
+
+
+
+
+    }
+    #endregion
     public override void RenderMap()
     {
         if (columns > 0 && rows > 0)
@@ -198,8 +394,8 @@ public class ChessBoardgame : Boardgame
             GameObject tile;
 
             float width = UtilityFunctions.ScreenWidth;
-            tileRenderScale = width / columns;
-            transform.localScale = Vector3.one * (width / columns);
+            tileRenderScale = width / columns * 1f;
+            transform.localScale = Vector3.one * (width / columns * 1f);
             tiles = new ChessTile[columns, rows];
             for (int i = 0; i < columns; i++)
             {
@@ -235,6 +431,32 @@ public class ChessBoardgame : Boardgame
 
     }
 
+    public void ConfirmRestartMatch()
+    {
+        ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+    }
+
+    public void ToggleFlipDarkSidesPieces()
+    {
+        FlipDarkSidePieces(!darkPiecesFlipped);
+    }
+    public void FlipDarkSidePieces(bool flip)
+    {
+        if (darkPiecesParent == null)
+            return;
+        foreach (Transform g in darkPiecesParent.transform)
+        {
+            SpriteRenderer sr = g.gameObject.GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sr.flipX = flip;
+                sr.flipY = flip;
+            }
+        }
+
+        darkPiecesFlipped = flip;
+    }
+
     public void SaveBoardState()
     {
         if (board == null)
@@ -244,6 +466,7 @@ public class ChessBoardgame : Boardgame
         save.board = board;
         save.movesLog = movesLog;
         save.turnPlayer = turnPlayer;
+        save.settings = gameSettings;
         SaveLoad.SaveFile("/chess_game1v1_data.dat", save);
     }
 
@@ -267,7 +490,14 @@ public class ChessBoardgame : Boardgame
         ClearRenders();
         if (data.board != null)
         {
+
+            lightTileColor = gameSettings.lightTileColor;
+            darkTileColor = gameSettings.darkTileColor;
+            lightPieceColor = gameSettings.bottomPieceColor;
+            darkPieceColor = gameSettings.topPieceColor;
             board = data.board;
+            columns = board.columns;
+            rows = board.rows;
             movesLog = data.movesLog;
             turnPlayer = data.turnPlayer;
             RenderMap();
@@ -279,7 +509,7 @@ public class ChessBoardgame : Boardgame
                 GameObject obj = Instantiate(GetPieceObjectFromType(node.pieceOnNode.type));
                 obj.transform.SetParent(node.pieceOnNode.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
                 obj.transform.localPosition = tiles[node.pos.x, node.pos.y].transform.localPosition;
-                //obj.transform.localScale = Vector3.one;
+                obj.transform.localScale = Vector3.one;
                 tiles[node.pos.x, node.pos.y].chessPiece = obj;
 
                 SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
@@ -330,6 +560,7 @@ public class ChessBoardgame : Boardgame
         if (!board.ValidCoordinate(pos))
             return;
         obj.gameObject.transform.SetParent(lightPiece ? lightPiecesParent.transform : darkPiecesParent.transform);
+        obj.transform.localScale = Vector3.one;
         tiles[pos.x, pos.y].chessPiece = obj;
         ChessPiece cp = p;
         cp.startPosition = cp.pos = pos;
@@ -380,49 +611,7 @@ public class ChessBoardgame : Boardgame
         }
     }
 
-    public virtual void PlacePieces()
-    {
-        pieces = new List<ChessPiece>();
-        // First Player
-        for (int i = 0; i < columns; i++)
-        {
-            Position pos = new Position(i, 1);
-            PlacePiece(Instantiate(pawnPrefab), pos, new Pawn(pos), board.player1);
-        }
 
-        PlacePiece(Instantiate(rookPrefab), new Position(0, 0), new Rook(new Position(0, 0)), board.player1);
-        PlacePiece(Instantiate(rookPrefab), new Position(7, 0), new Rook(new Position(7, 0)), board.player1);
-
-        PlacePiece(Instantiate(knightPrefab), new Position(1, 0), new Knight(new Position(1, 0)), board.player1);
-        PlacePiece(Instantiate(knightPrefab), new Position(6, 0), new Knight(new Position(6, 0)), board.player1);
-
-        PlacePiece(Instantiate(bishopPrefab), new Position(2, 0), new Bishop(new Position(2, 0)), board.player1);
-        PlacePiece(Instantiate(bishopPrefab), new Position(5, 0), new Bishop(new Position(5, 0)), board.player1);
-
-        PlacePiece(Instantiate(queenPrefab), new Position(3, 0), new Queen(new Position(3, 0)), board.player1);
-        PlacePiece(Instantiate(kingPrefab), new Position(4, 0), new King(new Position(4, 0)), board.player1);
-
-
-        // Second Player
-        for (int i = 0; i < columns; i++)
-        {
-            Position pos = new Position(i, 6);
-            PlacePiece(Instantiate(pawnPrefab), pos, new Pawn(pos), board.player2, false);
-        }
-
-        PlacePiece(Instantiate(rookPrefab), new Position(0, 7), new Rook(new Position(0, 7)), board.player2, false);
-        PlacePiece(Instantiate(rookPrefab), new Position(7, 7), new Rook(new Position(7, 7)), board.player2, false);
-
-        PlacePiece(Instantiate(knightPrefab), new Position(1, 7), new Knight(new Position(1, 7)), board.player2, false);
-        PlacePiece(Instantiate(knightPrefab), new Position(6, 7), new Knight(new Position(6, 7)), board.player2, false);
-
-        PlacePiece(Instantiate(bishopPrefab), new Position(2, 7), new Bishop(new Position(2, 7)), board.player2, false);
-        PlacePiece(Instantiate(bishopPrefab), new Position(5, 7), new Bishop(new Position(5, 7)), board.player2, false);
-
-        PlacePiece(Instantiate(queenPrefab), new Position(3, 7), new Queen(new Position(3, 7)), board.player2, false);
-        PlacePiece(Instantiate(kingPrefab), new Position(4, 7), new King(new Position(4, 7)), board.player2, false);
-
-    }
 
     /// <summary>
     /// Moves the piece's gameobject to a position

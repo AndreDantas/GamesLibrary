@@ -278,7 +278,7 @@ Milkshake
 
 Mist
 
-Money $$$$
+Money
 
 Monster
 

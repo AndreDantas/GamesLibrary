@@ -20,5 +20,9 @@ public abstract class Boardgame : MonoBehaviour
     /// Function to render the map. 
     /// </summary>
     public abstract void RenderMap();
+    public void ToggleMuteGame()
+    {
+        gameObject.ToggleMute();
+    }
 
 }

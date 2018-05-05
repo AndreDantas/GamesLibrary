@@ -53,6 +53,7 @@ public class ColorSelectUI : SelectUI
             return;
         for (int i = 0; i < selectColors.Count; i++)
         {
+            //Debug.Log("Comparing: " + c + " - " + selectColors[i] + " -> " + selectColors[i].Compare(c));
             if (selectColors[i].Compare(c))
             {
                 currentColor = selectColors[i];

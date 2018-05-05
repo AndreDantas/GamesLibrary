@@ -88,10 +88,9 @@ public class SceneController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !moving)
         {
-            if (OnBack != null)
-                OnBack();
+            OnBack?.Invoke();
         }
     }
 

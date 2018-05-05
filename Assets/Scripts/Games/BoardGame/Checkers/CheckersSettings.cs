@@ -63,8 +63,8 @@ public class CheckersSettingsData
         multiDirectionalCapture = true;
         darkTileColor = new SerializableColor(new Color(0.749f, 0.502f, 0.31f, 1f));
         lightTileColor = new SerializableColor(new Color(1f, 0.82f, 0.682f, 1f));
-        topPieceColor = new SerializableColor(new Color(0.877f, 0.087f, 0.173f, 1f));
-        bottomPieceColor = new SerializableColor(new Color(0.331f, 0.304f, 0.304f, 1f));
+        topPieceColor = new SerializableColor(Color.red);
+        bottomPieceColor = new SerializableColor(Colors.BlackLeatherJacket);
     }
     public CheckersSettingsData(CheckersSettingsData other)
     {
@@ -84,11 +84,14 @@ public class CheckersSettings : MonoBehaviour
 {
     public static CheckersSettings instance;
     public CheckersSettingsData settings = new CheckersSettingsData();
+    [ButtonGroup("G1")]
+    [Button(ButtonSizes.Medium)]
     public void SaveSettings()
     {
         SaveLoad.SaveFile("/checkers_settings.dat", settings);
     }
-
+    [ButtonGroup("G1")]
+    [Button(ButtonSizes.Medium)]
     public void LoadSettings()
     {
         CheckersSettingsData load = SaveLoad.LoadFile<CheckersSettingsData>("/checkers_settings.dat");

@@ -68,10 +68,6 @@ public class CheckersBoardgame : Boardgame
         gameObject.AddAudio(pieceMovement);
         //PrepareGame();
     }
-    public void ToggleMuteGame()
-    {
-        gameObject.ToggleMute();
-    }
 
     private void OnValidate()
     {
