@@ -9,6 +9,7 @@ public class Queen : ChessPiece
     {
 
         type = ChessPieceType.QUEEN;
+        value = 90;
     }
     public Queen(Queen other) : base(other)
     {
@@ -19,7 +20,13 @@ public class Queen : ChessPiece
     {
         return new Queen(this);
     }
-
+    public override float GetPieceValue()
+    {
+        float value = base.GetPieceValue();
+        if (PiecePositionEvaluation.QueenEval.ValidCoordinate(pos.x, pos.y))
+            value += (float)PiecePositionEvaluation.QueenEval[pos.x, pos.y];
+        return value;
+    }
 
     public override List<Move> GetPossibleMovement()
     {

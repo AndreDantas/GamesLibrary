@@ -9,6 +9,7 @@ public class King : ChessPiece
     {
 
         type = ChessPieceType.KING;
+        value = 2000;
     }
     public King(King other) : base(other)
     {
@@ -19,7 +20,21 @@ public class King : ChessPiece
     {
         return new King(this);
     }
-
+    public override float GetPieceValue()
+    {
+        float value = base.GetPieceValue();
+        if ((player as ChessPlayer).orientation == Orientation.DOWN)
+        {
+            if (PiecePositionEvaluation.KingEvalWhite.ValidCoordinate(pos.x, pos.y))
+                value += (float)PiecePositionEvaluation.KingEvalWhite[pos.x, pos.y];
+        }
+        else
+        {
+            if (PiecePositionEvaluation.KingEvalBlack.ValidCoordinate(pos.x, pos.y))
+                value += (float)PiecePositionEvaluation.KingEvalBlack[pos.x, pos.y];
+        }
+        return value;
+    }
     public override void MoveToPos(Move move)
     {
 
@@ -150,7 +165,8 @@ public class King : ChessPiece
                                 break;
                             }
                         }
-
+                        if (Mathf.Abs(cp.pos.x - pos.x) <= 2)
+                            piecesInBetween = true;
                         if (!piecesInBetween)
                         {
                             bool kingSafePass = true;
@@ -188,7 +204,8 @@ public class King : ChessPiece
                                 break;
                             }
                         }
-
+                        if (Mathf.Abs(cp.pos.x - pos.x) <= 2)
+                            piecesInBetween = true;
                         if (!piecesInBetween)
                         {
                             bool kingSafePass = true;

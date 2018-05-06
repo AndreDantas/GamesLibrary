@@ -267,6 +267,134 @@ public class ChessBoard : Board
         return GetWorldPositionFromNode(node.pos.x, node.pos.y);
     }
 
+    public float EvaluateBoard()
+    {
+        if (!isInit)
+            return 0;
+        float totalValue = 0;
+        foreach (ChessNode n in GetNodes())
+        {
+            if (n.pieceOnNode != null)
+            {
+                if (n.pieceOnNode.player == player1)
+                    totalValue += n.pieceOnNode.GetPieceValue();
+                else
+                    totalValue -= n.pieceOnNode.GetPieceValue();
+            }
+        }
+        return totalValue;
+    }
+    /// <summary>
+    /// Returns the other player.
+    /// </summary>
+    /// <returns></returns>
+    public ChessPlayer OtherPlayer(ChessPlayer thisPlayer)
+    {
+        if ((thisPlayer != player1 && thisPlayer != player2) || thisPlayer == null)
+            return null;
+
+        return thisPlayer == player1 ? player2 : player1;
+    }
+
+    //public float NegaMax(int depth, ChessBoard board, ChessPlayer playerCheck, int alpha = int.MinValue, int beta = int.MaxValue)
+    //{
+    //    if (depth <= 0)
+    //        return -EvaluateBoard();
+    //    float score;
+    //    ChessBoard b;
+    //    foreach (var item in board.GetPossibleMoves(playerCheck))
+    //    {
+    //        b = board.BoardAfterMove(item);
+    //        score = -NegaMax(depth - 1, board, OtherPlayer(playerCheck), -beta, -alpha);
+    //        if (score > alpha)
+    //        {
+    //            alpha = score;
+    //            if (alpha >= beta)
+    //                break;
+    //        }
+    //    }
+
+    //    return alpha;
+    //}
+    public float alphaBeta(float depth, ChessBoard board, bool maximisingPlayer, float alpha = float.MinValue, float beta = float.MaxValue)
+    {
+        float bestValue;
+        if (depth <= 0)
+        {
+            bestValue = -board.EvaluateBoard();
+        }
+        else if (maximisingPlayer)
+        {
+            bestValue = alpha;
+            List<Move> moves = board.GetPossibleMoves(player2);
+            for (var i = 0; i < moves.Count; i++)
+            {
+                ChessBoard b = board.BoardAfterMove(moves[i]);
+                var childValue = alphaBeta(depth - 1, b, false, bestValue, beta);
+                bestValue = Mathf.Max(bestValue, childValue);
+                if (beta <= bestValue)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            bestValue = beta;
+            List<Move> moves = board.GetPossibleMoves(player1);
+            // Recurse for all children of node.
+            for (var i = 0; i < moves.Count; i++)
+            {
+                ChessBoard b = board.BoardAfterMove(moves[i]);
+                var childValue = alphaBeta(depth - 1, b, true, alpha, bestValue);
+                bestValue = Mathf.Min(bestValue, childValue);
+                if (bestValue <= alpha)
+                {
+                    break;
+                }
+            }
+        }
+        return bestValue;
+    }
+    //public float MiniMax(int depth, ChessBoard board, ChessPlayer playerCheck, bool isMax, float alpha = float.MinValue, float beta = float.MaxValue)
+    //{
+    //    if (!isInit || (playerCheck != player1 && playerCheck != player2) || playerCheck == null)
+    //        return 0;
+    //    if (depth <= 0)
+    //        return -EvaluateBoard();
+    //    List<Move> moves = board.GetPossibleMoves(playerCheck);
+    //    if (isMax)
+    //    {
+    //        float bestMove = -9999f;
+    //        ChessBoard b;
+    //        for (int i = 0; i < moves.Count; i++)
+    //        {
+    //            b = board.BoardAfterMove(moves[i]);
+    //            bestMove = Mathf.Max(bestMove, MiniMax(depth - 1, b, OtherPlayer(playerCheck), !isMax, alpha, beta));
+
+    //            alpha = Mathf.Max(alpha, bestMove);
+    //            if (alpha >= beta)
+    //                break;
+
+    //        }
+    //        return bestMove;
+    //    }
+    //    else
+    //    {
+    //        float bestMove = 9999f;
+    //        ChessBoard b;
+    //        for (int i = 0; i < moves.Count; i++)
+    //        {
+    //            b = board.BoardAfterMove(moves[i]);
+    //            bestMove = Mathf.Min(bestMove, MiniMax(depth - 1, b, OtherPlayer(playerCheck), !isMax, alpha, beta));
+    //            beta = Mathf.Min(beta, bestMove);
+    //            if (alpha >= beta)
+    //                break;
+    //        }
+    //        return bestMove;
+    //    }
+    //}
+
     public bool IsPositionEmpty(Position pos)
     {
         if (!ValidCoordinate(pos))
@@ -411,19 +539,6 @@ public class ChessBoard : Board
         ChessBoard board = new ChessBoard(this);
         board.Move(move);
         return board;
-    }
-
-    /// <summary>
-    /// Returns the other player.
-    /// </summary>
-    /// <param name="player"></param>
-    /// <returns></returns>
-    public ChessPlayer OtherPlayer(ChessPlayer player)
-    {
-        if (player == player1)
-            return player2;
-        else
-            return player1;
     }
 
     /// <summary>

@@ -28,9 +28,7 @@ public class CheckersEditPanel : GamePanel
     public Toggle multiDirectionCaptureToggle;
     public ValueSelectUI piecesMovement;
     public Toggle kingInfiniteMovementDistance;
-    [SceneObjectsOnly]
     public ColorSelectUI topPlayerColorSelect;
-    [SceneObjectsOnly]
     public ColorSelectUI bottomPlayerColorSelect;
     private void Start()
     {

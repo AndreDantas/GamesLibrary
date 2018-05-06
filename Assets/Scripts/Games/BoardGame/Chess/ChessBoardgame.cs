@@ -61,7 +61,7 @@ public class ChessBoardgame : Boardgame
     [Space(10)]
     public TextMeshProUGUI victoryMsg;
     public GameObject promotionObj;
-
+    public bool vsAI { get; set; }
     [ReadOnly]
     public List<ChessMoveInfo> movesLog;
     public ChessTile[,] tiles { get; internal set; }
@@ -153,6 +153,53 @@ public class ChessBoardgame : Boardgame
         canClick = true;
         FlipDarkSidePieces(darkPiecesFlipped);
         StartTurn();
+    }
+
+    public virtual void PrepareGameAI()
+    {
+        gameSettings = new ChessSettingsData(ChessSettings.instance.settings);
+        columns = gameSettings.columns;
+        rows = gameSettings.rows;
+        darkPieceColor = gameSettings.topPieceColor;
+        lightPieceColor = gameSettings.bottomPieceColor;
+        darkTileColor = gameSettings.darkTileColor;
+        lightTileColor = gameSettings.lightTileColor;
+        waitingPromotion = false;
+        board = new ChessBoard(columns, rows);
+        board.InitBoard();
+        board.player1 = new ChessPlayer(Orientation.DOWN);
+
+        board.player2 = new ChessAI(Orientation.UP);
+
+        ((ChessAI)board.player2).board = board;
+        turnPlayer = board.player1;
+        RenderMap();
+        pieces = new List<ChessPiece>();
+        switch (gameSettings.gameMode)
+        {
+            case ChessGameMode.Mini:
+                PlacePiecesMini();
+                break;
+            case ChessGameMode.Normal:
+                PlacePiecesNormal();
+                break;
+            case ChessGameMode.Omega:
+                PlacePiecesOmega();
+                break;
+        }
+        ClearRenders();
+        movesLog = new List<ChessMoveInfo>();
+        canClick = true;
+        FlipDarkSidePieces(darkPiecesFlipped);
+        StartTurn();
+        //foreach (ChessNode n in board.GetNodes())
+        //{
+        //    if (n.pieceOnNode != null)
+        //    {
+        //        Debug.Log(n.pieceOnNode + " - " + n.pieceOnNode.GetPieceValue());
+        //    }
+        //}
+        //print(board.EvaluateBoard(turnPlayer));
     }
 
     #region Place Pieces
@@ -433,8 +480,12 @@ public class ChessBoardgame : Boardgame
 
     public void ConfirmRestartMatch()
     {
-        ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+        if (vsAI)
+            ModalWindow.Choice("Reiniciar jogo?", PrepareGameAI);
+        else
+            ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
     }
+
 
     public void ToggleFlipDarkSidesPieces()
     {
@@ -467,12 +518,24 @@ public class ChessBoardgame : Boardgame
         save.movesLog = movesLog;
         save.turnPlayer = turnPlayer;
         save.settings = gameSettings;
-        SaveLoad.SaveFile("/chess_game1v1_data.dat", save);
+        string saveName = "";
+        if (!vsAI)
+            saveName = "1v1";
+        else
+            saveName = "AI";
+
+        SaveLoad.SaveFile("/chess_game_" + saveName + "_data.dat", save);
+        ModalWindow.Message("Jogo Salvo.");
     }
 
     public void LoadBoardState()
     {
-        ChessBoardSaveData load = SaveLoad.LoadFile<ChessBoardSaveData>("/chess_game1v1_data.dat");
+        string saveName = "";
+        if (!vsAI)
+            saveName = "1v1";
+        else
+            saveName = "AI";
+        ChessBoardSaveData load = SaveLoad.LoadFile<ChessBoardSaveData>("/chess_game_" + saveName + "_data.dat");
         if (load != null ? load.board != null : false)
         {
             ReconstructBoard(load);
@@ -532,6 +595,8 @@ public class ChessBoardgame : Boardgame
             StartTurn();
             canClick = true;
         }
+        else
+            ModalWindow.Message("Sem jogos salvos.");
     }
 
     public bool ValidCoordinate(Position pos)
@@ -668,8 +733,12 @@ public class ChessBoardgame : Boardgame
 
     IEnumerator MakeAMove(Move move)
     {
-        selectedPiece.MoveToPos(move); // Move the piece internally
+
         yield return MovePieceObj(move); // Move piece object on scene
+        if (selectedPiece != null)
+            selectedPiece.MoveToPos(move); // Move the piece internally
+        else
+            board.GetPiece(move?.start)?.MoveToPos(move);
         ChessMoveInfo m = new ChessMoveInfo();
         m.piece = selectedPiece;
         m.move = move;
@@ -723,28 +792,67 @@ public class ChessBoardgame : Boardgame
 
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
+
         IndicateTurnPlayer(turnPlayer.orientation == Orientation.DOWN ? -1 : 1);
         if (CheckForCheckmate())
         {
             EndGame();
             return;
         }
+        if (turnPlayer is ChessAI)
+        {
+            playerTurnIndicator?.SetActive(false);
+            playerTurnBorder?.SetActive(false);
+            StartCoroutine(AITurn());
+        }
+    }
 
+    IEnumerator AITurn()
+    {
+        yield return new WaitForSeconds(0.2f);
+        canClick = false;
+        ChessAI ai = turnPlayer as ChessAI;
+        if (ai != null)
+        {
+            Move m = ai.CalculateBestMove();
+
+            if (board.GetPiece(m?.start) != null)
+            {
+                selectedPiece = board.GetPiece(m?.start);
+                StartCoroutine(MakeAMove(m));
+                yield break;
+            }
+        }
+
+        ChangeTurn();
     }
 
     public void ChangeTurn()
     {
         promotionPos = CheckForPromotion();
-        if (ValidCoordinate(promotionPos) && promotionObj != null)
+
+        if (ValidCoordinate(promotionPos))
         {
-            waitingPromotion = true;
-            List<GameObject> focus = new List<GameObject>();
-            promotionObj.SetActive(true);
-            focus.Add(promotionObj);
-            ObjectFocus.instance.SetFocusObjects(focus);
-            ObjectFocus.instance.EnableFocus(true);
-            return;
+            if (turnPlayer is ChessAI)
+            {
+                waitingPromotion = true;
+                SetPromotion(5);
+                return;
+            }
+            else if (promotionObj != null)
+            {
+
+
+                waitingPromotion = true;
+                List<GameObject> focus = new List<GameObject>();
+                promotionObj.SetActive(true);
+                focus.Add(promotionObj);
+                ObjectFocus.instance.SetFocusObjects(focus);
+                ObjectFocus.instance.EnableFocus(true);
+                return;
+            }
         }
+
         turnPlayer = turnPlayer == board.player1 ? board.player2 : board.player1;
         StartTurn();
     }
@@ -797,6 +905,7 @@ public class ChessBoardgame : Boardgame
         }
         ChangeTurn();
     }
+
 
     public void EndGame()
     {

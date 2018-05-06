@@ -8,6 +8,7 @@ public class Rook : ChessPiece
     {
 
         type = ChessPieceType.ROOK;
+        value = 50;
     }
     public Rook(Rook other) : base(other)
     {
@@ -18,7 +19,21 @@ public class Rook : ChessPiece
     {
         return new Rook(this);
     }
-
+    public override float GetPieceValue()
+    {
+        float value = base.GetPieceValue();
+        if ((player as ChessPlayer).orientation == Orientation.DOWN)
+        {
+            if (PiecePositionEvaluation.RookEvalWhite.ValidCoordinate(pos.x, pos.y))
+                value += (float)PiecePositionEvaluation.RookEvalWhite[pos.x, pos.y];
+        }
+        else
+        {
+            if (PiecePositionEvaluation.RookEvalBlack.ValidCoordinate(pos.x, pos.y))
+                value += (float)PiecePositionEvaluation.RookEvalBlack[pos.x, pos.y];
+        }
+        return value;
+    }
 
     public override List<Move> GetPossibleMovement()
     {

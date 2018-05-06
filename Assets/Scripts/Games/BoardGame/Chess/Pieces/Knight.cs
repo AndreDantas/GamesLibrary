@@ -9,6 +9,7 @@ public class Knight : ChessPiece
     {
 
         type = ChessPieceType.KNIGHT;
+        value = 32;
     }
 
     public Knight(Knight other) : base(other)
@@ -21,7 +22,13 @@ public class Knight : ChessPiece
         return new Knight(this);
     }
 
-
+    public override float GetPieceValue()
+    {
+        float value = base.GetPieceValue();
+        if (PiecePositionEvaluation.KnightEval.ValidCoordinate(pos.x, pos.y))
+            value += (float)PiecePositionEvaluation.KnightEval[pos.x, pos.y];
+        return value;
+    }
     public override List<Move> GetPossibleMovement()
     {
         List<Move> moves = new List<Move>();

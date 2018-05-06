@@ -294,6 +294,7 @@ public class CheckersBoardgame : Boardgame
         save.previousCaptureMove = previousCaptureMove;
         save.settings = new CheckersSettingsData(gameSettings);
         SaveLoad.SaveFile("/checkers_game1v1_data.dat", save);
+        ModalWindow.Message("Jogo Salvo.");
     }
 
     public void ConfirmBoardLoad()

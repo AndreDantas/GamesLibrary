@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 [System.Serializable]
 public class ChessPiece : Piece
 {
     public ChessPieceType type;
-    public int value = 1;
+    public float value = 1;
     public Position startPosition;
     public ChessBoard board;
 
@@ -82,6 +83,11 @@ public class ChessPiece : Piece
                                 "Player: {5} \n" +
                                 "Board: {6}", type, startPosition.x, startPosition.y, pos.x, pos.y, player, board);
         return s;
+    }
+
+    public virtual float GetPieceValue()
+    {
+        return value;
     }
 
     /// <summary>

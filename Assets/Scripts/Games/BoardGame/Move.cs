@@ -74,4 +74,8 @@ public class Move : System.Object
         return (start.x ^ start.y) * (end.x ^ end.y);
     }
 
+    public override string ToString()
+    {
+        return "Start: " + start + " - End: " + end;
+    }
 }

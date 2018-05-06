@@ -8,10 +8,12 @@ public class Pawn : ChessPiece
     public Pawn(Position pos) : base(pos)
     {
         type = ChessPieceType.PAWN;
+        value = 10;
     }
     public Pawn(Position pos, ChessPlayer player) : base(pos, player)
     {
         type = ChessPieceType.PAWN;
+        value = 10;
     }
 
     public Pawn(Pawn other) : base(other)
@@ -22,6 +24,29 @@ public class Pawn : ChessPiece
     public override ChessPiece GetCopy()
     {
         return new Pawn(this);
+    }
+
+    public override float GetPieceValue()
+    {
+        if ((player as ChessPlayer).orientation == Orientation.DOWN)
+        {
+            float value = base.GetPieceValue();
+            if (PiecePositionEvaluation.PawnEvalWhite.ValidCoordinate(pos.x, pos.y))
+                value += (float)PiecePositionEvaluation.PawnEvalWhite[pos.x, pos.y];
+            if (pos.y == board.rows - 1)
+                value += 50;
+            return value;
+        }
+        else
+        {
+
+            float value = base.GetPieceValue();
+            if (PiecePositionEvaluation.PawnEvalBlack.ValidCoordinate(pos.x, pos.y))
+                value += (float)PiecePositionEvaluation.PawnEvalBlack[pos.x, pos.y];
+            if (pos.y == 0)
+                value += 50;
+            return value;
+        }
     }
 
     public override void MoveToPos(Move move)

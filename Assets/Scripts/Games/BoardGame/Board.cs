@@ -58,12 +58,15 @@ public class Board
     /// </summary>
     public static float Distance(ChessNode a, ChessNode b, NodeDistance distance = NodeDistance.Manhattan)
     {
+        return Distance(a.pos, b.pos, distance);
+    }
+    public static float Distance(Position a, Position b, NodeDistance distance = NodeDistance.Manhattan)
+    {
         if (distance == NodeDistance.Manhattan)
         {
-            return (Mathf.Abs(a.pos.x - b.pos.x) + Mathf.Abs(a.pos.y - b.pos.y)) * ChessNode.MinCost;
+            return (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y)) * ChessNode.MinCost;
         }
         else
-            return Mathf.Sqrt(Mathf.Pow(a.pos.x - b.pos.x, 2) + Mathf.Pow(a.pos.y - b.pos.y, 2));
+            return Mathf.Sqrt(Mathf.Pow(a.x - b.x, 2) + Mathf.Pow(a.y - b.y, 2));
     }
-
 }

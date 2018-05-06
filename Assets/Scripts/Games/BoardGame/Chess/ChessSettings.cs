@@ -22,6 +22,7 @@ public class ChessSettingsData
     {
         return value % 2 == 0;
     }
+    public bool random = false;
     [HideInInspector]
     public SerializableColor darkTileColor = new SerializableColor(new Color(0.404f, 0.404f, 0.404f, 1f));
     [ShowInInspector, BoxGroup("Colors")]
@@ -94,6 +95,7 @@ public class ChessSettingsData
     {
         columns = 8;
         rows = 8;
+        random = false;
         darkTileColor = new SerializableColor(new Color(0.404f, 0.404f, 0.404f, 1f));
         lightTileColor = new SerializableColor(new Color(0.691f, 0.691f, 0.691f, 1f));
         topPieceColor = new SerializableColor(new Color(0.243f, 0.243f, 0.243f, 1f));
@@ -106,6 +108,7 @@ public class ChessSettingsData
     {
         columns = other.columns;
         rows = other.rows;
+        random = other.random;
         darkTileColor = other.darkTileColor;
         lightTileColor = other.lightTileColor;
         topPieceColor = other.topPieceColor;
