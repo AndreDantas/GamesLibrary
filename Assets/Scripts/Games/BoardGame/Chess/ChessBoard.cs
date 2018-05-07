@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Sirenix.OdinInspector;
 [System.Serializable]
 public class ChessBoard : Board
 {
@@ -316,12 +316,22 @@ public class ChessBoard : Board
 
     //    return alpha;
     //}
-    public float alphaBeta(float depth, ChessBoard board, bool maximisingPlayer, float alpha = float.MinValue, float beta = float.MaxValue)
+    [ShowInInspector]
+    public int movesEval { get; internal set; }
+    public int movesEvalPerFrame = 200;
+    public void ResetMovesEval()
     {
+        movesEval = 0;
+    }
+    public IEnumerator alphaBeta(float depth, ChessBoard board, bool maximisingPlayer, Action<float> result, float alpha = -10000, float beta = 10000)
+    {
+
         float bestValue;
+
         if (depth <= 0)
         {
             bestValue = -board.EvaluateBoard();
+
         }
         else if (maximisingPlayer)
         {
@@ -330,7 +340,11 @@ public class ChessBoard : Board
             for (var i = 0; i < moves.Count; i++)
             {
                 ChessBoard b = board.BoardAfterMove(moves[i]);
-                var childValue = alphaBeta(depth - 1, b, false, bestValue, beta);
+                var childValue = 0f;
+                var e = alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
+                while (e.MoveNext())
+                    yield return e.Current;
+
                 bestValue = Mathf.Max(bestValue, childValue);
                 if (beta <= bestValue)
                 {
@@ -346,7 +360,10 @@ public class ChessBoard : Board
             for (var i = 0; i < moves.Count; i++)
             {
                 ChessBoard b = board.BoardAfterMove(moves[i]);
-                var childValue = alphaBeta(depth - 1, b, true, alpha, bestValue);
+                var childValue = 0f;
+                var e = alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
+                while (e.MoveNext())
+                    yield return e.Current;
                 bestValue = Mathf.Min(bestValue, childValue);
                 if (bestValue <= alpha)
                 {
@@ -354,8 +371,10 @@ public class ChessBoard : Board
                 }
             }
         }
-        return bestValue;
+        movesEval++;
+        result(bestValue);
     }
+
     //public float MiniMax(int depth, ChessBoard board, ChessPlayer playerCheck, bool isMax, float alpha = float.MinValue, float beta = float.MaxValue)
     //{
     //    if (!isInit || (playerCheck != player1 && playerCheck != player2) || playerCheck == null)
@@ -505,6 +524,22 @@ public class ChessBoard : Board
             }
         }
     }
+
+    public void Swap(Position pos1, Position pos2)
+    {
+        if (!isInit)
+            return;
+        if (ValidCoordinate(pos1) && ValidCoordinate(pos2))
+        {
+            ChessPiece temp;
+            temp = nodes[pos1.x, pos1.y].pieceOnNode;
+            temp.pos = pos2;
+            nodes[pos1.x, pos1.y].pieceOnNode = nodes[pos2.x, pos2.y].pieceOnNode;
+            nodes[pos2.x, pos2.y].pieceOnNode = temp;
+            nodes[pos1.x, pos1.y].pieceOnNode.pos = pos1;
+        }
+    }
+
     /// <summary>
     /// Moves a piece on the board.
     /// </summary>

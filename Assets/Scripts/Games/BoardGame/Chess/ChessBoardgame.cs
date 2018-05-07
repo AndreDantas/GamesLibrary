@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 using Sirenix.OdinInspector;
 [Serializable]
 public struct ChessMoveInfo
@@ -58,15 +59,28 @@ public class ChessBoardgame : Boardgame
     public AreaRangeRenderer movementsRender;
     public AreaRangeRenderer checkRender;
     public AreaRangeRenderer lastMoveRender;
+    public AreaRangeRenderer selectedPieceRender;
     [Space(10)]
     public TextMeshProUGUI victoryMsg;
     public GameObject promotionObj;
+    public GameObject aiTurnTimeIndicator;
     public bool vsAI { get; set; }
     [ReadOnly]
     public List<ChessMoveInfo> movesLog;
     public ChessTile[,] tiles { get; internal set; }
     private List<ChessPiece> pieces = new List<ChessPiece>();
+    private readonly List<ChessPieceType> randomPieces = new List<ChessPieceType>
+        {
+          ChessPieceType.PAWN,
 
+            ChessPieceType.ROOK,
+
+            ChessPieceType.BISHOP,
+
+            ChessPieceType.KNIGHT,
+
+          ChessPieceType.QUEEN
+        };
     private GameObject tilesParentObj;
     private GameObject piecesParentObj;
     private GameObject darkPiecesParent;
@@ -136,17 +150,22 @@ public class ChessBoardgame : Boardgame
         turnPlayer = board.player1;
         RenderMap();
         pieces = new List<ChessPiece>();
-        switch (gameSettings.gameMode)
+        if (!gameSettings.random)
+            switch (gameSettings.gameMode)
+            {
+                case ChessGameMode.Mini:
+                    PlacePiecesMini();
+                    break;
+                case ChessGameMode.Normal:
+                    PlacePiecesNormal();
+                    break;
+                case ChessGameMode.Omega:
+                    PlacePiecesOmega();
+                    break;
+            }
+        else
         {
-            case ChessGameMode.Mini:
-                PlacePiecesMini();
-                break;
-            case ChessGameMode.Normal:
-                PlacePiecesNormal();
-                break;
-            case ChessGameMode.Omega:
-                PlacePiecesOmega();
-                break;
+            PlacePiecesRandom();
         }
         ClearRenders();
         movesLog = new List<ChessMoveInfo>();
@@ -175,17 +194,22 @@ public class ChessBoardgame : Boardgame
         turnPlayer = board.player1;
         RenderMap();
         pieces = new List<ChessPiece>();
-        switch (gameSettings.gameMode)
+        if (!gameSettings.random)
+            switch (gameSettings.gameMode)
+            {
+                case ChessGameMode.Mini:
+                    PlacePiecesMini();
+                    break;
+                case ChessGameMode.Normal:
+                    PlacePiecesNormal();
+                    break;
+                case ChessGameMode.Omega:
+                    PlacePiecesOmega();
+                    break;
+            }
+        else
         {
-            case ChessGameMode.Mini:
-                PlacePiecesMini();
-                break;
-            case ChessGameMode.Normal:
-                PlacePiecesNormal();
-                break;
-            case ChessGameMode.Omega:
-                PlacePiecesOmega();
-                break;
+            PlacePiecesRandom();
         }
         ClearRenders();
         movesLog = new List<ChessMoveInfo>();
@@ -203,6 +227,61 @@ public class ChessBoardgame : Boardgame
     }
 
     #region Place Pieces
+
+    public virtual void PlacePiecesRandom()
+    {
+
+        Queue<ChessPieceType> choosenPieces1 = new Queue<ChessPieceType>();
+        Queue<ChessPieceType> choosenPieces2 = new Queue<ChessPieceType>();
+
+        for (int i = 0; i < columns * 4 - 2; i++)
+        {
+            ChessPieceType type = randomPieces.PickRandom();
+            choosenPieces1.Enqueue(type);
+            choosenPieces2.Enqueue(type);
+        }
+
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+
+                Position pos = new Position(j, i);
+                if (j == columns / 2 && i == 0)
+                {
+                    PlacePiece(Instantiate(kingPrefab), pos, new King(pos), board.player1);
+                    continue;
+                }
+                if (choosenPieces1.Count == 0)
+                    break;
+                ChessPieceType type = choosenPieces1.Dequeue();
+                if (i == 0)
+                    while (type == ChessPieceType.PAWN)
+                        type = randomPieces.PickRandom();
+                PlacePiece(Instantiate(GetPieceObjectFromType(type)), pos, GetNewPieceFromType(type, pos), board.player1);
+            }
+        }
+        choosenPieces2.Reverse();
+        for (int i = rows - 1; i >= rows - 2; i--)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                Position pos = new Position(j, i);
+                if (j == columns / 2 && i == rows - 1)
+                {
+                    PlacePiece(Instantiate(kingPrefab), pos, new King(pos), board.player2, false);
+                    continue;
+                }
+                if (choosenPieces1.Count == 0)
+                    break;
+                ChessPieceType type = choosenPieces2.Dequeue();
+                if (i == rows - 1)
+                    while (type == ChessPieceType.PAWN)
+                        type = randomPieces.PickRandom();
+                PlacePiece(Instantiate(GetPieceObjectFromType(type)), pos, GetNewPieceFromType(type, pos), board.player2, false);
+            }
+        }
+    }
     public virtual void PlacePiecesNormal()
     {
 
@@ -309,6 +388,20 @@ public class ChessBoardgame : Boardgame
 
 
 
+    }
+
+    void Swap(Position pos1, Position pos2)
+    {
+        if (!board.isInit || tiles == null)
+            return;
+        if (ValidCoordinate(pos1) && ValidCoordinate(pos2))
+        {
+            GameObject temp;
+            temp = tiles[pos1.x, pos1.y].chessPiece;
+            tiles[pos1.x, pos1.y].chessPiece = tiles[pos2.x, pos2.y].chessPiece;
+            tiles[pos2.x, pos2.y].chessPiece = temp;
+            board.Swap(pos1, pos2);
+        }
     }
 
     public virtual void PlacePiecesOmega()
@@ -707,6 +800,26 @@ public class ChessBoardgame : Boardgame
         return null;
     }
 
+    public ChessPiece GetNewPieceFromType(ChessPieceType type, Position pos)
+    {
+        switch (type)
+        {
+            case ChessPieceType.PAWN:
+                return new Pawn(pos);
+            case ChessPieceType.ROOK:
+                return new Rook(pos);
+            case ChessPieceType.BISHOP:
+                return new Bishop(pos);
+            case ChessPieceType.KNIGHT:
+                return new Knight(pos);
+            case ChessPieceType.QUEEN:
+                return new Queen(pos);
+            case ChessPieceType.KING:
+                return new King(pos);
+        }
+        return null;
+    }
+
     IEnumerator MovePieceObj(Move move)
     {
         if (ValidCoordinate(move.end))
@@ -789,10 +902,12 @@ public class ChessBoardgame : Boardgame
     {
         RenderCheck();
         RenderLastMove();
-
+        if (aiTurnTimeIndicator)
+            aiTurnTimeIndicator.SetActive(false);
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
-
+        if (selectedPieceRender)
+            selectedPieceRender.Clear();
         IndicateTurnPlayer(turnPlayer.orientation == Orientation.DOWN ? -1 : 1);
         if (CheckForCheckmate())
         {
@@ -809,13 +924,17 @@ public class ChessBoardgame : Boardgame
 
     IEnumerator AITurn()
     {
-        yield return new WaitForSeconds(0.2f);
+
+        if (aiTurnTimeIndicator != null)
+            aiTurnTimeIndicator.SetActive(true);
         canClick = false;
         ChessAI ai = turnPlayer as ChessAI;
         if (ai != null)
         {
-            Move m = ai.CalculateBestMove();
+            Move m;
 
+            yield return ai.CalculateBestMove();
+            m = ai.bestMove;
             if (board.GetPiece(m?.start) != null)
             {
                 selectedPiece = board.GetPiece(m?.start);
@@ -823,7 +942,8 @@ public class ChessBoardgame : Boardgame
                 yield break;
             }
         }
-
+        if (aiTurnTimeIndicator != null)
+            aiTurnTimeIndicator.SetActive(false);
         ChangeTurn();
     }
 
@@ -1001,7 +1121,15 @@ public class ChessBoardgame : Boardgame
                 lastMoveRender.Clear();
         }
     }
+    public void RenderSelectedPiece(Position pos)
+    {
+        if (selectedPieceRender == null)
+            return;
+        if (ValidCoordinate(pos))
+            selectedPieceRender.RenderSquaresArea(new List<Vector3> { tiles[pos.x, pos.y].transform.position }, tileRenderScale, tileRenderScale);
 
+
+    }
     public void ClearRenders()
     {
         if (movementsRender)
@@ -1010,7 +1138,8 @@ public class ChessBoardgame : Boardgame
             lastMoveRender.Clear();
         if (checkRender)
             checkRender.Clear();
-
+        if (selectedPieceRender)
+            selectedPieceRender.Clear();
 
     }
 
@@ -1053,6 +1182,7 @@ public class ChessBoardgame : Boardgame
             {
                 selectedPiece = null;
                 movementsRender.Clear();
+                selectedPieceRender.Clear();
             }
             else // Player piece
             {
@@ -1073,9 +1203,11 @@ public class ChessBoardgame : Boardgame
                 else
                 {
                     movementsRender.Clear();
+                    selectedPieceRender.Clear();
                 }
 
                 selectedPiece = piece;
+                RenderSelectedPiece(selectedPiece.pos);
             }
 
 
@@ -1084,6 +1216,7 @@ public class ChessBoardgame : Boardgame
         {
             selectedPiece = null;
             movementsRender.Clear();
+            selectedPieceRender.Clear();
         }
     }
 }

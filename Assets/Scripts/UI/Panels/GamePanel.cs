@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class GamePanel : MonoBehaviour
 {
-    
+
     /// <summary>
     /// The panel's animation time.
     /// </summary>
-    public float animTime = 0.5f;
+    public static float animTime { get { return 0.3f; } }
     /// <summary>
     /// The reference for the center of the screen.
     /// </summary>
@@ -69,6 +69,7 @@ public class GamePanel : MonoBehaviour
 
 
         yield return null;
+        float animTime = GamePanel.animTime / 2f;
         transform.MoveToLocal(end, animTime);
         yield return new WaitForSeconds(animTime / 2f);
 
@@ -103,7 +104,7 @@ public class GamePanel : MonoBehaviour
         Vector2 start = screenCenter;
         Vector2 end = DefaultStartPosition(-1);
         transform.localPosition = start;
-
+        float animTime = GamePanel.animTime / 2f;
         if (panelObjects != null)
             for (int i = panelObjects.Count - 1; i >= 0; i--)
             {

@@ -57,7 +57,8 @@ public class ChessEditPanel : GamePanel
     public ColorSelectUI lightTileColorSelect;
     [SceneObjectsOnly]
     public ColorSelectUI darkTileColorSelect;
-
+    [SceneObjectsOnly]
+    public Toggle randomMode;
     private readonly List<ChessGameMode> gameModeIndex = new List<ChessGameMode>();
     private List<string> DisplayNameBR { get { return new List<string>() { "Torre", "Cavalo", "Bispo" }; } }
     private void Start()
@@ -168,6 +169,11 @@ public class ChessEditPanel : GamePanel
             darkTileColorSelect.OnColorSelect.RemoveAndAddListener(DarkTileColorChanged);
 
         }
+        if (randomMode)
+        {
+            randomMode.isOn = settings.random;
+            randomMode.onValueChanged.RemoveAndAddListener(RandomModeChanged);
+        }
     }
     private void DropdownValueChanged(int newPosition)
     {
@@ -272,6 +278,10 @@ public class ChessEditPanel : GamePanel
 
         }
         settings.darkTileColor = c;
+    }
+    private void RandomModeChanged(bool toggle)
+    {
+        settings.random = toggle;
     }
     protected override void OnEnable()
     {

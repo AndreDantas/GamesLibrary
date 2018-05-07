@@ -40,12 +40,18 @@ public class Checker : Piece
     public CheckersBoard board;
     public DiagonalMovement normalMovement = new DiagonalMovement(true, true, false, false);
     public DiagonalMovement jumpMovement = new DiagonalMovement(true, true, false, false);
+    public bool becameKing = false;
     public int moveDistance = 1;
     public bool isKing = false;
 
     public Checker(Position pos) : base(pos)
     {
 
+    }
+
+    public float GetPieceValue()
+    {
+        return (isKing ? 50 : 10) + ((CheckersPlayer)player).orientation == Orientation.DOWN ? pos.y : board.rows - pos.y;
     }
 
     public Checker(Checker other) : base(other)
@@ -58,6 +64,8 @@ public class Checker : Piece
             isKing = other.isKing;
             normalMovement = new DiagonalMovement(other.normalMovement);
             jumpMovement = new DiagonalMovement(other.jumpMovement);
+            becameKing = other.becameKing;
+
         }
     }
 

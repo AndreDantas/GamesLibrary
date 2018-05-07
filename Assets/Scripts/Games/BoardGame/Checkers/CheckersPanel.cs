@@ -7,38 +7,16 @@ public class CheckersPanel : GamePanel
 
     public CheckersBoardgame checkersBoardgame;
     public GameObject checkersObject;
-    public GameObject checkersOptions;
 
-    public void OpenCheckersOptions()
+    public bool vsAI;
+
+    public void SetGameAI(bool vsAi)
     {
-        if (checkersOptions == null)
-            return;
-
-        ObjectFocus focus = FindObjectOfType<ObjectFocus>();
-        List<GameObject> objs = new List<GameObject>();
-        checkersOptions.SetActive(true);
-        objs.Add(checkersOptions);
-        focus.SetFocusObjects(objs);
-        focus.OnDisableFocus += CloseCheckersOptions;
-        focus.EnableFocus();
-    }
-
-    public void CloseCheckersOptions()
-    {
-        if (checkersOptions == null)
-            return;
-
-        if (checkersOptions.activeSelf == false)
-            return;
-
-        checkersOptions.SetActive(false);
-        ObjectFocus focus = FindObjectOfType<ObjectFocus>();
-        if (focus)
+        vsAI = vsAi;
+        if (checkersBoardgame.board != null)
         {
-            focus.OnDisableFocus -= CloseCheckersOptions;
-            focus.DisableFocus();
+            checkersBoardgame.board.isInit = false;
         }
-
     }
 
     public override IEnumerator Enter()
@@ -48,7 +26,7 @@ public class CheckersPanel : GamePanel
 
         if (checkersObject)
             checkersObject.SetActive(false);
-        CloseCheckersOptions();
+
         moving = true;
 
         foreach (GameObject obj in panelObjects)
@@ -70,7 +48,13 @@ public class CheckersPanel : GamePanel
             checkersObject.SetActive(true);
             if (checkersBoardgame != null ? !checkersBoardgame.board.isInit : true)
             {
-                checkersBoardgame.PrepareGame();
+                checkersBoardgame.vsAI = vsAI;
+                if (!vsAI) checkersBoardgame.PrepareGame();
+                else
+                {
+
+                    checkersBoardgame.PrepareGameAI();
+                }
             }
             yield return new WaitForSeconds(animTime / 2f);
             checkersObject.transform.MoveTo(new Vector3(end.x, checkersObject.transform.position.y, checkersObject.transform.position.z), animTime);
@@ -85,7 +69,7 @@ public class CheckersPanel : GamePanel
     {
         if (moving)
             yield break;
-        CloseCheckersOptions();
+
         moving = true;
         checkersBoardgame.canClick = false;
         Vector2 start = screenCenter;
@@ -106,5 +90,10 @@ public class CheckersPanel : GamePanel
             checkersObject.SetActive(false);
         gameObject.SetActive(false);
         moving = false;
+    }
+
+    public override void OnBack()
+    {
+        ModalWindow.Choice("Sair da partida?", base.OnBack);
     }
 }

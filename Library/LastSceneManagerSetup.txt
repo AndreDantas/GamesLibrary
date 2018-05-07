@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Chess.unity
+- path: Assets/Scenes/Checkers.unity
   isLoaded: 1
   isActive: 1

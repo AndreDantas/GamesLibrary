@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using Sirenix.OdinInspector;
 
 [Serializable]
 public struct CheckersMoveInfo
@@ -17,7 +17,7 @@ class CheckerBoardSaveData
 {
     public CheckersBoard board;
     public List<CheckersMoveInfo> movesLog;
-    public CheckerPlayer turnPlayer;
+    public CheckersPlayer turnPlayer;
     public bool capturing;
     public Checker selectedPiece;
     public CheckerMove previousCaptureMove;
@@ -37,10 +37,10 @@ public class CheckersBoardgame : Boardgame
     public Color topPlayerColor = Color.red;
     public Color bottomPlayerColor = Color.black;
     [Space(10)]
-    [HideInInspector]
-    public CheckersBoard board;
 
-    public CheckerPlayer turnPlayer { get; internal set; }
+    public CheckersBoard board;
+    public bool vsAI;
+    public CheckersPlayer turnPlayer { get; internal set; }
     protected Checker selectedPiece;
     [Header("Renders")]
     public AreaRangeRenderer movementsRender;
@@ -51,7 +51,9 @@ public class CheckersBoardgame : Boardgame
     public AudioClip pieceMovement;
     [Space(10)]
     public TextMeshProUGUI victoryMsg;
+    public GameObject aiTurnTimeIndicator;
     public bool canClick = true;
+    [ListDrawerSettings(NumberOfItemsPerPage = 1)]
     public List<CheckersMoveInfo> movesLog;
     private CheckersMoveInfo currentMoveInfo;
     private float tileRenderScale = 0.89f;
@@ -106,10 +108,12 @@ public class CheckersBoardgame : Boardgame
         columns = gameSettings.columns;
         rows = gameSettings.rows;
         board = new CheckersBoard();
+        board.settings = new CheckersSettingsData(gameSettings);
         board.columns = columns;
         board.rows = rows;
-        (board.playerTop = new CheckerPlayer()).orientation = Orientation.UP;
-        (board.playerBottom = new CheckerPlayer()).orientation = Orientation.DOWN;
+        (board.playerTop = new CheckersPlayer()).orientation = Orientation.UP;
+        (board.playerBottom = new CheckersPlayer()).orientation = Orientation.DOWN;
+
         turnPlayer = board.playerBottom;
         board.InitBoard();
 
@@ -126,10 +130,42 @@ public class CheckersBoardgame : Boardgame
 
         StartTurn();
     }
-    public void ConfirmRestartMatch()
+
+    public void PrepareGameAI()
     {
-        ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+        gameSettings = new CheckersSettingsData(CheckersSettings.instance.settings);
+        // Board settings
+        lightTile = gameSettings.lightTileColor;
+        darkTile = gameSettings.darkTileColor;
+        topPlayerColor = gameSettings.topPieceColor;
+        bottomPlayerColor = gameSettings.bottomPieceColor;
+        columns = gameSettings.columns;
+        rows = gameSettings.rows;
+        board = new CheckersBoard();
+        board.settings = new CheckersSettingsData(gameSettings);
+        board.columns = columns;
+        board.rows = rows;
+        board.playerTop = new CheckersAI(Orientation.UP);
+        (board.playerBottom = new CheckersPlayer()).orientation = Orientation.DOWN;
+        ((CheckersAI)board.playerTop).board = board;
+        turnPlayer = board.playerBottom;
+        board.InitBoard();
+
+        // Map settings
+        RenderMap();
+        PlacePieces();
+        ClearRenders();
+
+
+        movesLog = new List<CheckersMoveInfo>();
+        canClick = true;
+        capturing = false;
+        selectedPiece = null;
+
+        StartTurn();
     }
+
+
 
     public void PlacePieces()
     {
@@ -280,6 +316,15 @@ public class CheckersBoardgame : Boardgame
         }
     }
     #region Save and Load
+
+    public void ConfirmRestartMatch()
+    {
+        if (vsAI)
+            ModalWindow.Choice("Reiniciar jogo?", PrepareGameAI);
+        else
+            ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+    }
+
     public void SaveBoardState()
     {
         if (board == null)
@@ -293,7 +338,13 @@ public class CheckersBoardgame : Boardgame
         save.selectedPiece = selectedPiece;
         save.previousCaptureMove = previousCaptureMove;
         save.settings = new CheckersSettingsData(gameSettings);
-        SaveLoad.SaveFile("/checkers_game1v1_data.dat", save);
+        string saveName = "";
+        if (!vsAI)
+            saveName = "1v1";
+        else
+            saveName = "AI";
+
+        SaveLoad.SaveFile("/checkers_game_" + saveName + "_data.dat", save);
         ModalWindow.Message("Jogo Salvo.");
     }
 
@@ -305,7 +356,12 @@ public class CheckersBoardgame : Boardgame
 
     public void LoadBoardState()
     {
-        CheckerBoardSaveData load = SaveLoad.LoadFile<CheckerBoardSaveData>("/checkers_game1v1_data.dat");
+        string saveName = "";
+        if (!vsAI)
+            saveName = "1v1";
+        else
+            saveName = "AI";
+        CheckerBoardSaveData load = SaveLoad.LoadFile<CheckerBoardSaveData>("/checkers_game_" + saveName + "_data.dat");
         if (load != null ? load.board != null : false)
         {
             ReconstructBoard(load);
@@ -455,6 +511,49 @@ public class CheckersBoardgame : Boardgame
         }
 
     }
+
+    IEnumerator MakeAMove(CheckerMove m)
+    {
+
+        if (m == null)
+        {
+            ChangeTurn();
+            yield break;
+        }
+
+
+        List<CheckerMove> moves = new List<CheckerMove>();
+        CheckerMove current = m;
+
+        while (current != null)
+        {
+
+            moves.Add(current);
+            current = current.next;
+        }
+
+        if (!moves[0].isCapture)
+        {
+
+            board.Move(m);
+            currentMoveInfo.moves.Add(m);
+            yield return MovePieceObj(m);
+
+        }
+        else
+        {
+            previousCaptureMove = moves[moves.Count - 1];
+
+            board.CaptureMovement(moves);
+            currentMoveInfo.moves.AddRange(moves);
+            yield return MovePieceObjCapture(moves);
+        }
+
+
+        if (aiTurnTimeIndicator != null)
+            aiTurnTimeIndicator.SetActive(false);
+
+    }
     /// <summary>
     /// Moves the piece's gameobject to a position
     /// </summary>
@@ -520,8 +619,14 @@ public class CheckersBoardgame : Boardgame
                 }
             }
         canClick = true;
-        List<CheckerMove> captureMoves = selectedPiece.GetPossibleJumps(new List<CheckerMove> { previousCaptureMove });
-        captureMoves.Remove(captureMoves.Find(x => x.end == selectedPiece.pos));
+        List<CheckerMove> captureMoves = new List<CheckerMove>();
+
+        if (selectedPiece != null)
+        {
+            captureMoves = selectedPiece.GetPossibleJumps(new List<CheckerMove> { previousCaptureMove });
+            captureMoves.Remove(captureMoves.Find(x => x.end == selectedPiece.pos));
+
+        }
         if (captureMoves.Count > 0)
         {
             capturing = true;
@@ -581,6 +686,8 @@ public class CheckersBoardgame : Boardgame
     public void StartTurn()
     {
         RenderLastTurn();
+        if (selectedPieceRender && !capturing)
+            selectedPieceRender.Clear();
         List<Checker> attackPieces = board.GetPiecesWithCapture(turnPlayer);
         if (attackPieces != null ? attackPieces.Count > 0 : false)
         {
@@ -593,16 +700,48 @@ public class CheckersBoardgame : Boardgame
         }
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
+        if (aiTurnTimeIndicator)
+            aiTurnTimeIndicator.SetActive(false);
         IndicateTurnPlayer(turnPlayer.orientation == Orientation.DOWN ? -1 : 1);
         if (CheckForDefeat())
         {
             EndGame();
             return;
         }
-
+        if (turnPlayer is CheckersAI)
+        {
+            playerTurnIndicator?.SetActive(false);
+            playerTurnBorder?.SetActive(false);
+            StartCoroutine(AITurn());
+        }
         currentMoveInfo = new CheckersMoveInfo();
         currentMoveInfo.moves = new List<CheckerMove>();
 
+    }
+    IEnumerator AITurn()
+    {
+
+        if (aiTurnTimeIndicator != null)
+            aiTurnTimeIndicator.SetActive(true);
+
+        canClick = false;
+        CheckersAI ai = turnPlayer as CheckersAI;
+        if (ai != null)
+        {
+
+            yield return ai.CalculateBestMove();
+
+            if (board.GetPiece(ai.bestMove?.start) != null)
+            {
+
+                selectedPiece = board.GetPiece(ai.bestMove?.start);
+                yield return MakeAMove(ai.bestMove);
+                yield break;
+            }
+        }
+        if (aiTurnTimeIndicator != null)
+            aiTurnTimeIndicator.SetActive(false);
+        ChangeTurn();
     }
     public void EndGame()
     {
@@ -640,6 +779,7 @@ public class CheckersBoardgame : Boardgame
         if (c == null)
             return;
         c.isKing = true;
+        c.becameKing = true;
         c.moveDistance = gameSettings.kingInfiniteMoveDistance ? 99 : gameSettings.pieceMoveDistance;
         c.normalMovement = new DiagonalMovement(true, true, true, true);
         c.jumpMovement = new DiagonalMovement(true, true, true, true);
@@ -656,7 +796,7 @@ public class CheckersBoardgame : Boardgame
             Checker piece = board.nodes[i, board.nodes.GetLength(1) - 1].checkerOnNode;
             if (piece != null)
             {
-                if (piece.player == board.playerBottom && !piece.isKing)
+                if (piece.player == board.playerBottom && !piece.becameKing)
                 {
                     return piece.pos;
                 }
@@ -665,7 +805,7 @@ public class CheckersBoardgame : Boardgame
             piece = board.nodes[i, 0].checkerOnNode;
             if (piece != null)
             {
-                if (piece.player == board.playerTop && !piece.isKing)
+                if (piece.player == board.playerTop && !piece.becameKing)
                 {
                     return piece.pos;
                 }
@@ -750,6 +890,8 @@ public class CheckersBoardgame : Boardgame
             {
                 List<Vector3> positions = new List<Vector3>();
                 List<CheckerMove> moves = movesLog[movesLog.Count - 1].moves;
+                if (!ValidCoordinate(moves[0].start))
+                    return;
                 positions.Add(tiles[moves[0].start.x, moves[0].start.y].transform.position);
                 foreach (CheckerMove m in moves)
                 {

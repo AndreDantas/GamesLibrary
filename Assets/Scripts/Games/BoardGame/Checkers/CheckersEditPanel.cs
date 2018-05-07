@@ -11,7 +11,7 @@ public class CheckersEditPanel : GamePanel
     [SerializeField]
     private CheckersSettingsData settings = new CheckersSettingsData();
     public TMP_Dropdown boardSizeDropdown;
-    public CheckerBoardImage boardPreview;
+    public CheckersBoardImage boardPreview;
     [ShowInInspector, HorizontalGroup("ColorGroup")]
     public List<Color> topPlayerColors { get { return new List<Color> { Color.red, Colors.PersianRed, Colors.BlizzardBlue, Colors.OrangeCrayola, Colors.GreenLizard }; } }
     [ShowInInspector, HorizontalGroup("ColorGroup")]

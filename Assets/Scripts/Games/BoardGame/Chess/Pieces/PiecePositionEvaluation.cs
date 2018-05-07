@@ -5,8 +5,9 @@ using TMPro;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 
-public static class PiecePositionEvaluation
+public class PiecePositionEvaluation
 {
+    [ShowInInspector]
     public static double[,] PawnEvalWhite
     {
         get
@@ -23,13 +24,13 @@ public static class PiecePositionEvaluation
         {0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,-0.5f,0.5f},
         {0.5f, 1.0f, 1.0f, -2.0f, -3.0f, -3.0f, -2.0f, 1.0f, 1.0f, 0.5f},
         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
-                };
+                }.Reverse();
 
         }
     }
-
+    [ShowInInspector]
     public static double[,] PawnEvalBlack { get { return PawnEvalWhite.Reverse(); } }
-
+    [ShowInInspector]
     public static double[,] KnightEval
     {
         get
@@ -45,9 +46,10 @@ public static class PiecePositionEvaluation
         {-5.0,-4.0, -2.0,  0.0,  0.5,  0.5,  0.0, -2.0, -4.0,-5.0},
         {-6.0,-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0,-6.0},
         {-7.0,-6.0, -5.0, -4.0, -4.0, -4.0, -4.0, -5.0, -6.0,-7.0}
-    };
+    }.Reverse();
         }
     }
+    [ShowInInspector]
     public static double[,] BishopEvalWhite
     {
         get
@@ -62,10 +64,12 @@ public static class PiecePositionEvaluation
             { -1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0},
             { -1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0},
             { -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0}
-        };
+        }.Reverse();
         }
     }
+    [ShowInInspector]
     public static double[,] BishopEvalBlack { get { return BishopEvalWhite.Reverse(); } }
+    [ShowInInspector]
     public static double[,] RookEvalWhite
     {
         get
@@ -82,10 +86,12 @@ public static class PiecePositionEvaluation
             { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 0.0,0.0,-0.5},
             { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 0.0,0.0,-0.5},
             {  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0,0.0 ,0.0}
-                };
+                }.Reverse();
         }
     }
+    [ShowInInspector]
     public static double[,] RookEvalBlack { get { return RookEvalWhite.Reverse(); } }
+    [ShowInInspector]
     public static double[,] QueenEval
     {
         get
@@ -102,9 +108,10 @@ public static class PiecePositionEvaluation
             {-2.0, -1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0,-2.0},
             {-3.0, -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0,-3.0},
             {-4.0,-3.0, -2.0, -2.0, -1.0, -1.0, -2.0, -2.0, -3.0,-4.0}
-        };
+        }.Reverse();
         }
     }
+    [ShowInInspector]
     public static double[,] KingEvalWhite
     {
         get
@@ -122,8 +129,9 @@ public static class PiecePositionEvaluation
             {  -1.0,-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0, -1.0},
             { 2.0,  2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0, 2.0 },
             {  2.0, 2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0 , 2.0}
-        };
+        }.Reverse();
         }
     }
+    [ShowInInspector]
     public static double[,] KingEvalBlack { get { return KingEvalWhite.Reverse(); } }
 }

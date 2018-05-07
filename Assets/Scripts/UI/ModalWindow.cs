@@ -141,9 +141,10 @@ public class ModalWindow : MonoBehaviour
                 instance.closeButton.onClick.AddListener(closeAction);
             instance.closeButton.onClick.AddListener(instance.CloseWindow);
         }
-        LayoutRebuilder.ForceRebuildLayoutImmediate(instance.window.GetComponentInChildren<LayoutGroup>().gameObject.transform as RectTransform);
         if (instance.windowText)
             instance.windowText.text = msg;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(instance.window.GetComponentInChildren<LayoutGroup>().gameObject.transform as RectTransform);
+        SceneController.LockPanel();
     }
 
     public static void Message(string msg, List<UnityAction> closeAction)
@@ -171,9 +172,10 @@ public class ModalWindow : MonoBehaviour
                 }
             instance.closeButton.onClick.AddListener(instance.CloseWindow);
         }
-        LayoutRebuilder.ForceRebuildLayoutImmediate(instance.window.GetComponentInChildren<LayoutGroup>().gameObject.transform as RectTransform);
         if (instance.windowText)
             instance.windowText.text = msg;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(instance.window.GetComponentInChildren<LayoutGroup>().gameObject.transform as RectTransform);
+        SceneController.LockPanel();
     }
 
     void CloseWindow()

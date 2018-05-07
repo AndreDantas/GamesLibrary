@@ -183,11 +183,24 @@ public static class UtilityFunctions
         return l;
     }
 
+    /// <summary>
+    /// Returns a random element from a IEnumerable.
+    /// </summary>
+    /// <typeparam name="T">The object Type.</typeparam>
+    /// <param name="source"></param>
+    /// <returns></returns>
     public static T PickRandom<T>(this IEnumerable<T> source)
     {
         return source.PickRandom(1).Single();
     }
 
+    /// <summary>
+    /// Returns a IEnumerable with random elements from the source IEnumerable.
+    /// </summary>
+    /// <typeparam name="T">The object Type.</typeparam>
+    /// <param name="source"></param>
+    /// <param name="count">The amount of elements to pick.</param>
+    /// <returns></returns>
     public static IEnumerable<T> PickRandom<T>(this IEnumerable<T> source, int count)
     {
         return source.Shuffle().Take(count);
@@ -267,8 +280,7 @@ public static class UtilityFunctions
     /// <returns></returns>
     public static T[,] RotateMatrix90L<T>(this T[,] matrix)
     {
-        if (matrix == null)
-            return null;
+
         T[,] ret = new T[matrix.GetLength(0), matrix.GetLength(1)];
 
         for (int i = 0; i < matrix.GetLength(0); ++i)
@@ -289,14 +301,8 @@ public static class UtilityFunctions
     /// <returns></returns>
     public static T[,] Reverse<T>(this T[,] matrix)
     {
-        if (matrix == null)
-            return null;
-        T[,] ret = new T[matrix.GetLength(0), matrix.GetLength(1)];
 
-        ret = ret.RotateMatrix90R();
-        ret = ret.RotateMatrix90R();
-
-        return ret;
+        return matrix.RotateMatrix90R().RotateMatrix90R();
     }
     public static bool Check2DArray<T>(this T[,] data, T[,] find) where T : class
     {
@@ -439,7 +445,12 @@ public static class UtilityFunctions
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(b.center, b.size);
     }
-
+    public static void Swap<T>(ref T a, ref T b)
+    {
+        T temp = a;
+        a = b;
+        b = temp;
+    }
     /// <summary>
     /// Removes and adds a listener.
     /// </summary>
