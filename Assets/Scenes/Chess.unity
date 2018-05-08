@@ -7634,6 +7634,7 @@ GameObject:
   - component: {fileID: 1084438040}
   - component: {fileID: 1084438039}
   - component: {fileID: 1084438043}
+  - component: {fileID: 1084438045}
   - component: {fileID: 1084438044}
   m_Layer: 0
   m_Name: Main Camera
@@ -7731,6 +7732,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!114 &1084438045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1084438038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a995a73a6add7b24fb4b4543b4225621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1087319219
 GameObject:
   m_ObjectHideFlags: 0
@@ -11944,7 +11956,6 @@ MonoBehaviour:
     player2:
       orientation: 0
       inCheck: 0
-    movesEvalPerFrame: 200
   tilePrefab: {fileID: 1585537792793140, guid: ae536776159868441a9209e89020d6c5, type: 2}
   lightTileColor: {r: 0.6911765, g: 0.6911765, b: 0.6911765, a: 1}
   darkTileColor: {r: 0.4044118, g: 0.4044118, b: 0.4044118, a: 1}

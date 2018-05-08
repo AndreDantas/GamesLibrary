@@ -51,7 +51,7 @@ public class Checker : Piece
 
     public float GetPieceValue()
     {
-        return (isKing ? 50 : 10) + ((CheckersPlayer)player).orientation == Orientation.DOWN ? pos.y : board.rows - pos.y;
+        return (isKing ? 100 : 10 + ((CheckersPlayer)player).orientation == Orientation.DOWN ? pos.y : board.rows - pos.y);
     }
 
     public Checker(Checker other) : base(other)

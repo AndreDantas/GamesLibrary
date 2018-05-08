@@ -219,17 +219,22 @@ public class CheckersBoard : Board
         SetPiece(move.start, null);
         CheckersPlayer player = piece.player as CheckersPlayer;
         if (!piece.isKing)
-            if (player.orientation == Orientation.DOWN)
+        {
+            if (move.isCapture ? move.next == null : true)
             {
+                if (player.orientation == Orientation.DOWN)
+                {
 
-                if (piece.pos.y == rows - 1)
-                    BecomeKing(piece);
+                    if (piece.pos.y == rows - 1)
+                        BecomeKing(piece);
+                }
+                else
+                {
+                    if (piece.pos.y == 0)
+                        BecomeKing(piece);
+                }
             }
-            else
-            {
-                if (piece.pos.y == 0)
-                    BecomeKing(piece);
-            }
+        }
         return this;
 
     }
@@ -445,9 +450,19 @@ public class CheckersBoard : Board
                 {
                     CheckersBoard b = board.BoardAfterMove(moves[i]);
                     var childValue = 0f;
-                    var e = alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
-                    while (e.MoveNext())
-                        yield return e.Current;
+                    if (movesEval % movesEvalPerFrame == 0)
+                    {
+
+                        yield return alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
+                    }
+                    else
+                    {
+                        childValue = alphaBeta(depth - 1, b, false, bestValue, beta);
+                        //var e = alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
+                        //while (e.MoveNext())
+                        //    yield return e.Current;
+                    }
+
 
                     bestValue = Mathf.Max(bestValue, childValue);
                     if (beta <= bestValue)
@@ -466,9 +481,18 @@ public class CheckersBoard : Board
                 {
                     CheckersBoard b = board.BoardAfterMove(moves[i]);
                     var childValue = 0f;
-                    var e = alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
-                    while (e.MoveNext())
-                        yield return e.Current;
+                    if (movesEval % movesEvalPerFrame == 0)
+                    {
+
+                        yield return alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
+                    }
+                    else
+                    {
+                        //var e = alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
+                        //while (e.MoveNext())
+                        //    yield return e.Current;
+                        childValue = alphaBeta(depth - 1, b, true, alpha, bestValue);
+                    }
                     bestValue = Mathf.Min(bestValue, childValue);
                     if (bestValue <= alpha)
                     {
@@ -479,7 +503,55 @@ public class CheckersBoard : Board
         movesEval++;
         result(bestValue);
     }
+    public float alphaBeta(float depth, CheckersBoard board, bool maximisingPlayer, float alpha = -10000, float beta = 10000)
+    {
 
+        float bestValue;
+
+        if (depth <= 0)
+        {
+            bestValue = -board.EvaluateBoard();
+
+        }
+        else if (maximisingPlayer)
+        {
+            bestValue = alpha;
+            List<CheckerMove> moves = board.GetPossibleMovementsAI(playerTop);
+            for (var i = 0; i < moves.Count; i++)
+            {
+                CheckersBoard b = board.BoardAfterMove(moves[i]);
+                var childValue = 0f;
+                childValue = alphaBeta(depth - 1, b, false, bestValue, beta);
+
+                bestValue = Mathf.Max(bestValue, childValue);
+                if (beta <= bestValue)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            bestValue = beta;
+            List<CheckerMove> moves = board.GetPossibleMovementsAI(playerBottom);
+            // Recurse for all children of node.
+            for (var i = 0; i < moves.Count; i++)
+            {
+                CheckersBoard b = board.BoardAfterMove(moves[i]);
+                var childValue = 0f;
+                childValue = alphaBeta(depth - 1, b, true, alpha, bestValue);
+
+
+                bestValue = Mathf.Min(bestValue, childValue);
+                if (bestValue <= alpha)
+                {
+                    break;
+                }
+            }
+        }
+        movesEval++;
+        return bestValue;
+    }
 
     /// <summary>
     /// Returns a piece from a position.

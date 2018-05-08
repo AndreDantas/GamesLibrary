@@ -99,6 +99,7 @@ public class CheckersBoardgame : Boardgame
 #endif
     public void PrepareGame()
     {
+        StopAllCoroutines();
         gameSettings = new CheckersSettingsData(CheckersSettings.instance.settings);
         // Board settings
         lightTile = gameSettings.lightTileColor;
@@ -133,6 +134,7 @@ public class CheckersBoardgame : Boardgame
 
     public void PrepareGameAI()
     {
+        StopAllCoroutines();
         gameSettings = new CheckersSettingsData(CheckersSettings.instance.settings);
         // Board settings
         lightTile = gameSettings.lightTileColor;
@@ -374,6 +376,7 @@ public class CheckersBoardgame : Boardgame
 
     void ReconstructBoard(CheckerBoardSaveData data, bool playerVsplayer = true)
     {
+        StopAllCoroutines();
         ClearRenders();
         if (data.board != null)
         {

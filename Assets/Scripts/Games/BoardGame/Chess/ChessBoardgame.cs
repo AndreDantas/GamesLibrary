@@ -135,6 +135,7 @@ public class ChessBoardgame : Boardgame
 
     public virtual void PrepareGame()
     {
+        StopAllCoroutines();
         gameSettings = new ChessSettingsData(ChessSettings.instance.settings);
         columns = gameSettings.columns;
         rows = gameSettings.rows;
@@ -176,6 +177,7 @@ public class ChessBoardgame : Boardgame
 
     public virtual void PrepareGameAI()
     {
+        StopAllCoroutines();
         gameSettings = new ChessSettingsData(ChessSettings.instance.settings);
         columns = gameSettings.columns;
         rows = gameSettings.rows;
@@ -644,6 +646,7 @@ public class ChessBoardgame : Boardgame
     void ReconstructBoard(ChessBoardSaveData data, bool playerVsplayer = true)
     {
         ClearRenders();
+        StopAllCoroutines();
         if (data.board != null)
         {
 

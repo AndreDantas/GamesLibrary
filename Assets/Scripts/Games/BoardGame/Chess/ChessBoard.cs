@@ -318,7 +318,8 @@ public class ChessBoard : Board
     //}
     [ShowInInspector]
     public int movesEval { get; internal set; }
-    public int movesEvalPerFrame = 200;
+    [ShowInInspector]
+    public int movesEvalPerFrame { get { return 300; } }
     public void ResetMovesEval()
     {
         movesEval = 0;
@@ -341,9 +342,75 @@ public class ChessBoard : Board
             {
                 ChessBoard b = board.BoardAfterMove(moves[i]);
                 var childValue = 0f;
-                var e = alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
-                while (e.MoveNext())
-                    yield return e.Current;
+                if (movesEval % movesEvalPerFrame == 0)
+                {
+
+                    yield return alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
+                }
+                else
+                {
+                    childValue = alphaBeta(depth - 1, b, false, bestValue, beta);
+                    //var e = alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
+                    //while (e.MoveNext())
+                    //    yield return e.Current;
+                }
+                bestValue = Mathf.Max(bestValue, childValue);
+                if (beta <= bestValue)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            bestValue = beta;
+            List<Move> moves = board.GetPossibleMoves(player1);
+            // Recurse for all children of node.
+            for (var i = 0; i < moves.Count; i++)
+            {
+                ChessBoard b = board.BoardAfterMove(moves[i]);
+                var childValue = 0f;
+                if (movesEval % movesEvalPerFrame == 0)
+                {
+
+                    yield return alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
+                }
+                else
+                {
+                    //var e = alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
+                    //while (e.MoveNext())
+                    //    yield return e.Current;
+                    childValue = alphaBeta(depth - 1, b, true, alpha, bestValue);
+                }
+                bestValue = Mathf.Min(bestValue, childValue);
+                if (bestValue <= alpha)
+                {
+                    break;
+                }
+            }
+        }
+        movesEval++;
+        result(bestValue);
+    }
+    public float alphaBeta(float depth, ChessBoard board, bool maximisingPlayer, float alpha = -10000, float beta = 10000)
+    {
+
+        float bestValue;
+
+        if (depth <= 0)
+        {
+            bestValue = -board.EvaluateBoard();
+
+        }
+        else if (maximisingPlayer)
+        {
+            bestValue = alpha;
+            List<Move> moves = board.GetPossibleMoves(player2);
+            for (var i = 0; i < moves.Count; i++)
+            {
+                ChessBoard b = board.BoardAfterMove(moves[i]);
+                var childValue = 0f;
+                childValue = alphaBeta(depth - 1, b, false, bestValue, beta);
 
                 bestValue = Mathf.Max(bestValue, childValue);
                 if (beta <= bestValue)
@@ -361,9 +428,9 @@ public class ChessBoard : Board
             {
                 ChessBoard b = board.BoardAfterMove(moves[i]);
                 var childValue = 0f;
-                var e = alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
-                while (e.MoveNext())
-                    yield return e.Current;
+                childValue = alphaBeta(depth - 1, b, true, alpha, bestValue);
+
+
                 bestValue = Mathf.Min(bestValue, childValue);
                 if (bestValue <= alpha)
                 {
@@ -372,9 +439,8 @@ public class ChessBoard : Board
             }
         }
         movesEval++;
-        result(bestValue);
+        return bestValue;
     }
-
     //public float MiniMax(int depth, ChessBoard board, ChessPlayer playerCheck, bool isMax, float alpha = float.MinValue, float beta = float.MaxValue)
     //{
     //    if (!isInit || (playerCheck != player1 && playerCheck != player2) || playerCheck == null)

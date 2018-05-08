@@ -237,7 +237,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 3651e57d4e5877662812ab708bc1ad29 Assembly-CSharp.dll:.BoardImage
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ShowFps
-8ff504d602a3b1ca1b953b0598eed63d Assembly-CSharp.dll:.ChessBoardgame
+63f2a3b5e6f46e89d82f9a8b9976256c Assembly-CSharp.dll:.ChessBoardgame
 ab58f03a521697c8e2b9792c5d1f5b8b Assembly-CSharp.dll:.ChangeToRandomColor
 aa0ff0d3d28eedf8a59d96494c41128b Assembly-CSharp.dll:.SceneController
 f6554046948397519f867f8e6b54e6a5 Sirenix.OdinInspector.Editor.dll:Sirenix.Serialization.AOTGenerationConfig
@@ -299,3 +299,4 @@ f9462d34d4e7f69a9b6f39732062fe31 Assembly-CSharp.dll:.CheckersSettings
 c2f5ce41cd75e17442b437e3b9dbb6b0 Assembly-CSharp-firstpass.dll:.SpriteOutline
 e1ce179b956825a1333a0a697e0b083f Sirenix.Serialization.Config.dll:Sirenix.Serialization.GlobalSerializationConfig
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CUIColorPicker
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DisablePhysics
