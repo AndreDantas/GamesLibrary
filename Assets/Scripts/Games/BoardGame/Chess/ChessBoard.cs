@@ -272,14 +272,17 @@ public class ChessBoard : Board
         if (!isInit)
             return 0;
         float totalValue = 0;
-        foreach (ChessNode n in GetNodes())
+        for (int i = 0; i < columns; i++)
         {
-            if (n.pieceOnNode != null)
+            for (int j = 0; j < rows; j++)
             {
-                if (n.pieceOnNode.player == player1)
-                    totalValue += n.pieceOnNode.GetPieceValue();
-                else
-                    totalValue -= n.pieceOnNode.GetPieceValue();
+                if (nodes[i, j].pieceOnNode != null)
+                {
+                    if (nodes[i, j].pieceOnNode.player == player1)
+                        totalValue += nodes[i, j].pieceOnNode.GetPieceValue();
+                    else
+                        totalValue -= nodes[i, j].pieceOnNode.GetPieceValue();
+                }
             }
         }
         return totalValue;
@@ -319,7 +322,7 @@ public class ChessBoard : Board
     [ShowInInspector]
     public int movesEval { get; internal set; }
     [ShowInInspector]
-    public int movesEvalPerFrame { get { return 300; } }
+    public int movesEvalPerFrame { get { return 500; } }
     public void ResetMovesEval()
     {
         movesEval = 0;
@@ -328,7 +331,7 @@ public class ChessBoard : Board
     {
 
         float bestValue;
-
+        movesEval++;
         if (depth <= 0)
         {
             bestValue = -board.EvaluateBoard();
@@ -338,58 +341,75 @@ public class ChessBoard : Board
         {
             bestValue = alpha;
             List<Move> moves = board.GetPossibleMoves(player2);
-            for (var i = 0; i < moves.Count; i++)
-            {
-                ChessBoard b = board.BoardAfterMove(moves[i]);
-                var childValue = 0f;
-                if (movesEval % movesEvalPerFrame == 0)
+
+            if (moves.Count > 0)
+                for (var i = 0; i < moves.Count; i++)
                 {
 
-                    yield return alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
+                    var childValue = 0f;
+                    if (movesEval % movesEvalPerFrame == 0)
+                    {
+
+                        var e = alphaBeta(depth - 1, board.BoardAfterMove(moves[i]), false, v => childValue = v, bestValue, beta);
+                        while (e.MoveNext())
+                            yield return e.Current;
+                        //yield return alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
+
+                    }
+                    else
+                    {
+                        childValue = alphaBeta(depth - 1, board.BoardAfterMove(moves[i]), false, bestValue, beta);
+                        //var e = alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
+                        //while (e.MoveNext())
+                        //    yield return e.Current;
+                    }
+                    bestValue = Mathf.Max(bestValue, childValue);
+                    if (beta <= bestValue)
+                    {
+
+                        break;
+                    }
                 }
-                else
-                {
-                    childValue = alphaBeta(depth - 1, b, false, bestValue, beta);
-                    //var e = alphaBeta(depth - 1, b, false, v => childValue = v, bestValue, beta);
-                    //while (e.MoveNext())
-                    //    yield return e.Current;
-                }
-                bestValue = Mathf.Max(bestValue, childValue);
-                if (beta <= bestValue)
-                {
-                    break;
-                }
-            }
+            else
+                bestValue = -10000;
         }
         else
         {
             bestValue = beta;
             List<Move> moves = board.GetPossibleMoves(player1);
             // Recurse for all children of node.
-            for (var i = 0; i < moves.Count; i++)
-            {
-                ChessBoard b = board.BoardAfterMove(moves[i]);
-                var childValue = 0f;
-                if (movesEval % movesEvalPerFrame == 0)
+
+            if (moves.Count > 0)
+                for (var i = 0; i < moves.Count; i++)
                 {
 
-                    yield return alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
+                    var childValue = 0f;
+                    if (movesEval % movesEvalPerFrame == 0)
+                    {
+
+                        var e = alphaBeta(depth - 1, board.BoardAfterMove(moves[i]), true, v => childValue = v, alpha, bestValue);
+                        while (e.MoveNext())
+                            yield return e.Current;
+                        //yield return alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
+                    }
+                    else
+                    {
+                        //var e = alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
+                        //while (e.MoveNext())
+                        //    yield return e.Current;
+                        childValue = alphaBeta(depth - 1, board.BoardAfterMove(moves[i]), true, alpha, bestValue);
+                    }
+                    bestValue = Mathf.Min(bestValue, childValue);
+                    if (bestValue <= alpha)
+                    {
+
+                        break;
+                    }
                 }
-                else
-                {
-                    //var e = alphaBeta(depth - 1, b, true, v => childValue = v, alpha, bestValue);
-                    //while (e.MoveNext())
-                    //    yield return e.Current;
-                    childValue = alphaBeta(depth - 1, b, true, alpha, bestValue);
-                }
-                bestValue = Mathf.Min(bestValue, childValue);
-                if (bestValue <= alpha)
-                {
-                    break;
-                }
-            }
+            else
+                bestValue = 10000;
         }
-        movesEval++;
+
         result(bestValue);
     }
     public float alphaBeta(float depth, ChessBoard board, bool maximisingPlayer, float alpha = -10000, float beta = 10000)
@@ -406,15 +426,17 @@ public class ChessBoard : Board
         {
             bestValue = alpha;
             List<Move> moves = board.GetPossibleMoves(player2);
+
             for (var i = 0; i < moves.Count; i++)
             {
-                ChessBoard b = board.BoardAfterMove(moves[i]);
+
                 var childValue = 0f;
-                childValue = alphaBeta(depth - 1, b, false, bestValue, beta);
+                childValue = alphaBeta(depth - 1, board.BoardAfterMove(moves[i]), false, bestValue, beta);
 
                 bestValue = Mathf.Max(bestValue, childValue);
                 if (beta <= bestValue)
                 {
+
                     break;
                 }
             }
@@ -424,16 +446,18 @@ public class ChessBoard : Board
             bestValue = beta;
             List<Move> moves = board.GetPossibleMoves(player1);
             // Recurse for all children of node.
+
             for (var i = 0; i < moves.Count; i++)
             {
-                ChessBoard b = board.BoardAfterMove(moves[i]);
+
                 var childValue = 0f;
-                childValue = alphaBeta(depth - 1, b, true, alpha, bestValue);
+                childValue = alphaBeta(depth - 1, board.BoardAfterMove(moves[i]), true, alpha, bestValue);
 
 
                 bestValue = Mathf.Min(bestValue, childValue);
                 if (bestValue <= alpha)
                 {
+
                     break;
                 }
             }
@@ -504,12 +528,12 @@ public class ChessBoard : Board
             moves = GetPossibleMoves(player1);
         else
             return false;
-
+        ChessPiece piece; Position pos;
         for (int i = 0; i < moves.Count; i++)
         {
 
-            Position pos = moves[i].end;
-            ChessPiece piece = GetPiece(pos);
+            pos = moves[i].end;
+            piece = GetPiece(pos);
 
             if (piece != null)
             {
@@ -649,13 +673,14 @@ public class ChessBoard : Board
     /// <returns></returns>
     public List<Move> GetPossibleMoves(ChessPlayer player)
     {
+        ChessPiece current; Position pos;
         List<Move> possibleMoves = new List<Move>();
         for (int i = 0; i < columns; i++)
         {
             for (int j = 0; j < rows; j++)
             {
-                Position pos = new Position(i, j);
-                ChessPiece current = GetPiece(pos);
+                pos = new Position(i, j);
+                current = GetPiece(pos);
 
                 if (current != null)
                 {

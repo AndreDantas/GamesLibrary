@@ -30,11 +30,11 @@ public class Board
     /// <summary>
     /// Number of rows. Can't be less than 1.
     /// </summary>
-    public int rows = 10;
+    public int rows = 8;
     /// <summary>
     /// Number of columns. Can't be less than 1.
     /// </summary>
-    public int columns = 10;
+    public int columns = 8;
     /// <summary>
     ///The X offset of each node.
     /// </summary>

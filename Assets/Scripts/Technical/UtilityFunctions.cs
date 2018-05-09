@@ -146,6 +146,7 @@ public static class UtilityFunctions
         return (NewValue);
     }
 
+    #region Lists
     /// <summary>
     /// Converts an array to a list.
     /// </summary>
@@ -182,7 +183,19 @@ public static class UtilityFunctions
 
         return l;
     }
+    /// <summary>
+    /// Is the list empty?
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    public static bool IsEmpty<T>(this List<T> list)
+    {
+        return list?.Count == 0;
+    }
+    #endregion
 
+    #region IEnumerables
     /// <summary>
     /// Returns a random element from a IEnumerable.
     /// </summary>
@@ -210,8 +223,9 @@ public static class UtilityFunctions
     {
         return source.OrderBy(x => Guid.NewGuid());
     }
+    #endregion
 
-
+    #region 2D Arrays
     /// <summary>
     /// Returns a list with all the items of the two-dimensional array.
     /// </summary>
@@ -343,18 +357,21 @@ public static class UtilityFunctions
         }
         return false;
     }
+    #endregion
 
-    /// <summary>
-    /// Is the list empty?
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="list"></param>
-    /// <returns></returns>
-    public static bool IsEmpty<T>(this List<T> list)
+    #region Vectors
+    public static Vector3 RoundVector3(Vector3 v)
     {
-        return list?.Count == 0;
+        return new Vector3(Mathf.Round(v.x), Mathf.Round(v.y), Mathf.Round(v.z));
     }
 
+    public static Vector2 RoundVector2(Vector2 v)
+    {
+        return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
+    }
+    #endregion
+
+    #region GameObject
     /// <summary>
     /// Tries to get a component in GameObject, adds new one if not found.
     /// </summary>
@@ -414,15 +431,7 @@ public static class UtilityFunctions
         }
 
     }
-    public static Vector3 RoundVector3(Vector3 v)
-    {
-        return new Vector3(Mathf.Round(v.x), Mathf.Round(v.y), Mathf.Round(v.z));
-    }
 
-    public static Vector2 RoundVector2(Vector2 v)
-    {
-        return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
-    }
     public static void ChangeParentScale(this Transform parent, Vector3 scale)
     {
         List<Transform> children = new List<Transform>();
@@ -434,23 +443,9 @@ public static class UtilityFunctions
         parent.localScale = scale;
         foreach (Transform child in children) child.parent = parent;
     }
+    #endregion
 
-
-    /// <summary>
-    /// Draws bounds on a DrawGizmos function.
-    /// </summary>
-    /// <param name="b"></param>
-    public static void DrawBounds(Bounds b)
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(b.center, b.size);
-    }
-    public static void Swap<T>(ref T a, ref T b)
-    {
-        T temp = a;
-        a = b;
-        b = temp;
-    }
+    #region Events and UI
     /// <summary>
     /// Removes and adds a listener.
     /// </summary>
@@ -483,4 +478,25 @@ public static class UtilityFunctions
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         return results.Count > 0;
     }
+    #endregion
+
+    #region Extras
+    /// <summary>
+    /// Draws bounds on a DrawGizmos function.
+    /// </summary>
+    /// <param name="b"></param>
+    public static void DrawBounds(Bounds b)
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(b.center, b.size);
+    }
+    public static void Swap<T>(ref T a, ref T b)
+    {
+        T temp = a;
+        a = b;
+        b = temp;
+    }
+
+    #endregion
+
 }

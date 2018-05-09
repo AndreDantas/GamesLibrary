@@ -470,6 +470,8 @@ public class CheckersBoard : Board
                         break;
                     }
                 }
+            else
+                bestValue = -10000;
         }
         else
         {
@@ -499,6 +501,8 @@ public class CheckersBoard : Board
                         break;
                     }
                 }
+            else
+                bestValue = 10000;
         }
         movesEval++;
         result(bestValue);

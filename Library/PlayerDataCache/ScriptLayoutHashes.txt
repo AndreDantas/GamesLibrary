@@ -1,16 +1,18 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/GamesLibrary/Builds/GamesLibrary v1.2.apk
+D:/Andre Dantas/Unity/GamesLibrary/Builds/GamesLibrary v1.3.apk
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/Catchphrase.unity
 Assets/Scenes/Chess.unity
 Assets/Scenes/Checkers.unity
 Assets/Scenes/Pong.unity
+Assets/Scenes/Reversi.unity
 SceneListEnd?
 11ac247b6cc81ec24f9696d7d42340c3 Assembly-CSharp.dll:.ButtonContentGroup
 bf1bc715f5981b498cb75abecad95456 Assembly-CSharp-firstpass.dll:.SetDirty
 264dffe0c3cc1cbe814fb323f3ee9e6d Assembly-CSharp.dll:.ScreenBounds
+7e3ada2ca85be6ef3896aeed0a275374 Assembly-CSharp.dll:.ReversiPanel
 73c40a6cb558e5ba57e1a048672d6b2a Assembly-CSharp.dll:.CheckersEditPanel
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 cf455f7a806648c6ed4c7d3e3f8a0e03 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
@@ -31,6 +33,7 @@ f8f8cf956cf629373f904da68e46b7d9 Assembly-CSharp.dll:.ChessPanel
 6a27eb2a4e4be0007ec027012db2c07e Assembly-CSharp.dll:.CheckersPanel
 bc0e0ff8f430b648fb7011e37dec62dd Assembly-CSharp.dll:.PickAColor
 07b7d5897faf1052ff2b9e30aa5fe956 Assembly-CSharp.dll:.PongBall
+2aa2fea2f586df68f4024df76dc9c3c5 Assembly-CSharp.dll:.ReversiSettings
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 49cd62a578efc0a599b810a2b66cd49c UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -169,6 +172,7 @@ e831d4d75df3b9952af6ac5127a97df5 Assembly-CSharp.dll:.BackgroundScroll
 a049a7edcb46afa471e9b603fa09e165 Assembly-CSharp.dll:.ChangeTextLanguage
 8cc4329cd9f2461b9e288912f3262d32 Assembly-CSharp.dll:.StartScreenPanel
 767ebd513e0d9db138ba3cb80ce17486 Assembly-CSharp.dll:.CheckerTile
+a805b3c1b96b0f2811ee9621b9a9709a Assembly-CSharp.dll:.ReversiBoardGame
 0020613b61aab8a5e27233c4669b1ce5 Assembly-CSharp.dll:.ImageRandomColorChange
 8cc4329cd9f2461b9e288912f3262d32 Assembly-CSharp.dll:.MenuPanel
 8cc4329cd9f2461b9e288912f3262d32 Assembly-CSharp.dll:.GamePanel
@@ -261,6 +265,7 @@ dd5f554da8fa9bb51245fea02eb26d69 Sirenix.OdinInspector.Editor.dll:Sirenix.OdinIn
 05524b8f659e7bfe5756d1335fec24ba Sirenix.OdinInspector.Editor.dll:Sirenix.OdinInspector.Editor.PersistentContextCacheEditor
 790759ef9b7f9c9ac6dba9e602c72e7b Sirenix.OdinInspector.Editor.dll:Sirenix.Utilities.Editor.SerializationDebuggerWindow
 6045af4584bc2538c82746394dd7f099 Sirenix.OdinInspector.Editor.dll:Sirenix.OdinInspector.Editor.SirenixPreferencesWindow
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DisablePhysics
 04574e176b9500405144574597981e6e Assembly-CSharp.dll:.Slideshow
 73f9c9e258e4d2042926d1c6a8a41463 Assembly-CSharp-firstpass.dll:.UIGradient
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
@@ -280,6 +285,7 @@ e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 9d7875ebe3700084e885f1905b93694b Assembly-CSharp.dll:.PongGameController
 b99c43181e1b9a8d844ed98e0c6bd0e1 Assembly-CSharp.dll:.LoadingCircle
+a70544fdae53964f351a9c6bf3df3aff Assembly-CSharp.dll:.ReversiTile
 00471b43688cd9007f92ff44760adcef Assembly-CSharp.dll:.PongPanel
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
@@ -299,4 +305,3 @@ f9462d34d4e7f69a9b6f39732062fe31 Assembly-CSharp.dll:.CheckersSettings
 c2f5ce41cd75e17442b437e3b9dbb6b0 Assembly-CSharp-firstpass.dll:.SpriteOutline
 e1ce179b956825a1333a0a697e0b083f Sirenix.Serialization.Config.dll:Sirenix.Serialization.GlobalSerializationConfig
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CUIColorPicker
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DisablePhysics

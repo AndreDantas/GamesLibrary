@@ -42,7 +42,7 @@ public class CheckersAI : CheckersPlayer
                 boardAfterMove = board.BoardAfterMove(currentMove);
                 float boardValue = 0f;
 
-                yield return boardAfterMove.alphaBeta(4, boardAfterMove, false, v => boardValue = v);
+                yield return boardAfterMove.alphaBeta(Random.Range(1, 3), boardAfterMove, false, v => boardValue = v);
                 //Debug.Log(boardValue);
                 if (boardValue >= bestValue)
                 {
