@@ -90,7 +90,7 @@ public class ChessEditPanel : GamePanel
             boardPreview.lightTile = settings.lightTileColor;
             boardPreview.topPieceColor = settings.topPieceColor;
             boardPreview.bottomPieceColor = settings.bottomPieceColor;
-            boardPreview.CreateGrid();
+            boardPreview.BuildBoard();
             switch (settings.gameMode)
             {
                 case ChessGameMode.Mini:
@@ -183,17 +183,17 @@ public class ChessEditPanel : GamePanel
         {
             case ChessGameMode.Mini:
                 boardPreview.columns = boardPreview.rows = settings.columns = settings.rows = 6;
-                boardPreview.CreateGrid();
+                boardPreview.BuildBoard();
                 boardPreview.PlacePiecesMiniChess(settings.removedPiece);
                 break;
             case ChessGameMode.Normal:
                 boardPreview.columns = boardPreview.rows = settings.columns = settings.rows = 8;
-                boardPreview.CreateGrid();
+                boardPreview.BuildBoard();
                 boardPreview.PlacePiecesNormal();
                 break;
             case ChessGameMode.Omega:
                 boardPreview.columns = boardPreview.rows = settings.columns = settings.rows = 10;
-                boardPreview.CreateGrid();
+                boardPreview.BuildBoard();
                 boardPreview.PlacePiecesOmegaChess(settings.addedPiece);
                 break;
             default:

@@ -14,7 +14,7 @@ public class CheckersBoardImage : BoardImage
     public override void PlacePiecesNormal()
     {
 
-        if (!piecesPrefab.ContainsKey("Checker"))
+        if (!ContainsPiece("Checker"))
             return;
         base.PlacePiecesNormal();
         GameObject piece;
@@ -31,7 +31,7 @@ public class CheckersBoardImage : BoardImage
             for (int j = 0; j < columns; j += 2)
             {
                 Position pos = new Position(oddRow ? j : j + 1, i);
-                piece = Instantiate(piecesPrefab["Checker"]);
+                piece = Instantiate(GetPiece("Checker"));
                 rect = piece.transform as RectTransform;
                 piece.name = "Piece +" + pos;
                 rect.SetParent(bottomPiecesParent.transform);
@@ -55,7 +55,7 @@ public class CheckersBoardImage : BoardImage
             for (int j = 0; j < columns; j += 2)
             {
                 Position pos = new Position(oddRow ? j : j + 1, i);
-                piece = Instantiate(piecesPrefab["Checker"]);
+                piece = Instantiate(GetPiece("Checker"));
                 rect = piece.transform as RectTransform;
                 rect.SetParent(topPiecesParent.transform);
                 rect.localScale = Vector3.one;

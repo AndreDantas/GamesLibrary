@@ -91,7 +91,7 @@ public class CheckersEditPanel : GamePanel
             boardPreview.lightTile = settings.lightTileColor;
             boardPreview.topPieceColor = settings.topPieceColor;
             boardPreview.bottomPieceColor = settings.bottomPieceColor;
-            boardPreview.CreateGrid();
+            boardPreview.BuildBoard();
             boardPreview.rowsWithPieces = settings.piecesByRow;
             boardPreview.PlacePiecesNormal();
 
@@ -132,7 +132,7 @@ public class CheckersEditPanel : GamePanel
         if (boardPreview)
         {
             boardPreview.columns = boardPreview.rows = realValue;
-            boardPreview.CreateGrid();
+            boardPreview.BuildBoard();
             boardPreview.PlacePiecesNormal();
         }
     }

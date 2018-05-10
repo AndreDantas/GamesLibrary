@@ -371,13 +371,18 @@ Prefab:
     m_Modifications:
     - target: {fileID: 114600691238918066, guid: b7a8a67a04aaf8b44bf6ebc8dac213ec,
         type: 2}
+      propertyPath: piecesPrefab.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114600691238918066, guid: b7a8a67a04aaf8b44bf6ebc8dac213ec,
+        type: 2}
       propertyPath: serializationData.SerializedBytes.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114600691238918066, guid: b7a8a67a04aaf8b44bf6ebc8dac213ec,
         type: 2}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114600691238918066, guid: b7a8a67a04aaf8b44bf6ebc8dac213ec,
         type: 2}
@@ -2332,6 +2337,17 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114600691238918066, guid: b7a8a67a04aaf8b44bf6ebc8dac213ec,
+        type: 2}
+      propertyPath: piecesPrefab.Array.data[0].name
+      value: Checker
+      objectReference: {fileID: 0}
+    - target: {fileID: 114600691238918066, guid: b7a8a67a04aaf8b44bf6ebc8dac213ec,
+        type: 2}
+      propertyPath: piecesPrefab.Array.data[0].piece
+      value: 
+      objectReference: {fileID: 1838000293591186, guid: 57d8a0af8f0370b468e632fd621af454,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b7a8a67a04aaf8b44bf6ebc8dac213ec, type: 2}
   m_IsPrefabParent: 0
@@ -2472,7 +2488,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -4284,7 +4300,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -4442,7 +4458,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -8134,7 +8150,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -8889,7 +8905,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:

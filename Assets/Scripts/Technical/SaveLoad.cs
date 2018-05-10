@@ -20,7 +20,10 @@ public static class SaveLoad
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + filePath, FileMode.Open);
-            T data = (T)bf.Deserialize(file);
+            T data = default(T);
+            object temp = bf.Deserialize(file);
+            if (temp.GetType() == typeof(T))
+                data = (T)temp;
             file.Close();
             return data;
         }

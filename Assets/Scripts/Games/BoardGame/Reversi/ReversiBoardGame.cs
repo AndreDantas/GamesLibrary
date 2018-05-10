@@ -82,7 +82,7 @@ public class ReversiBoardGame : Boardgame
     public virtual void PrepareGame()
     {
         StopAllCoroutines();
-        gameSettings = new ReversiSettingsData(ReversiSettings.instance.settings);
+        gameSettings = new ReversiSettingsData(BoardGameSettings.instance.settings as ReversiSettingsData);
         columns = gameSettings.columns;
         rows = gameSettings.rows;
         topPlayerColor = gameSettings.topPieceColor;
@@ -106,7 +106,7 @@ public class ReversiBoardGame : Boardgame
     public virtual void PrepareGameAI()
     {
         StopAllCoroutines();
-        gameSettings = new ReversiSettingsData(ReversiSettings.instance.settings);
+        gameSettings = new ReversiSettingsData(BoardGameSettings.instance.settings as ReversiSettingsData);
         columns = gameSettings.columns;
         rows = gameSettings.rows;
         topPlayerColor = gameSettings.topPieceColor;

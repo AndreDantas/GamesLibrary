@@ -5576,27 +5576,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: piecesPrefab
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.GameObject,
-        UnityEngine.CoreModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   tilePrefab: {fileID: 1231836701818208, guid: 217b144d512a7b148929fff021358cef, type: 2}
   darkTile: {r: 0.7490196, g: 0.5019608, b: 0.30980393, a: 1}
   lightTile: {r: 1, g: 0.81960785, b: 0.68235296, a: 1}
@@ -5604,6 +5584,7 @@ MonoBehaviour:
   rows: 8
   topPieceColor: {r: 1, g: 0, b: 0, a: 1}
   bottomPieceColor: {r: 0, g: 0, b: 1, a: 1}
+  piecesPrefab: []
   rowsWithPieces: 3
 --- !u!114 &114609757964548328
 MonoBehaviour:

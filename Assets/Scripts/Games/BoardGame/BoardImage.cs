@@ -5,6 +5,13 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
+[System.Serializable]
+public class BoardImagePiece
+{
+    public string name;
+    [AssetsOnly]
+    public GameObject piece;
+}
 public class BoardImage : SerializedMonoBehaviour
 {
     [Title("Board")]
@@ -24,8 +31,8 @@ public class BoardImage : SerializedMonoBehaviour
     [Title("Pieces")]
     public Color topPieceColor = new Color(0.877f, 0.087f, 0.173f, 1f);
     public Color bottomPieceColor = new Color(0.331f, 0.304f, 0.304f, 1f);
-    [ShowInInspector, OdinSerialize]
-    public Dictionary<string, GameObject> piecesPrefab = new Dictionary<string, GameObject>(StringComparer.InvariantCultureIgnoreCase);
+    [ShowInInspector]
+    public List<BoardImagePiece> piecesPrefab = new List<BoardImagePiece>();
     protected GameObject piecesParent;
     protected GameObject bottomPiecesParent;
     protected GameObject topPiecesParent;
@@ -36,12 +43,51 @@ public class BoardImage : SerializedMonoBehaviour
         UpdateGrid();
     }
 
+    public GameObject GetPiece(string name)
+    {
+        if (piecesPrefab == null)
+            return null;
+
+        foreach (var item in piecesPrefab)
+        {
+            if (item.name.ToLower() == name.ToLower())
+                return item.piece;
+        }
+
+        return null;
+    }
+
+    public bool ContainsPiece(string name)
+    {
+        if (piecesPrefab == null)
+            return false;
+
+        foreach (var item in piecesPrefab)
+        {
+            if (item.name.ToLower() == name.ToLower())
+                return true;
+        }
+
+        return false;
+    }
+
     public virtual void UpdateGrid()
     {
         ChangePiecesColor();
         ChangeTileColor();
     }
+    public bool ValidCoordinate(Position pos)
+    {
+        int x = pos.x;
+        int y = pos.y;
 
+        if (x < 0 || x >= columns)
+            return false;
+        if (y < 0 || y >= rows)
+            return false;
+
+        return true;
+    }
     public virtual void ChangePiecesColor()
     {
         if (piecesParent != null)
@@ -78,7 +124,7 @@ public class BoardImage : SerializedMonoBehaviour
         darkTile = color;
     }
 
-    public virtual void CreateGrid()
+    public virtual void BuildBoard()
     {
         if (tilePrefab == null)
             return;
@@ -213,4 +259,25 @@ public class BoardImage : SerializedMonoBehaviour
         tilesWidth = rect.sizeDelta.x / columns;
         tilesHeight = rect.sizeDelta.y / rows;
     }
+
+    public void PlacePiece(GameObject piece, Position pos, Color color, Transform parent)
+    {
+        if (piece == null || pieces == null || !ValidCoordinate(pos))
+            return;
+
+        Destroy(pieces[pos.x, pos.y]);
+        RectTransform rect;
+        rect = piece.transform as RectTransform;
+        rect.SetParent(parent);
+        rect.localScale = Vector3.one;
+        rect.anchoredPosition = (tiles[pos.x, pos.y].transform as RectTransform).anchoredPosition;
+        rect.sizeDelta = new Vector2(tilesWidth, tilesHeight);
+        Image img = piece.GetComponent<Image>();
+        if (img)
+        {
+            img.color = color;
+        }
+        pieces[pos.x, pos.y] = piece;
+    }
+
 }
