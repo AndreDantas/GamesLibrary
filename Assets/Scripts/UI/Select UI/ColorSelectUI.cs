@@ -47,6 +47,17 @@ public class ColorSelectUI : SelectUI
         ChangeOption(1);
     }
 
+    public void SetColors(List<Color> colors)
+    {
+        if (colors == null)
+            return;
+        selectColors = new List<Color>();
+        foreach (var item in colors)
+        {
+            selectColors.Add(new Color(item.r, item.g, item.b));
+        }
+    }
+
     public void SetCurrentColor(Color c)
     {
         if (selectColors == null)

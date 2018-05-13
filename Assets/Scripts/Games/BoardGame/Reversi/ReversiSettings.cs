@@ -14,7 +14,7 @@ public class ReversiSettingsData : BoardGameSettingsData
         rows = 8;
         darkTileColor = new SerializableColor(new Color(0.159f, 0.689f, 0.176f, 1f));
         lightTileColor = new SerializableColor(new Color(0.262f, 0.764f, 0.105f, 1f));
-        topPieceColor = new SerializableColor(new Color(0.274f, 0.274f, 0.274f, 1f));
+        topPieceColor = new SerializableColor(Colors.BlackLeatherJacket);
         bottomPieceColor = new SerializableColor(Colors.GhostWhite);
 
     }
@@ -38,7 +38,13 @@ public class ReversiSettings : BoardGameSettings
             settings = new ReversiSettingsData();
     }
 
-    private void Awake()
+    public override void ResetSettings()
+    {
+        settings = new ReversiSettingsData();
+        SaveSettings();
+    }
+
+    protected override void Awake()
     {
         if (instance != null && instance != this)
         {

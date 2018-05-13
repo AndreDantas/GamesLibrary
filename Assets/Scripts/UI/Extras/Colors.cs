@@ -6,7 +6,18 @@ public static class Colors
 {
     public static bool Compare(this Color c, Color other)
     {
-        return (Mathf.Approximately(c.r, other.r) && Mathf.Approximately(c.g, other.g) && Mathf.Approximately(c.b, other.b));
+        return (Mathf.Approximately(UtilityFunctions.RoundDown(c.r, 3), UtilityFunctions.RoundDown(other.r, 3))
+            && Mathf.Approximately(UtilityFunctions.RoundDown(c.g, 3), UtilityFunctions.RoundDown(other.g, 3))
+            && Mathf.Approximately(UtilityFunctions.RoundDown(c.b, 3), UtilityFunctions.RoundDown(other.b, 3)));
+    }
+
+    public static void SetColor(this Color c, Color other)
+    {
+        c = new Color(other.r, other.g, other.b);
+    }
+    public static Color RandomColor()
+    {
+        return new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
     }
 
     public static readonly Color AbsoluteZero = new Color32(0, 72, 186, 255);

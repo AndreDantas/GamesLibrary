@@ -58,10 +58,10 @@ public class BoardGameSettingsData
     {
         columns = other.columns;
         rows = other.rows;
-        darkTileColor = other.darkTileColor;
-        lightTileColor = other.lightTileColor;
-        topPieceColor = other.topPieceColor;
-        bottomPieceColor = other.bottomPieceColor;
+        darkTileColor = new SerializableColor(other.darkTileColor);
+        lightTileColor = new SerializableColor(other.lightTileColor);
+        topPieceColor = new SerializableColor(other.topPieceColor);
+        bottomPieceColor = new SerializableColor(other.bottomPieceColor);
     }
 }
 public class BoardGameSettings : MonoBehaviour
@@ -86,8 +86,15 @@ public class BoardGameSettings : MonoBehaviour
             settings = load;
         }
     }
+    [ButtonGroup("G1")]
+    [Button(ButtonSizes.Medium)]
+    public virtual void ResetSettings()
+    {
+        settings = new BoardGameSettingsData();
+        SaveSettings();
+    }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         if (instance != null && instance != this)
         {

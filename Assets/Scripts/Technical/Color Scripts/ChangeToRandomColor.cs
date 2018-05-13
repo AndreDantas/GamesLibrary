@@ -7,7 +7,9 @@ public class ChangeToRandomColor : MonoBehaviour
 {
 
     public bool changeColor = true;
+    [ShowIf("changeColor")]
     public bool random = true;
+    [ShowIf("changeColor")]
     public float changeTime = 1f;
     public void SetOnValueChangeCallback(Action<Color> onValueChange)
     {
@@ -15,6 +17,7 @@ public class ChangeToRandomColor : MonoBehaviour
     }
     private Action<Color> _onValueChange;
     [SerializeField]
+    [HideIf("random")]
     public List<Color> colorList = new List<Color> { Color.red, Color.green, Color.blue };
     int index = 0;
 
@@ -57,8 +60,8 @@ public class ChangeToRandomColor : MonoBehaviour
     {
         if (random)
         {
-            StartColor = RandomColor();
-            EndColor = RandomColor();
+            StartColor = Colors.RandomColor();
+            EndColor = Colors.RandomColor();
         }
         else if (colorList != null ? colorList.Count > 0 : false)
         {
@@ -86,7 +89,7 @@ public class ChangeToRandomColor : MonoBehaviour
                 if (random)
                 {
                     index = 0;
-                    EndColor = RandomColor();
+                    EndColor = Colors.RandomColor();
                 }
                 else if (colorList != null ? colorList.Count > 0 : false)
                 {
@@ -99,14 +102,9 @@ public class ChangeToRandomColor : MonoBehaviour
                 }
             }
             float t = lerpTime / changeTime;
-            if (_onValueChange != null)
-            {
-                _onValueChange(Color.Lerp(StartColor, EndColor, t));
-            }
+            _onValueChange?.Invoke(Color.Lerp(StartColor, EndColor, t));
         }
     }
-    public static Color RandomColor()
-    {
-        return new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-    }
+
+
 }

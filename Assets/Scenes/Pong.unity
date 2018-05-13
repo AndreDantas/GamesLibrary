@@ -1872,18 +1872,18 @@ Prefab:
         type: 2}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: a1c84844af78fcd4ab67174bdd6e7457,
+      objectReference: {fileID: 11400000, guid: b9d6ff5f47984b64ea63aa16ecc15895,
         type: 2}
     - target: {fileID: 114674324959118506, guid: 54b339b1d30417d49a8a457e4e9d4e04,
         type: 2}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 21839491806046778, guid: a1c84844af78fcd4ab67174bdd6e7457,
+      objectReference: {fileID: 21906798125226340, guid: b9d6ff5f47984b64ea63aa16ecc15895,
         type: 2}
     - target: {fileID: 114674324959118506, guid: 54b339b1d30417d49a8a457e4e9d4e04,
         type: 2}
       propertyPath: m_fontSize
-      value: 180
+      value: 237.5
       objectReference: {fileID: 0}
     - target: {fileID: 114762302240531316, guid: 54b339b1d30417d49a8a457e4e9d4e04,
         type: 2}
@@ -1908,7 +1908,7 @@ Prefab:
     - target: {fileID: 114674324959118506, guid: 54b339b1d30417d49a8a457e4e9d4e04,
         type: 2}
       propertyPath: m_fontSizeMax
-      value: 180
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 114762302240531316, guid: 54b339b1d30417d49a8a457e4e9d4e04,
         type: 2}
@@ -1935,7 +1935,7 @@ Prefab:
     - target: {fileID: 114674324959118506, guid: 54b339b1d30417d49a8a457e4e9d4e04,
         type: 2}
       propertyPath: m_textAlignment
-      value: 544
+      value: 4128
       objectReference: {fileID: 0}
     - target: {fileID: 114481596232110968, guid: 54b339b1d30417d49a8a457e4e9d4e04,
         type: 2}
@@ -1981,6 +1981,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95f8969588aa31d4685b976bc9052e6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   screenCenter: {x: 0, y: 0}
   onBackPanel: {fileID: 0}
   panelObjects: []
@@ -3307,6 +3316,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719cddbb4de1e9d48a820f9729005347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   screenCenter: {x: 0, y: 0}
   onBackPanel: {fileID: 869026766}
   panelObjects: []
@@ -4228,11 +4246,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -4822,6 +4840,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022eee3cc4de43e4d9fef8ab96a998cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   screenCenter: {x: 0, y: 0}
   onBackPanel: {fileID: 2071680427}
   panelObjects:
@@ -6118,11 +6145,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -6309,9 +6336,65 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 114349904659035608, guid: 0acfb5711e59d0540a4789a218109f31,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224307675483985194, guid: 0acfb5711e59d0540a4789a218109f31,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224307675483985194, guid: 0acfb5711e59d0540a4789a218109f31,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 224307675483985194, guid: 0acfb5711e59d0540a4789a218109f31,
+        type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224307675483985194, guid: 0acfb5711e59d0540a4789a218109f31,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224307675483985194, guid: 0acfb5711e59d0540a4789a218109f31,
+        type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224307675483985194, guid: 0acfb5711e59d0540a4789a218109f31,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224307675483985194, guid: 0acfb5711e59d0540a4789a218109f31,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0acfb5711e59d0540a4789a218109f31, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1255073877 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1951565339140838, guid: 0acfb5711e59d0540a4789a218109f31,
+    type: 2}
+  m_PrefabInternal: {fileID: 1255073876}
+--- !u!114 &1255073878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1255073877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -146154839, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1356327270
 GameObject:
   m_ObjectHideFlags: 0
@@ -6701,7 +6784,7 @@ PlatformEffector2D:
   m_RotationalOffset: 0
   m_UseOneWay: 1
   m_UseOneWayGrouping: 0
-  m_SurfaceArc: 90
+  m_SurfaceArc: 178
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 0
@@ -7009,7 +7092,7 @@ PlatformEffector2D:
   m_RotationalOffset: 180
   m_UseOneWay: 1
   m_UseOneWayGrouping: 0
-  m_SurfaceArc: 90
+  m_SurfaceArc: 178
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 0
@@ -7918,6 +8001,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a79e936b9cdbc64f9bac38901215291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   screenCenter: {x: 0, y: 0}
   onBackPanel: {fileID: 401605351}
   panelObjects:

@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using System.Linq;
+using Sirenix.Serialization;
 public class BoardgameEditPanel : GamePanel
 {
     public ScrollRect scrollRect;
@@ -12,10 +13,10 @@ public class BoardgameEditPanel : GamePanel
     protected BoardGameSettingsData settings = new BoardGameSettingsData();
     public TMP_Dropdown boardSizeDropdown;
     public BoardImage boardPreview;
-    [ShowInInspector, HorizontalGroup("ColorGroup")]
-    public List<Color> topPlayerColors { get; set; } = new List<Color> { Colors.GhostWhite, Colors.BrownChocolate, Colors.BlizzardBlue, Colors.OrangeCrayola, Colors.CyanCornflowerBlue };
-    [ShowInInspector, HorizontalGroup("ColorGroup")]
-    public List<Color> bottomplayerColors { get; set; } = new List<Color> { Colors.BlackLeatherJacket, Colors.YellowMunsell, Colors.PinkFlamingo, Colors.PurpleHeart, Colors.FireEngineRed };
+    [ShowInInspector, HorizontalGroup("ColorGroup"), OdinSerialize]
+    public List<Color> topPlayerColors { get; set; } //= new List<Color> { Colors.GhostWhite, Colors.BrownChocolate, Colors.BlizzardBlue, Colors.OrangeCrayola, Colors.CyanCornflowerBlue };
+    [ShowInInspector, HorizontalGroup("ColorGroup"), OdinSerialize]
+    public List<Color> bottomplayerColors { get; set; } //= new List<Color> { Colors.BlackLeatherJacket, Colors.YellowMunsell, Colors.PinkFlamingo, Colors.PurpleHeart, Colors.FireEngineRed };
 
     protected Dictionary<string, int> boardSize = new Dictionary<string, int>()
     {
@@ -29,8 +30,7 @@ public class BoardgameEditPanel : GamePanel
     public ColorSelectUI bottomPlayerColorSelect;
     protected virtual void Start()
     {
-        topPlayerColors[0] = BoardGameSettings.instance.settings.topPieceColor;
-        bottomplayerColors[0] = BoardGameSettings.instance.settings.bottomPieceColor;
+
         if (scrollRect == null)
             scrollRect = GetComponentInChildren<ScrollRect>();
         Init();
@@ -79,7 +79,7 @@ public class BoardgameEditPanel : GamePanel
         if (topPlayerColorSelect)
         {
             topPlayerColorSelect.selectColors.Clear();
-            topPlayerColorSelect.selectColors = topPlayerColors;
+            topPlayerColorSelect.SetColors(topPlayerColors);
             topPlayerColorSelect.SetCurrentColor(settings.topPieceColor.GetColor());
             topPlayerColorSelect.UpdateUI();
             topPlayerColorSelect.OnColorSelect.RemoveAndAddListener(TopPlayerColorChanged);
@@ -88,7 +88,7 @@ public class BoardgameEditPanel : GamePanel
         if (bottomPlayerColorSelect)
         {
             bottomPlayerColorSelect.selectColors.Clear();
-            bottomPlayerColorSelect.selectColors = bottomplayerColors;
+            bottomPlayerColorSelect.SetColors(bottomplayerColors);
             bottomPlayerColorSelect.SetCurrentColor(settings.bottomPieceColor.GetColor());
             bottomPlayerColorSelect.UpdateUI();
             bottomPlayerColorSelect.OnColorSelect.RemoveAndAddListener(BottomPlayerColorChanged);

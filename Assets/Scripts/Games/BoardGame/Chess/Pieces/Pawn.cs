@@ -61,8 +61,8 @@ public class Pawn : ChessPiece
                 ChessBoardgame c = GameObject.FindObjectOfType<ChessBoardgame>();
                 if (c != null)
                 {
-                    c.tiles[pos.x + dx, pos.y].chessPiece.SetActive(false);
-                    c.tiles[pos.x + dx, pos.y].chessPiece = null;
+                    c.tiles[pos.x + dx, pos.y].piece.SetActive(false);
+                    c.tiles[pos.x + dx, pos.y].piece = null;
                 }
             }
 

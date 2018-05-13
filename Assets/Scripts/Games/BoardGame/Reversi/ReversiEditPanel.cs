@@ -15,6 +15,14 @@ public class ReversiEditPanel : BoardgameEditPanel
 
     protected override void GetSettings()
     {
+        boardSize = new Dictionary<string, int>()
+    {
+        { "6x6", 6},
+        { "8x8", 8 },
+        { "10x10", 10 },
+        { "12x12", 12 }
+
+    };
         settings = new ReversiSettingsData((ReversiSettingsData)BoardGameSettings.instance.settings);
 
     }

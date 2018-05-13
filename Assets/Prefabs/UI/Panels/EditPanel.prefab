@@ -3936,6 +3936,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73ae3f80858e7194c9358f726924a61e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   screenCenter: {x: 0, y: 0}
   onBackPanel: {fileID: 0}
   panelObjects: []

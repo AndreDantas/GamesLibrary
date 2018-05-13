@@ -20,7 +20,7 @@ public class ReversiAI : Player
     public virtual IEnumerator CalculateBestMove()
     {
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         havingTurn = true;
         if (board == null ? true : !board.isInit)
             yield break;
@@ -43,7 +43,7 @@ public class ReversiAI : Player
                 boardAfterMove = board.BoardAfterMove(this, currentMove);
                 float boardValue = 0f;
 
-                yield return boardAfterMove.alphaBeta(Random.Range(1, 4), boardAfterMove, false, v => boardValue = v);
+                yield return boardAfterMove.alphaBeta(2, boardAfterMove, false, v => boardValue = v);
                 //Debug.Log(boardValue);
                 if (boardValue >= bestValue)
                 {

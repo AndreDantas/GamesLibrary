@@ -69,4 +69,47 @@ public class Board
         else
             return Mathf.Sqrt(Mathf.Pow(a.x - b.x, 2) + Mathf.Pow(a.y - b.y, 2));
     }
+
+    public bool ValidCoordinate(Position pos)
+    {
+        if (pos != null)
+            return ValidCoordinate(pos.x, pos.y);
+        else
+            return false;
+    }
+    /// <summary>
+    /// Checks if the coordinate is valid in this map.
+    /// </summary>
+    public bool ValidCoordinate(Node node)
+    {
+        if (node == null)
+            return false;
+
+        return ValidCoordinate(node.pos);
+    }
+    /// <summary>
+    /// Checks if the coordinate is valid in this map.
+    /// </summary>
+    public bool ValidCoordinate(int x, int y)
+    {
+        if (x < 0 || x >= columns)
+            return false;
+        if (y < 0 || y >= rows)
+            return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Checks if the coordinate is valid in this map.
+    /// </summary>
+    public bool ValidCoordinate(Vector2 worldPos)
+    {
+
+        int tilePosX = (int)Mathf.Floor(worldPos.x);
+        int tilePosY = (int)Mathf.Floor(worldPos.y);
+
+        return ValidCoordinate(tilePosX, tilePosY);
+    }
+
 }

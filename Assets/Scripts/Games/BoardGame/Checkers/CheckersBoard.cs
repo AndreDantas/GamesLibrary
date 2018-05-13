@@ -123,50 +123,6 @@ public class CheckersBoard : Board
         }
         return result;
     }
-    /// <summary>
-    /// Checks if the coordinate is valid in this map.
-    /// </summary>
-    public bool ValidCoordinate(Vector2 worldPos)
-    {
-
-        int tilePosX = (int)Mathf.Floor(worldPos.x);
-        int tilePosY = (int)Mathf.Floor(worldPos.y);
-
-        return ValidCoordinate(tilePosX, tilePosY);
-    }
-
-    public bool ValidCoordinate(Position pos)
-    {
-        if (pos != null)
-            return ValidCoordinate(pos.x, pos.y);
-        else
-            return false;
-    }
-
-    /// <summary>
-    /// Checks if the coordinate is valid in this map.
-    /// </summary>
-    public bool ValidCoordinate(int x, int y)
-    {
-        if (nodes == null)
-            return false;
-        if (x < 0 || x >= nodes.GetLength(0))
-            return false;
-        if (y < 0 || y >= nodes.GetLength(1))
-            return false;
-
-        return true;
-    }
-    /// <summary>
-    /// Checks if the coordinate is valid in this map.
-    /// </summary>
-    public bool ValidCoordinate(Node node)
-    {
-        if (node == null)
-            return false;
-
-        return ValidCoordinate(node.pos);
-    }
 
     public List<CheckersNode> GetNeighbors(Position pos)
     {

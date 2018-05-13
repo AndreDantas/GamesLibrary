@@ -146,6 +146,33 @@ public static class UtilityFunctions
         return (NewValue);
     }
 
+    private delegate float RoundingFunction(float value);
+
+    private enum RoundingDirection { Up, Down }
+
+    public static float RoundUp(float value, int precision)
+    {
+        return Round(value, precision, RoundingDirection.Up);
+    }
+
+    public static float RoundDown(float value, int precision)
+    {
+        return Round(value, precision, RoundingDirection.Down);
+    }
+
+    private static float Round(float value, int precision,
+                RoundingDirection roundingDirection)
+    {
+        RoundingFunction roundingFunction;
+        if (roundingDirection == RoundingDirection.Up)
+            roundingFunction = Mathf.Ceil;
+        else
+            roundingFunction = Mathf.Floor;
+        value *= Mathf.Pow(10, precision);
+        value = roundingFunction(value);
+        return value * Mathf.Pow(10, -1 * precision);
+    }
+
     #region Lists
     /// <summary>
     /// Converts an array to a list.
@@ -161,6 +188,15 @@ public static class UtilityFunctions
             result.Add(t);
         }
         return result;
+    }
+
+    public static void PrintAll<T>(this List<T> l)
+    {
+        if (l != null)
+            foreach (var item in l)
+            {
+                Debug.Log(item);
+            }
     }
 
     /// <summary>
@@ -194,6 +230,14 @@ public static class UtilityFunctions
         return list?.Count == 0;
     }
     #endregion
+    public static void PrintAll<T>(this T[] array)
+    {
+        if (array != null)
+            foreach (var item in array)
+            {
+                Debug.Log(item);
+            }
+    }
 
     #region IEnumerables
     /// <summary>

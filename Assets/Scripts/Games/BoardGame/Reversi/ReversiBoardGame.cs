@@ -44,9 +44,9 @@ public class ReversiBoardGame : Boardgame
     public Player turnPlayer { get; internal set; }
 
     [Header("Renders")]
-    public AreaRangeRenderer renderFlippedPieces;
-    public AreaRangeRenderer lastMoveRender;
-    public AreaRangeRenderer hintsRender;
+    public ProceduralMeshRenderer renderFlippedPieces;
+    public ProceduralMeshRenderer lastMoveRender;
+    public ProceduralMeshRenderer hintsRender;
     [Space(10)]
     public AudioClip piecePlacement;
     [Space(10)]
@@ -56,6 +56,8 @@ public class ReversiBoardGame : Boardgame
     public Image player2PieceScore;
     public TextMeshProUGUI player1ScoreText;
     public TextMeshProUGUI player2ScoreText;
+    public GameObject playerPassedObject;
+    public TextMeshProUGUI playerPassedText;
     public bool canClick = true;
     [ListDrawerSettings(NumberOfItemsPerPage = 1)]
 
@@ -68,8 +70,15 @@ public class ReversiBoardGame : Boardgame
     public ReversiTile[,] tiles { get; internal set; }
     public List<ReversiMoveInfo> movesLog;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+        if (victoryMsg)
+            victoryMsg.gameObject.SetActive(false);
+        if (aiTurnTimeIndicator)
+            aiTurnTimeIndicator.SetActive(false);
+        if (playerPassedObject)
+            playerPassedObject.SetActive(false);
         gameObject.AddAudio(piecePlacement);
         //PrepareGame();
     }
@@ -91,8 +100,8 @@ public class ReversiBoardGame : Boardgame
         lightTile = gameSettings.lightTileColor;
 
         board = new ReversiBoard(columns, rows);
-        board.player1 = new Player();
-        board.player2 = new Player();
+        board.player1 = new Player("Jogador 1");
+        board.player2 = new Player("Jogador 2");
         board.InitBoard();
         turnPlayer = board.player1;
         RenderMap();
@@ -100,7 +109,8 @@ public class ReversiBoardGame : Boardgame
         ClearRenders();
         movesLog = new List<ReversiMoveInfo>();
         canClick = true;
-
+        if (showHints)
+            ToggleShowHints();
         StartTurn();
     }
     public virtual void PrepareGameAI()
@@ -116,9 +126,9 @@ public class ReversiBoardGame : Boardgame
 
         board = new ReversiBoard(columns, rows);
         board.InitBoard();
-        board.player1 = new Player();
+        board.player1 = new Player("Jogador 1");
         board.player2 = new ReversiAI(board);
-
+        board.player2.name = "Computador";
 
         turnPlayer = board.player1;
         RenderMap();
@@ -126,7 +136,8 @@ public class ReversiBoardGame : Boardgame
         ClearRenders();
         movesLog = new List<ReversiMoveInfo>();
         canClick = true;
-
+        if (showHints)
+            ToggleShowHints();
         StartTurn();
     }
     public void PlacePieces()
@@ -418,7 +429,6 @@ public class ReversiBoardGame : Boardgame
             player2ScoreText.text = board.GetScore(board.player2).ToString();
     }
 
-
     public void StartTurn()
     {
         UpdateScores();
@@ -428,6 +438,8 @@ public class ReversiBoardGame : Boardgame
             victoryMsg.gameObject.SetActive(false);
         if (aiTurnTimeIndicator)
             aiTurnTimeIndicator.SetActive(false);
+        if (playerPassedObject)
+            playerPassedObject.SetActive(false);
         IndicateTurnPlayer(turnPlayer == board.player1 ? -1 : 1);
         if (CheckForEnd())
         {
@@ -436,7 +448,7 @@ public class ReversiBoardGame : Boardgame
         }
         if (board.GetValidMoves(turnPlayer).Count == 0)
         {
-            Passed();
+            StartCoroutine(Passed());
             return;
         }
         if (turnPlayer is ReversiAI)
@@ -452,8 +464,24 @@ public class ReversiBoardGame : Boardgame
 
     }
 
-    public void Passed()
+    IEnumerator Passed()
     {
+        yield return null;
+        if (playerPassedObject)
+        {
+            if (playerPassedText)
+            {
+                playerPassedObject.SetActive(true);
+                playerPassedObject.transform.localScale = new Vector3(1f, 0f, 1f);
+                playerPassedText.text = turnPlayer.name + " passou";
+                playerPassedObject.transform.ScaleTo(new Vector3(1f, 1f, 1f), 0.5f, EasingEquations.EaseInOutElastic);
+                SceneController.LockPanel();
+                yield return new WaitForSeconds(0.8f);
+                playerPassedObject.transform.ScaleTo(new Vector3(1f, 0f, 1f), 0.5f, EasingEquations.EaseInElastic);
+                yield return new WaitForSeconds(0.5f);
+                SceneController.UnlockPanel();
+            }
+        }
         ChangeTurn();
     }
 
@@ -491,9 +519,9 @@ public class ReversiBoardGame : Boardgame
 
             string winner;
             if (player1Score > player2Score)
-                winner = "Jogador 1 venceu!";
+                winner = board.player1.name + " venceu!";
             else if (player2Score > player1Score)
-                winner = "Jogador 2 venceu!";
+                winner = board.player2.name + " venceu!";
             else
                 winner = "Empate!";
             victoryMsg.text = winner;
@@ -623,7 +651,7 @@ public class ReversiBoardGame : Boardgame
                         sqrPos.Add(tiles[item.x, item.y].transform.position);
                 }
             }
-            hintsRender.RenderSquaresArea(sqrPos, tileRenderScale, tileRenderScale);
+            hintsRender.RenderCircles(sqrPos, (tileRenderScale / 2f) * 0.5f, 20);
         }
     }
 

@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class ReversiTile : BoardgameTile
 {
 
-    public GameObject piece;
+
     public override void OnPointerClick(PointerEventData pointerEventData)
     {
 

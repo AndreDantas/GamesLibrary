@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class CheckerTile : BoardgameTile
 {
 
-    public GameObject checkerPiece;
+
     public override void OnPointerClick(PointerEventData pointerEventData)
     {
 

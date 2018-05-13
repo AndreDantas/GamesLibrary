@@ -56,10 +56,10 @@ public class ChessBoardgame : Boardgame
     public AudioClip pieceMovement;
     [Space(10)]
     [Header("Renders")]
-    public AreaRangeRenderer movementsRender;
-    public AreaRangeRenderer checkRender;
-    public AreaRangeRenderer lastMoveRender;
-    public AreaRangeRenderer selectedPieceRender;
+    public ProceduralMeshRenderer movementsRender;
+    public ProceduralMeshRenderer checkRender;
+    public ProceduralMeshRenderer lastMoveRender;
+    public ProceduralMeshRenderer selectedPieceRender;
     [Space(10)]
     public TextMeshProUGUI victoryMsg;
     public GameObject promotionObj;
@@ -93,8 +93,9 @@ public class ChessBoardgame : Boardgame
     public delegate void OnGameEnd();
     public OnGameEnd OnEnd;
 
-    protected void Start()
+    protected override void Start()
     {
+        base.Start();
         gameObject.AddAudio(pieceMovement);
         //PrepareGame();
     }
@@ -399,9 +400,9 @@ public class ChessBoardgame : Boardgame
         if (ValidCoordinate(pos1) && ValidCoordinate(pos2))
         {
             GameObject temp;
-            temp = tiles[pos1.x, pos1.y].chessPiece;
-            tiles[pos1.x, pos1.y].chessPiece = tiles[pos2.x, pos2.y].chessPiece;
-            tiles[pos2.x, pos2.y].chessPiece = temp;
+            temp = tiles[pos1.x, pos1.y].piece;
+            tiles[pos1.x, pos1.y].piece = tiles[pos2.x, pos2.y].piece;
+            tiles[pos2.x, pos2.y].piece = temp;
             board.Swap(pos1, pos2);
         }
     }
@@ -669,7 +670,7 @@ public class ChessBoardgame : Boardgame
                 obj.transform.SetParent(node.pieceOnNode.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
                 obj.transform.localPosition = tiles[node.pos.x, node.pos.y].transform.localPosition;
                 obj.transform.localScale = Vector3.one;
-                tiles[node.pos.x, node.pos.y].chessPiece = obj;
+                tiles[node.pos.x, node.pos.y].piece = obj;
 
                 SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
                 if (sr != null)
@@ -722,7 +723,7 @@ public class ChessBoardgame : Boardgame
             return;
         obj.gameObject.transform.SetParent(lightPiece ? lightPiecesParent.transform : darkPiecesParent.transform);
         obj.transform.localScale = Vector3.one;
-        tiles[pos.x, pos.y].chessPiece = obj;
+        tiles[pos.x, pos.y].piece = obj;
         ChessPiece cp = p;
         cp.startPosition = cp.pos = pos;
         cp.board = board;
@@ -828,20 +829,20 @@ public class ChessBoardgame : Boardgame
         if (ValidCoordinate(move.end))
         {
 
-            GameObject temp = tiles[move.start.x, move.start.y].chessPiece;
+            GameObject temp = tiles[move.start.x, move.start.y].piece;
             if (temp != null)
             {
                 canClick = false;
-                tiles[move.start.x, move.start.y].chessPiece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
+                tiles[move.start.x, move.start.y].piece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
 
                 yield return new WaitForSeconds(0.1f);
                 gameObject.PlayAudio(pieceMovement);
-                tiles[move.start.x, move.start.y].chessPiece = null;
-                if (tiles[move.end.x, move.end.y].chessPiece != null)
+                tiles[move.start.x, move.start.y].piece = null;
+                if (tiles[move.end.x, move.end.y].piece != null)
                 {
-                    Destroy(tiles[move.end.x, move.end.y].chessPiece);
+                    Destroy(tiles[move.end.x, move.end.y].piece);
                 }
-                tiles[move.end.x, move.end.y].chessPiece = temp;
+                tiles[move.end.x, move.end.y].piece = temp;
                 canClick = true;
             }
         }
@@ -912,7 +913,7 @@ public class ChessBoardgame : Boardgame
         if (selectedPieceRender)
             selectedPieceRender.Clear();
         IndicateTurnPlayer(turnPlayer.orientation == Orientation.DOWN ? -1 : 1);
-        if (CheckForCheckmate())
+        if (CheckForCheckmate() || CheckForDraw())
         {
             EndGame();
             return;
@@ -923,6 +924,16 @@ public class ChessBoardgame : Boardgame
             playerTurnBorder?.SetActive(false);
             StartCoroutine(AITurn());
         }
+    }
+
+    bool CheckForDraw()
+    {
+        if ((ChessPiece.RemoveMovesPlayerInCheck(board.GetPossibleMoves(turnPlayer), board, turnPlayer).Count == 0)
+            && !board.IsPlayerInCheck(turnPlayer))
+        {
+            return true;
+        }
+        return false;
     }
 
     IEnumerator AITurn()
@@ -992,11 +1003,11 @@ public class ChessBoardgame : Boardgame
         piece.board = board;
         piece.player = turnPlayer;
 
-        Destroy(tiles[promotionPos.x, promotionPos.y].chessPiece);
+        Destroy(tiles[promotionPos.x, promotionPos.y].piece);
         GameObject obj = Instantiate(GetPieceObjectFromType(type));
         obj.transform.SetParent(piece.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
         obj.transform.localPosition = tiles[promotionPos.x, promotionPos.y].transform.localPosition;
-        tiles[promotionPos.x, promotionPos.y].chessPiece = obj;
+        tiles[promotionPos.x, promotionPos.y].piece = obj;
 
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         if (sr != null)
@@ -1035,16 +1046,23 @@ public class ChessBoardgame : Boardgame
         canClick = false;
         if (victoryMsg)
         {
-            string winner = turnPlayer == board.player1 ? "Preto" : "Branco";
-            victoryMsg.text = winner + " venceu!";
+            if (CheckForDraw())
+            {
+                victoryMsg.text = "Empate";
+            }
+            else
+            {
+                string winner = turnPlayer == board.player1 ? "Preto" : "Branco";
+                victoryMsg.text = winner + " venceu!";
+
+            }
             victoryMsg.gameObject.SetActive(true);
         }
         if (playerTurnIndicator)
             playerTurnIndicator.SetActive(false);
         if (playerTurnBorder)
             playerTurnBorder.SetActive(false);
-        if (OnEnd != null)
-            OnEnd();
+        OnEnd?.Invoke();
     }
 
     /// <summary>
@@ -1053,7 +1071,7 @@ public class ChessBoardgame : Boardgame
     /// <returns></returns>
     public bool CheckForCheckmate()
     {
-        return (ChessPiece.RemoveMovesPlayerInCheck(board.GetPossibleMoves(turnPlayer), board, turnPlayer).Count == 0);
+        return (ChessPiece.RemoveMovesPlayerInCheck(board.GetPossibleMoves(turnPlayer), board, turnPlayer).Count == 0 && board.IsPlayerInCheck(turnPlayer));
     }
 
     public Position CheckForPromotion()

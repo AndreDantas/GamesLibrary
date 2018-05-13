@@ -21,7 +21,14 @@ public class SerializableColor
         B = color.b;
         A = color.a;
     }
+    public SerializableColor(SerializableColor color)
+    {
 
+        R = color.R;
+        G = color.G;
+        B = color.B;
+        A = color.A;
+    }
     public Color GetColor()
     {
         return new Color(R, G, B, A);

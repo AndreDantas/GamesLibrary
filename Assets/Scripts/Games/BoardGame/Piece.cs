@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [System.Serializable]
-public abstract class Piece
+public class Piece
 {
     /// <summary>
     /// The piece's position.

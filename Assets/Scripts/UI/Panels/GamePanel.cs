@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class GamePanel : MonoBehaviour
+using Sirenix.Serialization;
+using Sirenix.OdinInspector;
+public class GamePanel : SerializedMonoBehaviour
 {
 
     /// <summary>

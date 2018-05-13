@@ -16,6 +16,16 @@ public abstract class Boardgame : MonoBehaviour
     public GameObject playerTurnBorder;
     public float indicatorScale = 0.6f;
 
+
+    protected virtual void Start()
+    {
+        if (playerTurnBorder)
+            playerTurnBorder.SetActive(false);
+        if (playerTurnIndicator)
+        {
+            playerTurnIndicator.SetActive(false);
+        }
+    }
     /// <summary>
     /// Function to render the map. 
     /// </summary>

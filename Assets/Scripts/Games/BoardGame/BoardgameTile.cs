@@ -8,7 +8,7 @@ public class BoardgameTile : MonoBehaviour, IPointerClickHandler
 
     public Position pos;
     public Boardgame boardGame;
-
+    public GameObject piece;
     public virtual void OnPointerClick(PointerEventData pointerEventData)
     {
 

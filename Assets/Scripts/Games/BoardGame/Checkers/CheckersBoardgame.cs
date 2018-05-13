@@ -43,10 +43,10 @@ public class CheckersBoardgame : Boardgame
     public CheckersPlayer turnPlayer { get; internal set; }
     protected Checker selectedPiece;
     [Header("Renders")]
-    public AreaRangeRenderer movementsRender;
-    public AreaRangeRenderer captureRender;
-    public AreaRangeRenderer lastMoveRender;
-    public AreaRangeRenderer selectedPieceRender;
+    public ProceduralMeshRenderer movementsRender;
+    public ProceduralMeshRenderer captureRender;
+    public ProceduralMeshRenderer lastMoveRender;
+    public ProceduralMeshRenderer selectedPieceRender;
     [Space(10)]
     public AudioClip pieceMovement;
     [Space(10)]
@@ -65,8 +65,9 @@ public class CheckersBoardgame : Boardgame
     public CheckerTile[,] tiles { get; internal set; }
     private CheckerMove previousCaptureMove;
     private bool capturing;
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         gameObject.AddAudio(pieceMovement);
         //PrepareGame();
     }
@@ -220,7 +221,7 @@ public class CheckersBoardgame : Boardgame
         piece.board = board;
         piece.startPosition = pos;
         board.SetPiece(pos, piece);
-        Destroy(tiles[pos.x, pos.y].checkerPiece);
+        Destroy(tiles[pos.x, pos.y].piece);
         GameObject pieceObj = Instantiate(piece.isKing ? checkerKingPrefab : checkerPrefab);
 
         SpriteRenderer sr = pieceObj.GetComponent<SpriteRenderer>();
@@ -232,7 +233,7 @@ public class CheckersBoardgame : Boardgame
         pieceObj.transform.SetParent(isTopPlayer ? player2PiecesParent.transform : player1PiecesParent.transform);
         pieceObj.transform.localScale = Vector3.one;
         pieceObj.transform.localPosition = tiles[pos.x, pos.y].transform.localPosition;
-        tiles[pos.x, pos.y].checkerPiece = pieceObj;
+        tiles[pos.x, pos.y].piece = pieceObj;
     }
 
     public override void RenderMap()
@@ -404,7 +405,7 @@ public class CheckersBoardgame : Boardgame
                 obj.transform.SetParent(node.checkerOnNode.player == board.playerTop ? player2PiecesParent.transform : player1PiecesParent.transform);
                 obj.transform.localPosition = tiles[node.pos.x, node.pos.y].transform.localPosition;
                 obj.transform.localScale = Vector3.one;
-                tiles[node.pos.x, node.pos.y].checkerPiece = obj;
+                tiles[node.pos.x, node.pos.y].piece = obj;
 
                 SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
                 if (sr != null)
@@ -570,16 +571,16 @@ public class CheckersBoardgame : Boardgame
         if (ValidCoordinate(move.end))
         {
 
-            GameObject temp = tiles[move.start.x, move.start.y].checkerPiece;
+            GameObject temp = tiles[move.start.x, move.start.y].piece;
             if (temp != null)
             {
                 canClick = false;
-                tiles[move.start.x, move.start.y].checkerPiece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
+                tiles[move.start.x, move.start.y].piece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
 
                 yield return new WaitForSeconds(0.1f);
                 gameObject.PlayAudio(pieceMovement);
-                tiles[move.start.x, move.start.y].checkerPiece = null;
-                tiles[move.end.x, move.end.y].checkerPiece = temp;
+                tiles[move.start.x, move.start.y].piece = null;
+                tiles[move.end.x, move.end.y].piece = temp;
                 canClick = true;
             }
             selectedPiece = null;
@@ -599,23 +600,23 @@ public class CheckersBoardgame : Boardgame
             if (ValidCoordinate(move.end))
             {
 
-                GameObject temp = tiles[move.start.x, move.start.y].checkerPiece;
+                GameObject temp = tiles[move.start.x, move.start.y].piece;
                 if (temp != null)
                 {
 
-                    tiles[move.start.x, move.start.y].checkerPiece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
+                    tiles[move.start.x, move.start.y].piece.transform.MoveTo(tiles[move.end.x, move.end.y].transform.position, 0.1f);
 
                     yield return new WaitForSeconds(0.1f);
                     gameObject.PlayAudio(pieceMovement);
-                    tiles[move.start.x, move.start.y].checkerPiece = null;
+                    tiles[move.start.x, move.start.y].piece = null;
                     Position delta = new Position(UtilityFunctions.Sign(move.end.x - move.start.x), UtilityFunctions.Sign(move.end.y - move.start.y));
                     Position captured = move.end - delta;
-                    if (tiles[captured.x, captured.y].checkerPiece != null)
+                    if (tiles[captured.x, captured.y].piece != null)
                     {
-                        Destroy(tiles[captured.x, captured.y].checkerPiece);
-                        tiles[captured.x, captured.y].checkerPiece = null;
+                        Destroy(tiles[captured.x, captured.y].piece);
+                        tiles[captured.x, captured.y].piece = null;
                     }
-                    tiles[move.end.x, move.end.y].checkerPiece = temp;
+                    tiles[move.end.x, move.end.y].piece = temp;
                     if ((moves.IndexOf(move) != moves.Count - 1))
                         yield return new WaitForSeconds(0.2f);
 
@@ -697,7 +698,7 @@ public class CheckersBoardgame : Boardgame
             List<GameObject> objects = new List<GameObject>();
             foreach (var item in attackPieces)
             {
-                objects.Add(tiles[item.pos.x, item.pos.y].checkerPiece);
+                objects.Add(tiles[item.pos.x, item.pos.y].piece);
             }
             RenderAttackPieces(objects);
         }
@@ -755,7 +756,15 @@ public class CheckersBoardgame : Boardgame
             playerTurnBorder.SetActive(false);
         if (victoryMsg)
         {
-            string winner = turnPlayer == board.playerTop ? "Jogador 1" : "Jogador 2";
+            string winner;
+            if (vsAI)
+            {
+                winner = turnPlayer == board.playerTop ? "Jogador 1" : "Computador";
+            }
+            else
+            {
+                winner = turnPlayer == board.playerTop ? "Jogador 1" : "Jogador 2";
+            }
             victoryMsg.text = winner + " venceu!";
             victoryMsg.gameObject.SetActive(true);
         }
