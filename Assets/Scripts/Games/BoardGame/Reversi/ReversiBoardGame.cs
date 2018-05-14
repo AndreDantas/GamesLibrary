@@ -545,18 +545,7 @@ public class ReversiBoardGame : Boardgame
         return board.GetValidMoves(turnPlayer).Count == 0 && board.GetValidMoves(otherPlayer).Count == 0;
 
     }
-    public bool ValidCoordinate(Position pos)
-    {
-        int x = pos.x;
-        int y = pos.y;
 
-        if (x < 0 || x >= columns)
-            return false;
-        if (y < 0 || y >= rows)
-            return false;
-
-        return true;
-    }
 
     /// <summary>
     /// Changes the color of the pieces at runtime.
@@ -710,7 +699,7 @@ public class ReversiBoardGame : Boardgame
 
     }
 
-    public void OnClick(Position pos)
+    public override void OnClick(Position pos)
     {
         if (!canClick)
         {

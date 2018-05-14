@@ -14,8 +14,8 @@ public class Connect4SettingsData : BoardGameSettingsData
     {
         columns = 7;
         rows = 6;
-        darkTileColor = new SerializableColor(Colors.BlueBell);
-        lightTileColor = new SerializableColor(Colors.BlueBell);
+        darkTileColor = lightTileColor = new SerializableColor(Colors.BlueBolt);
+
         topPieceColor = new SerializableColor(Colors.YellowCrayola);
         bottomPieceColor = new SerializableColor(Colors.Red);
         connectTarget = 4;

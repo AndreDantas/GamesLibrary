@@ -696,18 +696,7 @@ public class ChessBoardgame : Boardgame
             ModalWindow.Message("Sem jogos salvos.");
     }
 
-    public bool ValidCoordinate(Position pos)
-    {
-        int x = pos.x;
-        int y = pos.y;
 
-        if (x < 0 || x >= columns)
-            return false;
-        if (y < 0 || y >= rows)
-            return false;
-
-        return true;
-    }
 
     /// <summary>
     /// Initializes the piece on the board.
@@ -1169,7 +1158,7 @@ public class ChessBoardgame : Boardgame
     /// When a tile is clicked.
     /// </summary>
     /// <param name="pos"></param>
-    public void OnClick(Position pos)
+    public override void OnClick(Position pos)
     {
         if (!canClick)
         {

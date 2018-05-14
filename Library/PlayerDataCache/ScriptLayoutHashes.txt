@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/GamesLibrary/Builds/GamesLibrary v1.3.5.apk
+D:/Andre Dantas/Unity/GamesLibrary/Builds/GamesLibrary v1.4.apk
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/Catchphrase.unity
@@ -8,12 +8,14 @@ Assets/Scenes/Chess.unity
 Assets/Scenes/Checkers.unity
 Assets/Scenes/Pong.unity
 Assets/Scenes/Reversi.unity
+Assets/Scenes/Connect4.unity
 SceneListEnd?
 11ac247b6cc81ec24f9696d7d42340c3 Assembly-CSharp.dll:.ButtonContentGroup
 bf1bc715f5981b498cb75abecad95456 Assembly-CSharp-firstpass.dll:.SetDirty
 264dffe0c3cc1cbe814fb323f3ee9e6d Assembly-CSharp.dll:.ScreenBounds
 fb2a23c8f326cb10eb99c7f3c156f3d0 Assembly-CSharp.dll:.ReversiPanel
 401eb18f14a80566e6eb295af1a5e79d Assembly-CSharp.dll:.CheckersEditPanel
+2fbc8ca12ef69dcaa788d88e8f3a4679 Assembly-CSharp.dll:.Connect4Boardgame
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 cf455f7a806648c6ed4c7d3e3f8a0e03 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 13bdb7c23815c33a33b37b0ba8dd39be UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
@@ -26,7 +28,9 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 30afa8783a8bbee2e465ec9ce1efaee2 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
 30afa8783a8bbee2e465ec9ce1efaee2 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 607d64d2c4bc76ac9876e6f7b9cc7edf UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Connect4EditPanel
 2c4d783368d5d4945da027170d2c47b9 Assembly-CSharp.dll:.SpriteRendererRandomColorChange
+9935f602d7488df924405402ec1818b9 Assembly-CSharp.dll:.Connect4Panel
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SetUpLanguage
 4f3115c8562904ca2fee94ea4c7b2dd2 Assembly-CSharp-firstpass.dll:.UICornersGradient
 820d8a46b6c0274667a98e2f0f425aef Assembly-CSharp.dll:.ChessPanel
@@ -199,6 +203,7 @@ e763036081c708b34f78f5a56f72c23d TextMeshPro-2017.3-1.0.56-Runtime.dll:TMPro.TMP
 d672cee35261f9935d5ce974c746730f TextMeshPro-2017.3-1.0.56-Runtime.dll:TMPro.TMP_Text
 2b54175828251329350e922966c6d111 Assembly-CSharp.dll:.ObjectFocus
 a70544fdae53964f351a9c6bf3df3aff Assembly-CSharp.dll:.BoardgameTile
+4e28a807c3d945f6df83ee8b4948b494 Assembly-CSharp.dll:.Connect4Settings
 1dd1031b422d201db1359ffe196d7477 Assembly-CSharp.dll:.CatchphrasePanel
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GameQualitySettings
 05524b8f659e7bfe5756d1335fec24ba TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.EditorUtilities.DropdownEditor

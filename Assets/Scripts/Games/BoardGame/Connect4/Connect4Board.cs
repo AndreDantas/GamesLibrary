@@ -8,14 +8,17 @@ using System;
 [System.Serializable]
 public class Connect4Board : Board
 {
+    [TableMatrix(DrawElementMethod = "DrawColoredEnumElement", ResizableColumns = false)]
     public Connect4Node[,] nodes;
 
     public Player player1;
     public Player player2;
     [SerializeField, HideInInspector]
-    private int connectTarget;
+    private int connectTarget = 4;
     [ShowInInspector]
     public int ConnectTarget { get { return connectTarget; } set { value = Mathf.Max(3, value); connectTarget = value; } }
+
+
     public static List<Position> ConnectDirections
     {
         get
@@ -38,50 +41,6 @@ public class Connect4Board : Board
             return result;
         }
     }
-#if UNITY_EDITOR
-    [ShowInInspector, TableMatrix(DrawElementMethod = "DrawColoredEnumElement", ResizableColumns = false)]
-    private bool[,] piecesPos
-    {
-        get
-        {
-            if (!isInit)
-                return null;
-            else
-            {
-                bool[,] pos = new bool[columns, rows];
-                int x = 0, y = 0;
-                for (int i = columns - 1; i >= 0; i--)
-                {
-                    for (int j = 0; j < rows; j++)
-                    {
-                        pos[j, i] = nodes[x, y].pieceOnNode != null;
-                        x++;
-                    }
-                    x = 0;
-                    y++;
-                }
-                return pos;
-            }
-        }
-    }
-
-
-
-    private static bool DrawColoredEnumElement(Rect rect, bool value)
-    {
-        if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-        {
-            value = !value;
-            GUI.changed = true;
-            Event.current.Use();
-        }
-
-        UnityEditor.EditorGUI.DrawRect(rect, value ? new Color(0.1f, 0.8f, 0.2f) : new Color(0, 0, 0, 0.5f));
-
-        return value;
-    }
-
-#endif
 
     public Connect4Board()
     {
@@ -151,6 +110,14 @@ public class Connect4Board : Board
             return null;
 
         return thisPlayer == player1 ? player2 : player1;
+    }
+    public Piece AddPiece(Player player, Position pos)
+    {
+        if (player == null || !ValidCoordinate(pos))
+            return null;
+
+        return (nodes[pos.x, pos.y].pieceOnNode = new Piece(pos, player));
+
     }
 
     /// <summary>
@@ -227,6 +194,12 @@ public class Connect4Board : Board
                     int connectTarget = 0;
                     while (piece?.player == player)
                     {
+                        connectTarget++;
+                        if (connectTarget == this.connectTarget)
+                        {
+                            result = true;
+                            break;
+                        }
                         connectNodes.Add(nodes[x, y]);
                         x += item.x;
                         y += item.y;
@@ -235,12 +208,8 @@ public class Connect4Board : Board
                             break;
                         piece = nodes[x, y].pieceOnNode;
 
-                        connectTarget++;
-                        if (connectTarget == this.connectTarget)
-                        {
-                            result = true;
-                            break;
-                        }
+
+
                     }
                     if (result)
                         break;
@@ -374,7 +343,31 @@ public class Connect4Board : Board
         return valid;
     }
 
+    public int GetRowEmptyPosition(int columnIndex)
+    {
+        if (!isInit || !ValidColumnIndex(columnIndex))
+            return -1;
+        for (int i = 0; i < rows; i++)
+        {
+            if (nodes[columnIndex, i].pieceOnNode == null)
+                return i;
+        }
+        return -1; ;
+    }
 
+    public List<int> GetValidColumns()
+    {
+        if (!isInit)
+            return null;
+        List<int> result = new List<int>();
+        for (int i = 0; i < columns; i++)
+        {
+            if (ValidColumn(i))
+                result.Add(i);
+        }
+
+        return result;
+    }
 
     [ShowInInspector]
     public int movesEval { get; internal set; }

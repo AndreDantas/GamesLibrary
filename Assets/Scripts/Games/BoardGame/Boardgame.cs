@@ -14,7 +14,7 @@ public abstract class Boardgame : MonoBehaviour
 
     public GameObject playerTurnIndicator;
     public GameObject playerTurnBorder;
-    public float indicatorScale = 0.6f;
+    public float indicatorScale = 0.5f;
 
 
     protected virtual void Start()
@@ -34,5 +34,21 @@ public abstract class Boardgame : MonoBehaviour
     {
         gameObject.ToggleMute();
     }
+    public bool ValidCoordinate(Position pos)
+    {
+        int x = pos.x;
+        int y = pos.y;
 
+        if (x < 0 || x >= columns)
+            return false;
+        if (y < 0 || y >= rows)
+            return false;
+
+        return true;
+    }
+
+    public virtual void OnClick(Position pos)
+    {
+
+    }
 }

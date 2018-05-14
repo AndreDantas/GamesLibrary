@@ -11,6 +11,6 @@ public class BoardgameTile : MonoBehaviour, IPointerClickHandler
     public GameObject piece;
     public virtual void OnPointerClick(PointerEventData pointerEventData)
     {
-
+        boardGame.OnClick(pos);
     }
 }
