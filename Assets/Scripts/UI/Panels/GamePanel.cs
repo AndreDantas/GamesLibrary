@@ -31,6 +31,15 @@ public class GamePanel : SerializedMonoBehaviour
         RectTransform rect = transform as RectTransform;
         rect.localPosition = screenCenter;
     }
+
+    /// <summary>
+    /// Makes the SceneController change the current panel to this one.
+    /// </summary>
+    public virtual void ChangeToThisPanel()
+    {
+        SceneController.instance?.ChangePanel(this);
+    }
+
     /// <summary>
     /// Returns the default offscreen position for animating the panel. 
     /// </summary>

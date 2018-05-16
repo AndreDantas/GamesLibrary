@@ -31,7 +31,7 @@ public class Pawn : ChessPiece
         if ((player as ChessPlayer).orientation == Orientation.DOWN)
         {
             float value = base.GetPieceValue();
-            if (PiecePositionEvaluation.PawnEvalWhite.ValidCoordinate(pos.x, pos.y))
+            if (PiecePositionEvaluation.PawnEvalWhite.ValidCoordinates(pos.x, pos.y))
                 value += (float)PiecePositionEvaluation.PawnEvalWhite[pos.x, pos.y];
             if (pos.y == board.rows - 1)
                 value += 50;
@@ -41,7 +41,7 @@ public class Pawn : ChessPiece
         {
 
             float value = base.GetPieceValue();
-            if (PiecePositionEvaluation.PawnEvalBlack.ValidCoordinate(pos.x, pos.y))
+            if (PiecePositionEvaluation.PawnEvalBlack.ValidCoordinates(pos.x, pos.y))
                 value += (float)PiecePositionEvaluation.PawnEvalBlack[pos.x, pos.y];
             if (pos.y == 0)
                 value += 50;

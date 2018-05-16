@@ -25,12 +25,12 @@ public class King : ChessPiece
         float value = base.GetPieceValue();
         if ((player as ChessPlayer).orientation == Orientation.DOWN)
         {
-            if (PiecePositionEvaluation.KingEvalWhite.ValidCoordinate(pos.x, pos.y))
+            if (PiecePositionEvaluation.KingEvalWhite.ValidCoordinates(pos.x, pos.y))
                 value += (float)PiecePositionEvaluation.KingEvalWhite[pos.x, pos.y];
         }
         else
         {
-            if (PiecePositionEvaluation.KingEvalBlack.ValidCoordinate(pos.x, pos.y))
+            if (PiecePositionEvaluation.KingEvalBlack.ValidCoordinates(pos.x, pos.y))
                 value += (float)PiecePositionEvaluation.KingEvalBlack[pos.x, pos.y];
         }
         return value;

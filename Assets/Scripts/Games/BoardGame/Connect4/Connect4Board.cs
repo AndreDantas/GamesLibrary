@@ -17,8 +17,8 @@ public class Connect4Board : Board
     private int connectTarget = 4;
     [ShowInInspector]
     public int ConnectTarget { get { return connectTarget; } set { value = Mathf.Max(3, value); connectTarget = value; } }
-
-
+    [SerializeField, HideInInspector]
+    protected bool finished = false;
     public static List<Position> ConnectDirections
     {
         get
@@ -73,6 +73,7 @@ public class Connect4Board : Board
         player1 = oldBoard.player1;
         player2 = oldBoard.player2;
         isInit = oldBoard.isInit;
+        finished = oldBoard.finished;
 
     }
 
@@ -165,65 +166,28 @@ public class Connect4Board : Board
     }
 
 
-    public List<Connect4Node> CheckForConnect(Player player, Position connectPos)
+    public Position CheckForConnect(Player player)
     {
-        if (!isInit || !ValidCoordinate(connectPos) || player == null)
-            return null;
+        if (!isInit || player == null)
+            return new Position(-1, -1);
 
-        int x, y;
-        //Debug.Log(pos);
-        List<Connect4Node> connectNodes = new List<Connect4Node>();
-        bool result = false;
-        foreach (var item in ConnectDirections)
+        int maxCon = 0;
+        Position pos = new Position(-1, -1);
+        foreach (var item in GetNodes())
         {
 
-            x = connectPos.x;
-            y = connectPos.y;
-
-            //Debug.Log("Direction: " + item);
-            connectNodes.Clear();
-            if (ValidCoordinate(x, y))
+            int pieceCount = GetPieceConnectionsCount(item.pos, player);
+            if (pieceCount > maxCon)
             {
-                //Debug.Log("Checking at : " + new Position(x, y));
-                Piece piece = nodes[x, y].pieceOnNode;
-                //Debug.Log(piece);
-                if (piece?.player == player)
-                {
-
-
-                    int connectTarget = 0;
-                    while (piece?.player == player)
-                    {
-                        connectTarget++;
-                        if (connectTarget == this.connectTarget)
-                        {
-                            result = true;
-                            break;
-                        }
-                        connectNodes.Add(nodes[x, y]);
-                        x += item.x;
-                        y += item.y;
-
-                        if (!ValidCoordinate(x, y))
-                            break;
-                        piece = nodes[x, y].pieceOnNode;
-
-
-
-                    }
-                    if (result)
-                        break;
-
-                }
-                else
-                    break;
+                pos = item.pos;
+                maxCon = pieceCount;
             }
         }
 
-        if (result)
-            return connectNodes;
+        if (maxCon >= connectTarget)
+            return pos;
         else
-            return null;
+            return new Position(-1, -1);
     }
 
     public int EvaluateBoard()
@@ -247,19 +211,25 @@ public class Connect4Board : Board
 
     public int EvaluatePosition(Position pos, Player player)
     {
-        if (!ValidCoordinate(pos) || !isInit || player == null)
+        if (!ValidCoordinate(pos) || !isInit || player == null || finished)
             return 0;
 
         Piece piece = nodes[pos.x, pos.y].pieceOnNode;
         if (piece == null)
             return 0;
 
-        int pieceValue = 10;
         int pts = 0;
         if (piece.player == player)
         {
-            pts = pieceValue ^ GetPieceConnectionsCount(pos, player);
+            int connections = GetPieceConnectionsCount(pos, player);
+
+            if (connections >= connectTarget)
+                pts = 1000;
+            else
+                pts = connections * (player == player1 ? 10 : 1);
+
         }
+
 
         return pts;
     }
@@ -293,7 +263,7 @@ public class Connect4Board : Board
                     int connections = 0;
                     while (piece?.player == player)
                     {
-                        connectTarget++;
+                        connections++;
                         x += item.x;
                         y += item.y;
 
@@ -322,6 +292,80 @@ public class Connect4Board : Board
 
     }
 
+    public List<Position> GetConnectPositions(Position pos, Player player)
+    {
+        if (!ValidCoordinate(pos) || !isInit || player == null)
+            return null;
+
+        int maxConnections = 0;
+        List<Position> temp = new List<Position>();
+        bool validConnect = false;
+        List<Position> result = new List<Position>();
+        Piece piece = nodes[pos.x, pos.y].pieceOnNode;
+        if (piece?.player == player)
+        {
+            int x, y;
+            //Debug.Log(pos);
+
+            foreach (var item in ConnectDirections)
+            {
+
+                x = pos.x;
+                y = pos.y;
+
+                temp.Clear();
+                //Debug.Log("Checking at : " + new Position(x, y));
+                piece = nodes[x, y].pieceOnNode;
+                //Debug.Log(piece);
+                if (piece?.player == player)
+                {
+
+
+                    int connections = 0;
+                    while (piece?.player == player)
+                    {
+                        temp.Add(piece.pos);
+                        connections++;
+                        x += item.x;
+                        y += item.y;
+
+                        if (!ValidCoordinate(x, y))
+                            break;
+                        piece = nodes[x, y].pieceOnNode;
+
+
+                    }
+                    if (connections > maxConnections)
+                    {
+                        maxConnections = connections;
+                        if (maxConnections >= connectTarget)
+                        {
+                            //Debug.Log(maxConnections);
+                            result.Clear();
+                            result.AddRange(temp);
+                            validConnect = true;
+                        }
+
+
+                    }
+
+
+                }
+                else
+                    break;
+
+            }
+        }
+        else
+        {
+            return null;
+        }
+        if (validConnect)
+            return result;
+        else return null;
+
+    }
+
     public bool ValidColumnIndex(int columnIndex)
     {
         return !(columnIndex < 0 || columnIndex >= columns);
@@ -330,7 +374,7 @@ public class Connect4Board : Board
 
     public bool ValidColumn(int columnIndex)
     {
-        if (!isInit || !ValidColumnIndex(columnIndex))
+        if (!isInit || !ValidColumnIndex(columnIndex) || finished)
             return false;
 
         bool valid = false;

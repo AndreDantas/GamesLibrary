@@ -21,12 +21,12 @@ public class Bishop : ChessPiece
         float value = base.GetPieceValue();
         if ((player as ChessPlayer).orientation == Orientation.DOWN)
         {
-            if (PiecePositionEvaluation.BishopEvalWhite.ValidCoordinate(pos.x, pos.y))
+            if (PiecePositionEvaluation.BishopEvalWhite.ValidCoordinates(pos.x, pos.y))
                 value += (float)PiecePositionEvaluation.BishopEvalWhite[pos.x, pos.y];
         }
         else
         {
-            if (PiecePositionEvaluation.BishopEvalBlack.ValidCoordinate(pos.x, pos.y))
+            if (PiecePositionEvaluation.BishopEvalBlack.ValidCoordinates(pos.x, pos.y))
                 value += (float)PiecePositionEvaluation.BishopEvalBlack[pos.x, pos.y];
         }
         return value;

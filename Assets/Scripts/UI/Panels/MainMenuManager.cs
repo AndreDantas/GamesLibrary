@@ -10,6 +10,7 @@ public class MainMenuManager : MonoBehaviour
     public static MainMenuManager instance;
     public static int MainMenuLevelBuild = 0;
     public static float fadeTime = 0.3f;  // the fading speed
+    private bool isLoading = false;
     GameObject fadeImage;
     private void Awake()
     {
@@ -51,15 +52,20 @@ public class MainMenuManager : MonoBehaviour
         else
             sr.FadeIn(fadeTime);
     }
+
     public void LoadLevel(int level)
     {
+        if (isLoading)
+            return;
         StartCoroutine(LevelLoad(level));
     }
 
     IEnumerator LevelLoad(int level)
     {
+        isLoading = true;
         BeginFade(1);
         yield return new WaitForSeconds(fadeTime);
         SceneManager.LoadScene(level);
+        isLoading = false;
     }
 }

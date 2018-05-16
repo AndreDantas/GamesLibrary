@@ -20,7 +20,7 @@ public enum LerpMode
 
 public static class UtilityFunctions
 {
-
+    #region Math
     public static float ClampMax(float value, float maxValue)
     {
 
@@ -85,27 +85,6 @@ public static class UtilityFunctions
     }
 
     /// <summary>
-    /// The width of the screen.
-    /// </summary>
-    public static float ScreenWidth
-    {
-        get
-        {
-            return ScreenHeight * Screen.width / Screen.height;
-        }
-    }
-    /// <summary>
-    /// The height of the screen.
-    /// </summary>
-    public static float ScreenHeight
-    {
-        get
-        {
-            return Camera.main.orthographicSize * 2.0f;
-        }
-    }
-
-    /// <summary>
     /// Used to modify the "t" value in a lerp function.
     /// </summary>
     /// <param name="lerpMode"></param>
@@ -150,6 +129,7 @@ public static class UtilityFunctions
 
     private enum RoundingDirection { Up, Down }
 
+
     public static float RoundUp(float value, int precision)
     {
         return Round(value, precision, RoundingDirection.Up);
@@ -172,6 +152,37 @@ public static class UtilityFunctions
         value = roundingFunction(value);
         return value * Mathf.Pow(10, -1 * precision);
     }
+    #endregion
+
+    #region IEnumerables
+    /// <summary>
+    /// Returns a random element from a IEnumerable.
+    /// </summary>
+    /// <typeparam name="T">The object Type.</typeparam>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static T PickRandom<T>(this IEnumerable<T> source)
+    {
+        return source.PickRandom(1).Single();
+    }
+
+    /// <summary>
+    /// Returns a IEnumerable with random elements from the source IEnumerable.
+    /// </summary>
+    /// <typeparam name="T">The object Type.</typeparam>
+    /// <param name="source"></param>
+    /// <param name="count">The amount of elements to pick.</param>
+    /// <returns></returns>
+    public static IEnumerable<T> PickRandom<T>(this IEnumerable<T> source, int count)
+    {
+        return source.Shuffle().Take(count);
+    }
+
+    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
+    {
+        return source.OrderBy(x => Guid.NewGuid());
+    }
+    #endregion
 
     #region Lists
     /// <summary>
@@ -190,6 +201,11 @@ public static class UtilityFunctions
         return result;
     }
 
+    /// <summary>
+    /// Prints all elements on the list.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="l"></param>
     public static void PrintAll<T>(this List<T> l)
     {
         if (l != null)
@@ -230,6 +246,13 @@ public static class UtilityFunctions
         return list?.Count == 0;
     }
     #endregion
+
+    #region Arrays
+    /// <summary>
+    /// Prints all elements on the array.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
     public static void PrintAll<T>(this T[] array)
     {
         if (array != null)
@@ -237,35 +260,6 @@ public static class UtilityFunctions
             {
                 Debug.Log(item);
             }
-    }
-
-    #region IEnumerables
-    /// <summary>
-    /// Returns a random element from a IEnumerable.
-    /// </summary>
-    /// <typeparam name="T">The object Type.</typeparam>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    public static T PickRandom<T>(this IEnumerable<T> source)
-    {
-        return source.PickRandom(1).Single();
-    }
-
-    /// <summary>
-    /// Returns a IEnumerable with random elements from the source IEnumerable.
-    /// </summary>
-    /// <typeparam name="T">The object Type.</typeparam>
-    /// <param name="source"></param>
-    /// <param name="count">The amount of elements to pick.</param>
-    /// <returns></returns>
-    public static IEnumerable<T> PickRandom<T>(this IEnumerable<T> source, int count)
-    {
-        return source.Shuffle().Take(count);
-    }
-
-    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
-    {
-        return source.OrderBy(x => Guid.NewGuid());
     }
     #endregion
 
@@ -293,14 +287,14 @@ public static class UtilityFunctions
     }
 
     /// <summary>
-    /// Checks if the (x,y) coordinate is valid in the two-dimensional array.
+    /// Checks if the (x,y) coordinates is valid in the two-dimensional array.
     /// </summary>
     /// <typeparam name="T">The object Type.</typeparam>
     /// <param name="twoDimensionalArray"></param>
     /// <param name="x">X coordinate.</param>
     /// <param name="y">Y coordinate</param>
     /// <returns></returns>
-    public static bool ValidCoordinate<T>(this T[,] twoDimensionalArray, int x, int y)
+    public static bool ValidCoordinates<T>(this T[,] twoDimensionalArray, int x, int y)
     {
         if (twoDimensionalArray == null)
             return false;
@@ -476,6 +470,11 @@ public static class UtilityFunctions
 
     }
 
+    /// <summary>
+    /// Changes the GameObject's scale without affecting the children.
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="scale"></param>
     public static void ChangeParentScale(this Transform parent, Vector3 scale)
     {
         List<Transform> children = new List<Transform>();
@@ -490,6 +489,28 @@ public static class UtilityFunctions
     #endregion
 
     #region Events and UI
+
+    /// <summary>
+    /// The width of the screen.
+    /// </summary>
+    public static float ScreenWidth
+    {
+        get
+        {
+            return ScreenHeight * Screen.width / Screen.height;
+        }
+    }
+    /// <summary>
+    /// The height of the screen.
+    /// </summary>
+    public static float ScreenHeight
+    {
+        get
+        {
+            return Camera.main.orthographicSize * 2.0f;
+        }
+    }
+
     /// <summary>
     /// Removes and adds a listener.
     /// </summary>
@@ -534,6 +555,12 @@ public static class UtilityFunctions
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(b.center, b.size);
     }
+    /// <summary>
+    /// Swaps two references.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
     public static void Swap<T>(ref T a, ref T b)
     {
         T temp = a;

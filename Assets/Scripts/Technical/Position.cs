@@ -91,13 +91,16 @@ public class Position : System.Object
         return (x == p.x) && (y == p.y);
     }
 
-    public override int GetHashCode()
-    {
-        return x ^ y;
-    }
-
     public override string ToString()
     {
         return "(" + x + "," + y + ")";
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = 1502939027;
+        hashCode = hashCode * -1521134295 + x.GetHashCode();
+        hashCode = hashCode * -1521134295 + y.GetHashCode();
+        return hashCode;
     }
 }

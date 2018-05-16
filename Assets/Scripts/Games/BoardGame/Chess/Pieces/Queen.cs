@@ -23,7 +23,7 @@ public class Queen : ChessPiece
     public override float GetPieceValue()
     {
         float value = base.GetPieceValue();
-        if (PiecePositionEvaluation.QueenEval.ValidCoordinate(pos.x, pos.y))
+        if (PiecePositionEvaluation.QueenEval.ValidCoordinates(pos.x, pos.y))
             value += (float)PiecePositionEvaluation.QueenEval[pos.x, pos.y];
         return value;
     }

@@ -24,12 +24,12 @@ public class Rook : ChessPiece
         float value = base.GetPieceValue();
         if ((player as ChessPlayer).orientation == Orientation.DOWN)
         {
-            if (PiecePositionEvaluation.RookEvalWhite.ValidCoordinate(pos.x, pos.y))
+            if (PiecePositionEvaluation.RookEvalWhite.ValidCoordinates(pos.x, pos.y))
                 value += (float)PiecePositionEvaluation.RookEvalWhite[pos.x, pos.y];
         }
         else
         {
-            if (PiecePositionEvaluation.RookEvalBlack.ValidCoordinate(pos.x, pos.y))
+            if (PiecePositionEvaluation.RookEvalBlack.ValidCoordinates(pos.x, pos.y))
                 value += (float)PiecePositionEvaluation.RookEvalBlack[pos.x, pos.y];
         }
         return value;

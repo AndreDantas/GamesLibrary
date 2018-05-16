@@ -109,8 +109,7 @@ public class ReversiBoardGame : Boardgame
         ClearRenders();
         movesLog = new List<ReversiMoveInfo>();
         canClick = true;
-        if (showHints)
-            ToggleShowHints();
+
         StartTurn();
     }
     public virtual void PrepareGameAI()
@@ -136,8 +135,7 @@ public class ReversiBoardGame : Boardgame
         ClearRenders();
         movesLog = new List<ReversiMoveInfo>();
         canClick = true;
-        if (showHints)
-            ToggleShowHints();
+
         StartTurn();
     }
     public void PlacePieces()

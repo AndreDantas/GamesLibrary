@@ -57,12 +57,15 @@ public class ReversiPanel : GamePanel
 
                     reversiBoardGame.PrepareGameAI();
                 }
+
             }
             yield return new WaitForSeconds(animTime / 2f);
             reversiObjects.transform.MoveTo(new Vector3(end.x, reversiObjects.transform.position.y, reversiObjects.transform.position.z), animTime);
             yield return new WaitForSeconds(animTime / 2f);
         }
         yield return new WaitForSeconds(animTime / 2f);
+        if (reversiBoardGame.showHints)
+            reversiBoardGame.RenderHints();
         reversiBoardGame.canClick = true;
         moving = false;
     }

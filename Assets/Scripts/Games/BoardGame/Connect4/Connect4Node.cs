@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+[System.Serializable]
 public class Connect4Node : Node
 {
 

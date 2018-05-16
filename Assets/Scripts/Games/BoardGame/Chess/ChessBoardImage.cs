@@ -221,7 +221,7 @@ public class ChessBoardImage : BoardImage
 
     private void PlaceChessPiece(GameObject piece, Position pos, Color pieceColor, Transform parent)
     {
-        if (!tiles.ValidCoordinate(pos.x, pos.y) || !pieces.ValidCoordinate(pos.x, pos.y))
+        if (!tiles.ValidCoordinates(pos.x, pos.y) || !pieces.ValidCoordinates(pos.x, pos.y))
             return;
         RectTransform rect = piece.transform as RectTransform;
         piece.name = "Piece +" + pos;

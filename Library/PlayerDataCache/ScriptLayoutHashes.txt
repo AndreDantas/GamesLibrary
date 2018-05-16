@@ -15,7 +15,7 @@ bf1bc715f5981b498cb75abecad95456 Assembly-CSharp-firstpass.dll:.SetDirty
 264dffe0c3cc1cbe814fb323f3ee9e6d Assembly-CSharp.dll:.ScreenBounds
 fb2a23c8f326cb10eb99c7f3c156f3d0 Assembly-CSharp.dll:.ReversiPanel
 401eb18f14a80566e6eb295af1a5e79d Assembly-CSharp.dll:.CheckersEditPanel
-2fbc8ca12ef69dcaa788d88e8f3a4679 Assembly-CSharp.dll:.Connect4Boardgame
+d8880db983478cd7d9b150b4604ec59b Assembly-CSharp.dll:.Connect4Boardgame
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 cf455f7a806648c6ed4c7d3e3f8a0e03 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 13bdb7c23815c33a33b37b0ba8dd39be UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
@@ -28,7 +28,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 30afa8783a8bbee2e465ec9ce1efaee2 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
 30afa8783a8bbee2e465ec9ce1efaee2 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 607d64d2c4bc76ac9876e6f7b9cc7edf UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Connect4EditPanel
+a329f0a8d3fb8954f71567cb3cbab1f9 Assembly-CSharp.dll:.Connect4EditPanel
 2c4d783368d5d4945da027170d2c47b9 Assembly-CSharp.dll:.SpriteRendererRandomColorChange
 9935f602d7488df924405402ec1818b9 Assembly-CSharp.dll:.Connect4Panel
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SetUpLanguage

@@ -18,13 +18,13 @@ public class BoardgameEditPanel : GamePanel
     [ShowInInspector, HorizontalGroup("ColorGroup"), OdinSerialize]
     public List<Color> bottomplayerColors { get; set; } //= new List<Color> { Colors.BlackLeatherJacket, Colors.YellowMunsell, Colors.PinkFlamingo, Colors.PurpleHeart, Colors.FireEngineRed };
 
-    protected Dictionary<string, int> boardSize = new Dictionary<string, int>()
+    protected Dictionary<string, object> boardSize = new Dictionary<string, object>()
     {
         { "6x6", 6},
         { "8x8", 8 },
         { "10x10", 10 }
     };
-    protected List<int> boardSizeIndex = new List<int>();
+    protected List<object> boardSizeIndex = new List<object>();
 
     public ColorSelectUI topPlayerColorSelect;
     public ColorSelectUI bottomPlayerColorSelect;
@@ -106,12 +106,15 @@ public class BoardgameEditPanel : GamePanel
             boardPreview.PlacePiecesNormal();
 
         }
+        ExtraSettings();
+    }
+    protected virtual void ExtraSettings()
+    {
 
     }
-
     protected virtual void DropdownValueChanged(int newPosition)
     {
-        int realValue = boardSize.Values.ElementAt(newPosition);
+        int realValue = (int)boardSize.Values.ElementAt(newPosition);
         settings.columns = settings.rows = realValue;
 
         if (boardPreview)

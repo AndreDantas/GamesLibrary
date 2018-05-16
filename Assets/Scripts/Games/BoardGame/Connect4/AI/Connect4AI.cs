@@ -41,7 +41,7 @@ public class Connect4AI : Player
                 boardAfterMove = board.BoardAfterMove(this, currentMove);
                 float boardValue = 0f;
 
-                yield return boardAfterMove.alphaBeta(Random.Range(1, 5), boardAfterMove, false, v => boardValue = v);
+                yield return boardAfterMove.alphaBeta(4, boardAfterMove, false, v => boardValue = v);
                 //Debug.Log(boardValue);
                 if (boardValue >= bestValue)
                 {

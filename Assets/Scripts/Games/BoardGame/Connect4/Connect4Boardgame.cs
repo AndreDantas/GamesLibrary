@@ -36,16 +36,19 @@ public class Connect4Boardgame : Boardgame
     public Connect4SettingsData gameSettings;
     public Connect4Board board;
     public bool vsAI;
+    public bool hasAnimation = true;
     public Player turnPlayer { get; internal set; }
     public bool hitConnect = false;
     [Header("Renders")]
     public ProceduralMeshRenderer lastMoveRender;
-    public ProceduralMeshRenderer hintsRender;
+    public ProceduralMeshRenderer connectRender;
     [Space(10)]
     public AudioClip piecePlacement;
     [Space(10)]
     public TextMeshProUGUI victoryMsg;
     public GameObject aiTurnTimeIndicator;
+    public TextMeshProUGUI titleText;
+    public string gameName = "Conectar";
     public bool canClick = true;
     private float tileRenderScale = 0.89f;
     private GameObject tilesParentObj;
@@ -63,9 +66,14 @@ public class Connect4Boardgame : Boardgame
             victoryMsg.gameObject.SetActive(false);
         if (aiTurnTimeIndicator)
             aiTurnTimeIndicator.SetActive(false);
-
+        hasAnimation = true;
         gameObject.AddAudio(piecePlacement);
         // PrepareGame();
+    }
+
+    public void ToggleAnimation()
+    {
+        hasAnimation = !hasAnimation;
     }
 
     public void AddPiece(Player player, Position pos)
@@ -110,11 +118,11 @@ public class Connect4Boardgame : Boardgame
         gameSettings = new Connect4SettingsData(BoardGameSettings.instance.settings as Connect4SettingsData);
         columns = gameSettings.columns;
         rows = gameSettings.rows;
-        board.ConnectTarget = gameSettings.connectTarget;
         topPlayerColor = gameSettings.topPieceColor;
         bottomPlayerColor = gameSettings.bottomPieceColor;
         tileColor = gameSettings.darkTileColor;
         board = new Connect4Board(columns, rows);
+        board.ConnectTarget = gameSettings.connectTarget;
         board.player1 = new Player("Jogador 1");
         board.player2 = new Player("Jogador 2");
         board.InitBoard();
@@ -133,12 +141,13 @@ public class Connect4Boardgame : Boardgame
         gameSettings = new Connect4SettingsData(BoardGameSettings.instance.settings as Connect4SettingsData);
         columns = gameSettings.columns;
         rows = gameSettings.rows;
-        board.ConnectTarget = gameSettings.connectTarget;
+
         topPlayerColor = gameSettings.topPieceColor;
         bottomPlayerColor = gameSettings.bottomPieceColor;
         tileColor = gameSettings.darkTileColor;
         board = new Connect4Board(columns, rows);
         board.InitBoard();
+        board.ConnectTarget = gameSettings.connectTarget;
         board.player1 = new Player("Jogador 1");
         board.player2 = new Connect4AI(board);
         board.player2.name = "Computador";
@@ -238,7 +247,104 @@ public class Connect4Boardgame : Boardgame
             lastMoveRender.Clear();
 
     }
+    public void ConfirmRestartMatch()
+    {
+        if (vsAI)
+            ModalWindow.Choice("Reiniciar jogo?", PrepareGameAI);
+        else
+            ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+    }
+    public void SaveBoardState()
+    {
+        if (board == null)
+            return;
 
+        Connect4BoardSaveData save = new Connect4BoardSaveData();
+        save.board = board;
+        save.movesLog = movesLog;
+        save.turnPlayer = turnPlayer;
+        save.settings = gameSettings;
+        string saveName = "";
+        if (!vsAI)
+            saveName = "1v1";
+        else
+            saveName = "AI";
+
+        SaveLoad.SaveFile("/connect4_game_" + saveName + "_data.dat", save);
+        ModalWindow.Message("Jogo Salvo.");
+    }
+
+    public void LoadBoardState()
+    {
+        string saveName = "";
+        if (!vsAI)
+            saveName = "1v1";
+        else
+            saveName = "AI";
+        Connect4BoardSaveData load = SaveLoad.LoadFile<Connect4BoardSaveData>("/connect4_game_" + saveName + "_data.dat");
+        if (load != null ? load.board != null : false)
+        {
+            ReconstructBoard(load);
+        }
+        else
+            ModalWindow.Message("Sem jogos salvos.");
+    }
+    public void ConfirmBoardLoad()
+    {
+        ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
+    }
+
+    void ReconstructBoard(Connect4BoardSaveData data, bool playerVsplayer = true)
+    {
+        ClearRenders();
+        StopAllCoroutines();
+        if (data.board != null ? data.board.isInit : false)
+        {
+
+            tileColor = gameSettings.lightTileColor;
+            bottomPlayerColor = gameSettings.bottomPieceColor;
+            topPlayerColor = gameSettings.topPieceColor;
+            board = data.board;
+            columns = board.columns;
+            rows = board.rows;
+            board.ConnectTarget = data.board.ConnectTarget;
+            movesLog = data.movesLog;
+            turnPlayer = data.turnPlayer;
+            RenderMap();
+
+            foreach (Connect4Node node in data.board.GetNodes())
+            {
+                if (node.pieceOnNode == null)
+                    continue;
+                GameObject obj = Instantiate(piecePrefab);
+                obj.transform.SetParent(node.pieceOnNode.player == board.player1 ? player1PiecesParent.transform : player2PiecesParent.transform);
+                obj.transform.localPosition = tiles[node.pos.x, node.pos.y].transform.localPosition;
+                obj.transform.localScale = Vector3.one;
+                tiles[node.pos.x, node.pos.y].piece = obj;
+
+                SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    if (node.pieceOnNode.player == board.player1)
+                    {
+                        sr.color = bottomPlayerColor;
+
+                    }
+                    else
+                    {
+                        sr.color = topPlayerColor;
+                    }
+
+                }
+
+            }
+
+            StartTurn();
+            canClick = true;
+        }
+        else
+            ModalWindow.Message("Sem jogos salvos.");
+    }
     /// <summary>
     /// Changes the color of the pieces at runtime.
     /// </summary>
@@ -289,11 +395,21 @@ public class Connect4Boardgame : Boardgame
         movesLog.Add(new Connect4MoveInfo(pos));
 
         GameObject piece = GeneratePiece(turnPlayer, pos);
-        piece.transform.localPosition = tiles[pos.x, rows - 1].transform.localPosition + Vector3.up;
-        yield return new WaitForSeconds(0.1f);
-        piece.transform.MoveToLocal(tiles[pos.x, pos.y].transform.localPosition, 1f, EasingEquations.EaseOutBounce);
-        yield return new WaitForSeconds(1f);
-        //gameObject.PlayAudio(piecePlacement);
+        if (hasAnimation)
+        {
+            piece.transform.localPosition = tiles[pos.x, rows - 1].transform.localPosition + Vector3.up;
+            //yield return new WaitForSeconds(0.1f);
+            piece.transform.MoveToLocal(tiles[pos.x, pos.y].transform.localPosition, 0.8f, EasingEquations.EaseOutBounce);
+            yield return new WaitForSeconds(0.7f);
+            gameObject.PlayAudio(piecePlacement);
+        }
+        else
+        {
+            piece.transform.localPosition = tiles[pos.x, pos.y].transform.localPosition;
+
+            gameObject.PlayAudio(piecePlacement);
+            yield return null;
+        }
 
         canClick = true;
         ChangeTurn();
@@ -304,10 +420,15 @@ public class Connect4Boardgame : Boardgame
     public void StartTurn()
     {
         hitConnect = false;
-        // RenderLastTurn();
+        //RenderLastTurn();
         //RenderFlippedPieces();
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
+        if (titleText)
+        {
+            titleText.gameObject.SetActive(true);
+            titleText.text = gameName + " " + board.ConnectTarget;
+        }
         if (aiTurnTimeIndicator)
             aiTurnTimeIndicator.SetActive(false);
 
@@ -317,7 +438,7 @@ public class Connect4Boardgame : Boardgame
             EndGame();
             return;
         }
-        if (turnPlayer is ReversiAI)
+        if (turnPlayer is Connect4AI)
         {
             playerTurnIndicator?.SetActive(false);
             playerTurnBorder?.SetActive(false);
@@ -336,14 +457,14 @@ public class Connect4Boardgame : Boardgame
             aiTurnTimeIndicator.SetActive(true);
 
         canClick = false;
-        ReversiAI ai = turnPlayer as ReversiAI;
+        Connect4AI ai = turnPlayer as Connect4AI;
         if (ai != null)
         {
 
             yield return ai.CalculateBestMove();
             if (aiTurnTimeIndicator != null)
                 aiTurnTimeIndicator.SetActive(false);
-            yield return MakeAMove(ai.bestMove);
+            yield return MakeAMove(new Position(ai.bestMove, 0));
         }
 
 
@@ -398,10 +519,11 @@ public class Connect4Boardgame : Boardgame
     {
         if (movesLog != null ? movesLog.Count > 0 : false)
         {
-            List<Connect4Node> result = board.CheckForConnect(board.OtherPlayer(turnPlayer), movesLog[movesLog.Count - 1].dropPos);
-            if (result != null)
+            Position result = board.CheckForConnect(board.OtherPlayer(turnPlayer));
+            if (result.x >= 0 && result.y >= 0)
             {
                 // Render connect
+                RenderConnect(result);
                 hitConnect = true;
                 return true;
             }
@@ -424,16 +546,16 @@ public class Connect4Boardgame : Boardgame
         {
             sr.color = Mathf.Sign(orientation) >= 1 ? topPlayerColor : bottomPlayerColor;
         }
-        playerTurnIndicator.transform.localPosition = new Vector3(0f, (rows * tileRenderScale / 2f + playerTurnIndicator.transform.localScale.y / 2f) * Mathf.Sign(orientation) + transform.position.y, 0f);
-        playerTurnIndicator.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
+        playerTurnIndicator.transform.localPosition = new Vector3(0f, (rows * tileRenderScale / 2f + playerTurnIndicator.transform.localScale.y / 2f) * -1 + transform.position.y, 0f);
+        playerTurnIndicator.transform.eulerAngles = new Vector3(0, 0, 180);
 
         if (playerTurnBorder)
         {
             playerTurnBorder.SetActive(true);
             playerTurnBorder.transform.SetParent(indicatorParent.transform);
             playerTurnBorder.transform.localScale = new Vector3(columns * tileRenderScale, indicatorScale, 1f);
-            playerTurnBorder.transform.localPosition = new Vector3(0f, (rows * tileRenderScale / 2f + playerTurnBorder.transform.localScale.y / 2f) * Mathf.Sign(orientation) + transform.position.y, 0f);
-            playerTurnBorder.transform.eulerAngles = new Vector3(0, 0, 180 * (Mathf.Sign(orientation) >= 1 ? 0 : 1));
+            playerTurnBorder.transform.localPosition = new Vector3(0f, (rows * tileRenderScale / 2f + playerTurnBorder.transform.localScale.y / 2f) * -1 + transform.position.y, 0f);
+            playerTurnBorder.transform.eulerAngles = new Vector3(0, 0, 180);
 
             sr = playerTurnBorder.GetComponent<SpriteRenderer>();
 
@@ -458,9 +580,29 @@ public class Connect4Boardgame : Boardgame
                 if (board.ValidCoordinate(position))
                 {
                     Vector3 pos = tiles[position.x, position.y].transform.position;
-                    lastMoveRender.RenderCircles(new List<Vector3> { pos }, tileRenderScale / 2f * 0.9f, 20);
+                    //lastMoveRender.RenderCircles(new List<Vector3> { pos }, tileRenderScale / 2f * 0.9f, 20);
+                    lastMoveRender.RenderSquaresArea(new List<Vector3> { pos }, tileRenderScale, tileRenderScale);
                 }
             }
+
+        }
+    }
+
+    public void RenderConnect(Position pos)
+    {
+        if (connectRender)
+        {
+            if (ValidCoordinate(pos))
+            {
+                List<Vector3> renderPos = new List<Vector3>();
+                foreach (var item in board.GetConnectPositions(pos, board.OtherPlayer(turnPlayer)))
+                {
+                    //Debug.Log(item);
+                    renderPos.Add(tiles[item.x, item.y].transform.position);
+                }
+                lastMoveRender.RenderCircles(renderPos, tileRenderScale / 2f, 30);
+            }
+
 
         }
     }

@@ -25,7 +25,7 @@ public class Knight : ChessPiece
     public override float GetPieceValue()
     {
         float value = base.GetPieceValue();
-        if (PiecePositionEvaluation.KnightEval.ValidCoordinate(pos.x, pos.y))
+        if (PiecePositionEvaluation.KnightEval.ValidCoordinates(pos.x, pos.y))
             value += (float)PiecePositionEvaluation.KnightEval[pos.x, pos.y];
         return value;
     }
