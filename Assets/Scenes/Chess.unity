@@ -290,11 +290,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -6577,11 +6577,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -7555,11 +7555,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -9485,7 +9485,7 @@ Prefab:
     - target: {fileID: 224883128088138284, guid: c471480c6455c104994d0b4b0ddeb61f,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -109.825
+      value: -103.205
       objectReference: {fileID: 0}
     - target: {fileID: 224883128088138284, guid: c471480c6455c104994d0b4b0ddeb61f,
         type: 2}
@@ -9495,7 +9495,7 @@ Prefab:
     - target: {fileID: 224883128088138284, guid: c471480c6455c104994d0b4b0ddeb61f,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 159.65
+      value: 146.41
       objectReference: {fileID: 0}
     - target: {fileID: 114001624871921408, guid: c471480c6455c104994d0b4b0ddeb61f,
         type: 2}
@@ -9595,7 +9595,7 @@ Prefab:
     - target: {fileID: 224987659449493860, guid: c471480c6455c104994d0b4b0ddeb61f,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -289.64996
+      value: -276.40997
       objectReference: {fileID: 0}
     - target: {fileID: 224987659449493860, guid: c471480c6455c104994d0b4b0ddeb61f,
         type: 2}
@@ -9605,7 +9605,7 @@ Prefab:
     - target: {fileID: 224688568153242392, guid: c471480c6455c104994d0b4b0ddeb61f,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 369.65
+      value: 356.41
       objectReference: {fileID: 0}
     - target: {fileID: 114002642565154532, guid: c471480c6455c104994d0b4b0ddeb61f,
         type: 2}
@@ -9717,6 +9717,23 @@ Prefab:
       value: 
       objectReference: {fileID: 21269482736146280, guid: 83ed1179e6ea84d4bae01c03a71cd058,
         type: 2}
+    - target: {fileID: 114898925192790020, guid: c471480c6455c104994d0b4b0ddeb61f,
+        type: 2}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 09dd622b47e4ac84b83446b9b21a815d,
+        type: 2}
+    - target: {fileID: 114898925192790020, guid: c471480c6455c104994d0b4b0ddeb61f,
+        type: 2}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 21283226494735398, guid: 09dd622b47e4ac84b83446b9b21a815d,
+        type: 2}
+    - target: {fileID: 114898925192790020, guid: c471480c6455c104994d0b4b0ddeb61f,
+        type: 2}
+      propertyPath: m_textAlignment
+      value: 288
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c471480c6455c104994d0b4b0ddeb61f, type: 2}
   m_IsPrefabParent: 0
@@ -9854,11 +9871,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -10823,11 +10840,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -11297,11 +11314,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -11923,11 +11940,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -12087,6 +12104,7 @@ MonoBehaviour:
       name: 
       orientation: 0
       inCheck: 0
+    movesLog: []
   tilePrefab: {fileID: 1585537792793140, guid: ae536776159868441a9209e89020d6c5, type: 2}
   lightTileColor: {r: 0.6911765, g: 0.6911765, b: 0.6911765, a: 1}
   darkTileColor: {r: 0.4044118, g: 0.4044118, b: 0.4044118, a: 1}
@@ -13947,11 +13965,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -14802,11 +14820,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:

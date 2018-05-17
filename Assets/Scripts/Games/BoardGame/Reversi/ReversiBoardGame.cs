@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using CielaSpike;
 [System.Serializable]
 class ReversiBoardSaveData
 {
@@ -311,6 +312,7 @@ public class ReversiBoardGame : Boardgame
     void ReconstructBoard(ReversiBoardSaveData data, bool playerVsplayer = true)
     {
         ClearRenders();
+        GameExit();
         StopAllCoroutines();
         if (data.board != null)
         {
@@ -483,7 +485,13 @@ public class ReversiBoardGame : Boardgame
         ChangeTurn();
     }
 
+    public override void GameExit()
+    {
+        task?.Cancel();
+        StopAllCoroutines();
+    }
 
+    Task task;
     IEnumerator AITurn()
     {
 
@@ -494,8 +502,9 @@ public class ReversiBoardGame : Boardgame
         ReversiAI ai = turnPlayer as ReversiAI;
         if (ai != null)
         {
-
-            yield return ai.CalculateBestMove();
+            this.StartCoroutineAsync(ai.CalculateBestMove(), out task);
+            yield return task.Wait();
+            //yield return ai.CalculateBestMove();
             if (aiTurnTimeIndicator != null)
                 aiTurnTimeIndicator.SetActive(false);
             yield return MakeAMove(ai.bestMove);

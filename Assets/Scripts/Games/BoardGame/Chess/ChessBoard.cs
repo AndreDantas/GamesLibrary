@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 [System.Serializable]
+public struct ChessMovesLog
+{
+    public ChessPiece piece;
+    public Move move;
+}
+[System.Serializable]
 public class ChessBoard : Board
 {
     /// <summary>
@@ -13,13 +19,14 @@ public class ChessBoard : Board
 
     public ChessPlayer player1;
     public ChessPlayer player2;
-
+    public List<ChessMovesLog> movesLog;
     public ChessBoard()
     {
 
     }
     public ChessBoard(int columns, int rows)
     {
+        movesLog = new List<ChessMovesLog>();
         this.columns = columns;
         this.rows = rows;
     }
@@ -44,7 +51,8 @@ public class ChessBoard : Board
         player1 = oldBoard.player1;
         player2 = oldBoard.player2;
         isInit = oldBoard.isInit;
-
+        movesLog = new List<ChessMovesLog>();
+        movesLog.AddRange(oldBoard.movesLog);
     }
 
 
@@ -57,6 +65,7 @@ public class ChessBoard : Board
 
     public override void InitBoard()
     {
+        movesLog = new List<ChessMovesLog>();
         //removed = new List<Piece>();
         if (columns <= 0 || rows <= 0)
             return;
@@ -277,7 +286,7 @@ public class ChessBoard : Board
     [ShowInInspector]
     public int movesEval { get; internal set; }
     [ShowInInspector]
-    public int movesEvalPerFrame { get { return 500; } }
+    public int movesEvalPerFrame { get { return 200; } }
     public void ResetMovesEval()
     {
         movesEval = 0;
@@ -324,6 +333,7 @@ public class ChessBoard : Board
 
                         break;
                     }
+                    yield return null;
                 }
             else
                 bestValue = -10000;
@@ -596,6 +606,10 @@ public class ChessBoard : Board
         ChessPiece piece = GetPiece(start);
         SetPiece(end, piece);
         SetPiece(start, null);
+        ChessMovesLog move = new ChessMovesLog();
+        move.move = new Move(start, end);
+        move.piece = piece;
+        movesLog.Add(move);
         return this;
     }
     /// <summary>

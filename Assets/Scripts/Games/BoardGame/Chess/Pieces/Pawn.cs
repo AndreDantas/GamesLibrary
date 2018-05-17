@@ -85,11 +85,11 @@ public class Pawn : ChessPiece
         {
             if (testPiece.type == ChessPieceType.PAWN && testPiece.player != player)
             {
-                ChessBoardgame boardGame = GameObject.FindObjectOfType<ChessBoardgame>();
-                if (boardGame != null && boardGame.movesLog != null ? boardGame.movesLog.Count > 0 : false)
+                //ChessBoardgame boardGame = GameObject.FindObjectOfType<ChessBoardgame>();
+                if (board != null && board.movesLog != null ? board.movesLog.Count > 0 : false)
                 {
-                    Move lastMove = boardGame.movesLog[boardGame.movesLog.Count - 1].move;
-                    ChessPiece lastMovePiece = boardGame.movesLog[boardGame.movesLog.Count - 1].piece;
+                    Move lastMove = board.movesLog[board.movesLog.Count - 1].move;
+                    ChessPiece lastMovePiece = board.movesLog[board.movesLog.Count - 1].piece;
                     if (testPiece == lastMovePiece && Mathf.Abs(lastMove.start.y - lastMove.end.y) == 2)
                     {
                         moves.Add(new Move(pos, new Position(pos.x - 1, pos.y + dy)));
@@ -105,11 +105,11 @@ public class Pawn : ChessPiece
         {
             if (testPiece.type == ChessPieceType.PAWN && testPiece.player != player)
             {
-                ChessBoardgame boardGame = GameObject.FindObjectOfType<ChessBoardgame>();
-                if (boardGame != null && boardGame.movesLog != null ? boardGame.movesLog.Count > 0 : false)
+                //ChessBoardgame board = GameObject.FindObjectOfType<ChessBoardgame>();
+                if (board != null && board.movesLog != null ? board.movesLog.Count > 0 : false)
                 {
-                    Move lastMove = boardGame.movesLog[boardGame.movesLog.Count - 1].move;
-                    ChessPiece lastMovePiece = boardGame.movesLog[boardGame.movesLog.Count - 1].piece;
+                    Move lastMove = board.movesLog[board.movesLog.Count - 1].move;
+                    ChessPiece lastMovePiece = board.movesLog[board.movesLog.Count - 1].piece;
                     if (testPiece == lastMovePiece && Mathf.Abs(lastMove.start.y - lastMove.end.y) == 2)
                     {
                         moves.Add(new Move(pos, new Position(pos.x + 1, pos.y + dy)));

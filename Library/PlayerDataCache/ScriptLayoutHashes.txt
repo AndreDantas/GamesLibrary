@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/GamesLibrary/Builds/GamesLibrary v1.4.apk
+D:/Andre Dantas/Unity/GamesLibrary/Builds/GamesLibrary v1.4.5.apk
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/Catchphrase.unity
@@ -15,7 +15,7 @@ bf1bc715f5981b498cb75abecad95456 Assembly-CSharp-firstpass.dll:.SetDirty
 264dffe0c3cc1cbe814fb323f3ee9e6d Assembly-CSharp.dll:.ScreenBounds
 fb2a23c8f326cb10eb99c7f3c156f3d0 Assembly-CSharp.dll:.ReversiPanel
 401eb18f14a80566e6eb295af1a5e79d Assembly-CSharp.dll:.CheckersEditPanel
-d8880db983478cd7d9b150b4604ec59b Assembly-CSharp.dll:.Connect4Boardgame
+422d759f4ee90db5e16d931ea88493e1 Assembly-CSharp.dll:.Connect4Boardgame
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 cf455f7a806648c6ed4c7d3e3f8a0e03 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 13bdb7c23815c33a33b37b0ba8dd39be UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
@@ -71,6 +71,7 @@ f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 86d36c43c53541d667100dc90b89cfba UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 1b8c02d0aa82fbf036a2b9b2d713eec3 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.EventSensitiveScrollRect
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp-firstpass.dll:.ExampleScript
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
@@ -249,7 +250,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 64685af2fb41b96606df0d9fbd02cc2d Assembly-CSharp.dll:.BoardImage
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ShowFps
-9e49af734abd1b046872b19f60ae3b88 Assembly-CSharp.dll:.ChessBoardgame
+f4eb00b360e39a76858c2c3710815875 Assembly-CSharp.dll:.ChessBoardgame
 c490a86f77d5e1531488bf449cd3dd5c Assembly-CSharp.dll:.ReversiEditPanel
 ab58f03a521697c8e2b9792c5d1f5b8b Assembly-CSharp.dll:.ChangeToRandomColor
 aa0ff0d3d28eedf8a59d96494c41128b Assembly-CSharp.dll:.SceneController

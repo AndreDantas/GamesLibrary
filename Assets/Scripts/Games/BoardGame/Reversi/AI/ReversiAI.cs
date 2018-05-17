@@ -43,7 +43,7 @@ public class ReversiAI : Player
                 boardAfterMove = board.BoardAfterMove(this, currentMove);
                 float boardValue = 0f;
 
-                yield return boardAfterMove.alphaBeta(2, boardAfterMove, false, v => boardValue = v);
+                boardValue = boardAfterMove.alphaBeta(2, boardAfterMove, false);
                 //Debug.Log(boardValue);
                 if (boardValue >= bestValue)
                 {

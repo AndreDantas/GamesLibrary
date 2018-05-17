@@ -5,6 +5,8 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using Sirenix.OdinInspector;
+using System.Threading;
+using CielaSpike;
 [Serializable]
 public struct ChessMoveInfo
 {
@@ -234,15 +236,7 @@ public class ChessBoardgame : Boardgame
     public virtual void PlacePiecesRandom()
     {
 
-        Queue<ChessPieceType> choosenPieces1 = new Queue<ChessPieceType>();
-        Queue<ChessPieceType> choosenPieces2 = new Queue<ChessPieceType>();
-
-        for (int i = 0; i < columns * 4 - 2; i++)
-        {
-            ChessPieceType type = randomPieces.PickRandom();
-            choosenPieces1.Enqueue(type);
-            choosenPieces2.Enqueue(type);
-        }
+        Queue<ChessPieceType> choosenPieces = new Queue<ChessPieceType>();
 
         for (int i = 0; i < 2; i++)
         {
@@ -255,16 +249,19 @@ public class ChessBoardgame : Boardgame
                     PlacePiece(Instantiate(kingPrefab), pos, new King(pos), board.player1);
                     continue;
                 }
-                if (choosenPieces1.Count == 0)
-                    break;
-                ChessPieceType type = choosenPieces1.Dequeue();
+
+                ChessPieceType type = randomPieces.PickRandom();
                 if (i == 0)
                     while (type == ChessPieceType.PAWN)
+                    {
                         type = randomPieces.PickRandom();
+
+                    }
+                choosenPieces.Enqueue(type);
                 PlacePiece(Instantiate(GetPieceObjectFromType(type)), pos, GetNewPieceFromType(type, pos), board.player1);
             }
         }
-        choosenPieces2.Reverse();
+        choosenPieces.Reverse();
         for (int i = rows - 1; i >= rows - 2; i--)
         {
             for (int j = 0; j < columns; j++)
@@ -275,12 +272,10 @@ public class ChessBoardgame : Boardgame
                     PlacePiece(Instantiate(kingPrefab), pos, new King(pos), board.player2, false);
                     continue;
                 }
-                if (choosenPieces1.Count == 0)
+                if (choosenPieces.Count == 0)
                     break;
-                ChessPieceType type = choosenPieces2.Dequeue();
-                if (i == rows - 1)
-                    while (type == ChessPieceType.PAWN)
-                        type = randomPieces.PickRandom();
+                ChessPieceType type = choosenPieces.Dequeue();
+
                 PlacePiece(Instantiate(GetPieceObjectFromType(type)), pos, GetNewPieceFromType(type, pos), board.player2, false);
             }
         }
@@ -647,7 +642,7 @@ public class ChessBoardgame : Boardgame
     void ReconstructBoard(ChessBoardSaveData data, bool playerVsplayer = true)
     {
         ClearRenders();
-        StopAllCoroutines();
+        GameExit();
         if (data.board != null)
         {
 
@@ -689,8 +684,9 @@ public class ChessBoardgame : Boardgame
 
             }
             FlipDarkSidePieces(darkPiecesFlipped);
-            StartTurn();
             canClick = true;
+            StartTurn();
+
         }
         else
             ModalWindow.Message("Sem jogos salvos.");
@@ -891,6 +887,13 @@ public class ChessBoardgame : Boardgame
 
     }
 
+    public override void GameExit()
+    {
+        aiTurnThread?.Abort();
+        task?.Cancel();
+        StopAllCoroutines();
+    }
+
     public void StartTurn()
     {
         RenderCheck();
@@ -924,7 +927,12 @@ public class ChessBoardgame : Boardgame
         }
         return false;
     }
+    ManualResetEvent evnt = new ManualResetEvent(false);
+    Thread aiTurnThread;
 
+
+
+    Task task;
     IEnumerator AITurn()
     {
 
@@ -936,7 +944,19 @@ public class ChessBoardgame : Boardgame
         {
             Move m;
 
-            yield return ai.CalculateBestMove();
+            //aiTurnThread = new Thread(new ThreadStart(ai.CalculateBestMove));
+            //aiTurnThread.IsBackground = false;
+            // aiTurnThread.Start();
+
+
+            this.StartCoroutineAsync(ai.CalculateBestMove(), out task);
+            yield return StartCoroutine(task.Wait());
+
+            // yield return ai.CalculateBestMove();
+
+            yield return null;
+            while (ai.havingTurn)
+                yield return null;
             m = ai.bestMove;
             if (board.GetPiece(m?.start) != null)
             {

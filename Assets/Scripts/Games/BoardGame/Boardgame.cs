@@ -51,4 +51,26 @@ public abstract class Boardgame : MonoBehaviour
     {
 
     }
+
+    protected void OnApplicationQuit()
+    {
+        GameExit();
+
+    }
+
+    public virtual void GameExit()
+    {
+
+    }
+
+    private void OnDestroy()
+    {
+        GameExit();
+    }
+
+    private void OnDisable()
+    {
+        GameExit();
+    }
+
 }

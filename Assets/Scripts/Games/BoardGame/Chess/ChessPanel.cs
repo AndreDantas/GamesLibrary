@@ -80,6 +80,8 @@ public class ChessPanel : GamePanel
 
         moving = true;
         chessBoardGame.canClick = false;
+        chessBoardGame.StopAllCoroutines();
+        chessBoardGame.GameExit();
         Vector2 start = screenCenter;
         Vector2 end = DefaultStartPosition(-1);
         transform.localPosition = start;
