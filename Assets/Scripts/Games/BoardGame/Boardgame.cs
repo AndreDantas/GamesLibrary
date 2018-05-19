@@ -39,6 +39,13 @@ public abstract class Boardgame : MonoBehaviour
         int x = pos.x;
         int y = pos.y;
 
+
+        return ValidCoordinate(x, y);
+    }
+    public bool ValidCoordinate(int x, int y)
+    {
+
+
         if (x < 0 || x >= columns)
             return false;
         if (y < 0 || y >= rows)
@@ -46,7 +53,6 @@ public abstract class Boardgame : MonoBehaviour
 
         return true;
     }
-
     public virtual void OnClick(Position pos)
     {
 

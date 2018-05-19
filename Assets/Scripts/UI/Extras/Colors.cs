@@ -20,6 +20,12 @@ public static class Colors
         return new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
     }
 
+    public static Color ChangeAlpha(this Color c, float alpha)
+    {
+        alpha = Mathf.Clamp01(alpha);
+        return new Color(c.r, c.g, c.b, alpha);
+
+    }
     public static readonly Color AbsoluteZero = new Color32(0, 72, 186, 255);
     public static readonly Color Acajou = new Color32(76, 47, 39, 255);
     public static readonly Color AcidGreen = new Color32(176, 191, 26, 255);

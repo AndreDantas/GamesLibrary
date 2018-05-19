@@ -75,6 +75,17 @@ public static class UtilityFunctions
         else
             return -1;
     }
+
+    public static int SignZero(int value)
+    {
+        if (value > 0)
+            return 1;
+        else if (value < 0)
+            return -1;
+        else
+            return 0;
+    }
+
     /// <summary>
     /// Returns -1 or 1 at random.
     /// </summary>
@@ -152,6 +163,9 @@ public static class UtilityFunctions
         value = roundingFunction(value);
         return value * Mathf.Pow(10, -1 * precision);
     }
+
+
+
     #endregion
 
     #region IEnumerables
@@ -286,6 +300,8 @@ public static class UtilityFunctions
         return result;
     }
 
+
+
     /// <summary>
     /// Checks if the (x,y) coordinates is valid in the two-dimensional array.
     /// </summary>
@@ -406,6 +422,15 @@ public static class UtilityFunctions
     public static Vector2 RoundVector2(Vector2 v)
     {
         return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
+    }
+
+    public static Vector2Int Normalized(this Vector2Int v)
+    {
+        return new Vector2Int(Sign(v.x), Sign(v.y));
+    }
+    public static Vector2Int NormalizedZero(this Vector2Int v)
+    {
+        return new Vector2Int(SignZero(v.x), SignZero(v.y));
     }
     #endregion
 

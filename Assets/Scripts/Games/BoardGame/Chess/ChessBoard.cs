@@ -263,26 +263,6 @@ public class ChessBoard : Board
         return thisPlayer == player1 ? player2 : player1;
     }
 
-    //public float NegaMax(int depth, ChessBoard board, ChessPlayer playerCheck, int alpha = int.MinValue, int beta = int.MaxValue)
-    //{
-    //    if (depth <= 0)
-    //        return -EvaluateBoard();
-    //    float score;
-    //    ChessBoard b;
-    //    foreach (var item in board.GetPossibleMoves(playerCheck))
-    //    {
-    //        b = board.BoardAfterMove(item);
-    //        score = -NegaMax(depth - 1, board, OtherPlayer(playerCheck), -beta, -alpha);
-    //        if (score > alpha)
-    //        {
-    //            alpha = score;
-    //            if (alpha >= beta)
-    //                break;
-    //        }
-    //    }
-
-    //    return alpha;
-    //}
     [ShowInInspector]
     public int movesEval { get; internal set; }
     [ShowInInspector]
@@ -430,6 +410,26 @@ public class ChessBoard : Board
         movesEval++;
         return bestValue;
     }
+    public float NegaMax(int depth, ChessBoard board, ChessPlayer player, float alpha = -10000, float beta = 10000)
+    {
+        float staticEval = board.EvaluateBoard();
+        if (depth <= 0)
+            return -staticEval;
+
+        List<Move> moves = board.GetPossibleMoves(player);
+        float bestScore = alpha - staticEval;
+        for (int i = 0; i < moves.Count; i++)
+        {
+            float moveScore = -NegaMax(depth - 1, board.BoardAfterMove(moves[i]), board.OtherPlayer(player), -(beta - staticEval), -bestScore);
+            if (moveScore > bestScore)
+                bestScore = moveScore;
+            if (bestScore + staticEval >= beta)
+                break;
+
+        }
+        return (bestScore + staticEval);
+    }
+
     //public float MiniMax(int depth, ChessBoard board, ChessPlayer playerCheck, bool isMax, float alpha = float.MinValue, float beta = float.MaxValue)
     //{
     //    if (!isInit || (playerCheck != player1 && playerCheck != player2) || playerCheck == null)

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Sirenix.OdinInspector;
 [System.Serializable]
 public class PairLanguageText
 {
     public SystemLanguage language;
+    [TextArea]
     public string text;
 }
 public class ChangeTextLanguage : MonoBehaviour

@@ -77,50 +77,53 @@ public class Pawn : ChessPiece
         ChessPlayer player = (ChessPlayer)this.player;
         int dy = player.orientation == Orientation.DOWN ? 1 : -1;
 
-        //Check for en passant
-        bool enpassant = false;
-        ChessPiece testPiece = board.GetPiece(new Position(pos.x - 1, pos.y)); // Pawn on the left
-
-        if (testPiece != null)
+        if (hasMoved)
         {
-            if (testPiece.type == ChessPieceType.PAWN && testPiece.player != player)
+            //Check for en passant
+            bool enpassant = false;
+            ChessPiece testPiece = board.GetPiece(new Position(pos.x - 1, pos.y)); // Pawn on the left
+
+            if (testPiece != null)
             {
-                //ChessBoardgame boardGame = GameObject.FindObjectOfType<ChessBoardgame>();
-                if (board != null && board.movesLog != null ? board.movesLog.Count > 0 : false)
+                if (testPiece.type == ChessPieceType.PAWN && testPiece.player != player)
                 {
-                    Move lastMove = board.movesLog[board.movesLog.Count - 1].move;
-                    ChessPiece lastMovePiece = board.movesLog[board.movesLog.Count - 1].piece;
-                    if (testPiece == lastMovePiece && Mathf.Abs(lastMove.start.y - lastMove.end.y) == 2)
+                    //ChessBoardgame boardGame = GameObject.FindObjectOfType<ChessBoardgame>();
+                    if (board != null && board.movesLog != null ? board.movesLog.Count > 0 : false)
                     {
-                        moves.Add(new Move(pos, new Position(pos.x - 1, pos.y + dy)));
-                        enpassant = true;
+                        Move lastMove = board.movesLog[board.movesLog.Count - 1].move;
+                        ChessPiece lastMovePiece = board.movesLog[board.movesLog.Count - 1].piece;
+                        if (testPiece == lastMovePiece && Mathf.Abs(lastMove.start.y - lastMove.end.y) == 2)
+                        {
+                            moves.Add(new Move(pos, new Position(pos.x - 1, pos.y + dy)));
+                            enpassant = true;
+                        }
                     }
                 }
             }
-        }
 
-        testPiece = board.GetPiece(new Position(pos.x + 1, pos.y)); // Pawn on the right
+            testPiece = board.GetPiece(new Position(pos.x + 1, pos.y)); // Pawn on the right
 
-        if (testPiece != null)
-        {
-            if (testPiece.type == ChessPieceType.PAWN && testPiece.player != player)
+            if (testPiece != null)
             {
-                //ChessBoardgame board = GameObject.FindObjectOfType<ChessBoardgame>();
-                if (board != null && board.movesLog != null ? board.movesLog.Count > 0 : false)
+                if (testPiece.type == ChessPieceType.PAWN && testPiece.player != player)
                 {
-                    Move lastMove = board.movesLog[board.movesLog.Count - 1].move;
-                    ChessPiece lastMovePiece = board.movesLog[board.movesLog.Count - 1].piece;
-                    if (testPiece == lastMovePiece && Mathf.Abs(lastMove.start.y - lastMove.end.y) == 2)
+                    //ChessBoardgame board = GameObject.FindObjectOfType<ChessBoardgame>();
+                    if (board != null && board.movesLog != null ? board.movesLog.Count > 0 : false)
                     {
-                        moves.Add(new Move(pos, new Position(pos.x + 1, pos.y + dy)));
-                        enpassant = true;
+                        Move lastMove = board.movesLog[board.movesLog.Count - 1].move;
+                        ChessPiece lastMovePiece = board.movesLog[board.movesLog.Count - 1].piece;
+                        if (testPiece == lastMovePiece && Mathf.Abs(lastMove.start.y - lastMove.end.y) == 2)
+                        {
+                            moves.Add(new Move(pos, new Position(pos.x + 1, pos.y + dy)));
+                            enpassant = true;
+                        }
                     }
                 }
             }
-        }
 
-        if (enpassant)
-            return moves;
+            if (enpassant)
+                return moves;
+        }
 
         Position newPos = new Position(pos.x, pos.y + dy);
 

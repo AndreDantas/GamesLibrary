@@ -7,6 +7,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using System.Threading;
 using CielaSpike;
+using UnityEngine.UI;
 [Serializable]
 public struct ChessMoveInfo
 {
@@ -66,7 +67,9 @@ public class ChessBoardgame : Boardgame
     public TextMeshProUGUI victoryMsg;
     public GameObject promotionObj;
     public GameObject aiTurnTimeIndicator;
-    public bool vsAI { get; set; }
+    public Image aiTurnProgress;
+    public bool vsAI
+    { get; set; }
     [ReadOnly]
     public List<ChessMoveInfo> movesLog;
     public ChessTile[,] tiles { get; internal set; }
@@ -717,6 +720,9 @@ public class ChessBoardgame : Boardgame
         if (sr != null)
         {
             sr.color = lightPiece ? lightPieceColor : darkPieceColor;
+            var outline = obj.GetComponent<SpriteOutline>();
+            if (outline && !lightPiece)
+                outline.outline = false;
         }
         obj.transform.localPosition = tiles[pos.x, pos.y].transform.localPosition;
         board.nodes[pos.x, pos.y].pieceOnNode = cp;
@@ -889,7 +895,6 @@ public class ChessBoardgame : Boardgame
 
     public override void GameExit()
     {
-        aiTurnThread?.Abort();
         task?.Cancel();
         StopAllCoroutines();
     }
@@ -904,6 +909,8 @@ public class ChessBoardgame : Boardgame
             victoryMsg.gameObject.SetActive(false);
         if (selectedPieceRender)
             selectedPieceRender.Clear();
+        if (aiTurnProgress)
+            aiTurnProgress.gameObject.SetActive(false);
         IndicateTurnPlayer(turnPlayer.orientation == Orientation.DOWN ? -1 : 1);
         if (CheckForCheckmate() || CheckForDraw())
         {
@@ -927,9 +934,6 @@ public class ChessBoardgame : Boardgame
         }
         return false;
     }
-    ManualResetEvent evnt = new ManualResetEvent(false);
-    Thread aiTurnThread;
-
 
 
     Task task;
@@ -938,6 +942,12 @@ public class ChessBoardgame : Boardgame
 
         if (aiTurnTimeIndicator != null)
             aiTurnTimeIndicator.SetActive(true);
+        if (aiTurnProgress)
+        {
+            aiTurnProgress.gameObject.SetActive(true);
+            aiTurnProgress.fillAmount = 0f;
+        }
+        yield return null;
         canClick = false;
         ChessAI ai = turnPlayer as ChessAI;
         if (ai != null)
@@ -950,13 +960,15 @@ public class ChessBoardgame : Boardgame
 
 
             this.StartCoroutineAsync(ai.CalculateBestMove(), out task);
-            yield return StartCoroutine(task.Wait());
-
+            // yield return StartCoroutine(task.Wait());
             // yield return ai.CalculateBestMove();
-
             yield return null;
-            while (ai.havingTurn)
+            while (task.State == TaskState.Running)
+            {
+                if (aiTurnProgress)
+                    aiTurnProgress.fillAmount = ai.turnProgress;
                 yield return null;
+            }
             m = ai.bestMove;
             if (board.GetPiece(m?.start) != null)
             {
