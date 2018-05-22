@@ -12,7 +12,7 @@ public class DotsAndBoxesBoard : Board
     public Edge[,] edgesY;
     public Player player1;
     public Player player2;
-
+    public float score { get; internal set; }
     public DotsAndBoxesBoard(int columns, int rows)
     {
         this.columns = columns;
@@ -58,8 +58,73 @@ public class DotsAndBoxesBoard : Board
         player1 = oldBoard.player1;
         player2 = oldBoard.player2;
         isInit = oldBoard.isInit;
+        score = oldBoard.score;
     }
 
+    public List<Edge> GetEdges()
+    {
+        if (!isInit)
+            return null;
+
+        List<Edge> result = new List<Edge>();
+        result.AddRange(edgesX.GetItems());
+        result.AddRange(edgesY.GetItems());
+
+        return result;
+    }
+
+    public List<Edge> GetValidEdges()
+    {
+        if (!isInit)
+            return null;
+
+        List<Edge> result = new List<Edge>();
+
+        for (int i = 0; i < edgesX.GetLength(0); i++)
+        {
+            for (int j = 0; j < edgesX.GetLength(1); j++)
+            {
+                if (!edgesX[i, j].active)
+                    result.Add(edgesX[i, j]);
+            }
+        }
+        for (int i = 0; i < edgesY.GetLength(0); i++)
+        {
+            for (int j = 0; j < edgesY.GetLength(1); j++)
+            {
+                if (!edgesY[i, j].active)
+                    result.Add(edgesY[i, j]);
+            }
+        }
+
+        return result;
+    }
+    public List<Edge> GetFilledEdges()
+    {
+        if (!isInit)
+            return null;
+
+        List<Edge> result = new List<Edge>();
+
+        for (int i = 0; i < edgesX.GetLength(0); i++)
+        {
+            for (int j = 0; j < edgesX.GetLength(1); j++)
+            {
+                if (edgesX[i, j].active)
+                    result.Add(edgesX[i, j]);
+            }
+        }
+        for (int i = 0; i < edgesY.GetLength(0); i++)
+        {
+            for (int j = 0; j < edgesY.GetLength(1); j++)
+            {
+                if (edgesY[i, j].active)
+                    result.Add(edgesY[i, j]);
+            }
+        }
+
+        return result;
+    }
 
     private void OnValidate()
     {
@@ -72,6 +137,7 @@ public class DotsAndBoxesBoard : Board
 
         if (columns <= 0 || rows <= 0)
             return;
+        score = 0;
         edgesX = new Edge[columns + 1, rows];
         edgesY = new Edge[columns, rows + 1];
         nodes = new DotsAndBoxesNode[columns, rows];
@@ -92,15 +158,122 @@ public class DotsAndBoxesBoard : Board
         isInit = true;
     }
 
+    public float EvaluateBoard()
+    {
+        List<Edge> edges = GetEdges();
+        float score = 0;
+        for (int i = 0; i < edges.Count; i++)
+        {
+            if (edges[i].active)
+            {
+                if (edges[i].owner == player1)
+                    score++;
+                else
+                    score--;
+            }
+        }
+        List<DotsAndBoxesNode> nodes = this.nodes.GetItems();
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            if (nodes[i].box.filled)
+            {
+                if (nodes[i].box.owner == player1)
+                    score += 10;
+                else
+                    score -= 10;
+            }
+        }
+
+        return score;
+    }
+
+    public DotsAndBoxesBoard BoardAfterMove(Player player, Edge edge)
+    {
+        DotsAndBoxesBoard b = new DotsAndBoxesBoard(this);
+        b.TraceEdge(edge, player);
+        return b;
+    }
+
+    public void TraceEdge(Edge edge, Player player)
+    {
+        if (!isInit || edge == null)
+            return;
+        if (edge.orientation == EdgePosition.Horizontal && edgesX.ValidCoordinates(edge.pos.x, edge.pos.y))
+        {
+            Edge temp = edgesX[edge.pos.x, edge.pos.y];
+            temp.active = true;
+            temp.owner = player;
+
+            //Debug.Log(edgesX[edge.pos.x, edge.pos.y]);
+            CheckForFill(edge.pos);
+            CheckForFill(edge.pos - Position.Right);
+        }
+        else if (edge.orientation == EdgePosition.Vertical && edgesY.ValidCoordinates(edge.pos.x, edge.pos.y))
+        {
+            Edge temp = edgesY[edge.pos.x, edge.pos.y];
+            temp.active = true;
+            temp.owner = player;
+
+            //Debug.Log(edgesY[edge.pos.x, edge.pos.y]);
+            CheckForFill(edge.pos);
+            CheckForFill(edge.pos - Position.Up);
+        }
+        if (player == player1)
+            score++;
+        else
+            score--;
+    }
+
+    public bool CheckForFill(Position pos)
+    {
+        //Debug.Log("Checking at " + pos);
+        if (!nodes.ValidCoordinates(pos.x, pos.y))
+            return false;
+
+
+        foreach (Edge item in nodes[pos.x, pos.y].box.Edges.GetValues())
+        {
+            //Debug.Log(item);
+
+            if (item.active == false)
+                return false;
+        }
+
+        return true;
+    }
+
+    public void FillBox(Position pos, Player player)
+    {
+        if (!nodes.ValidCoordinates(pos.x, pos.y))
+            return;
+
+        Box box = nodes[pos.x, pos.y].box;
+        foreach (Edge item in box.Edges.GetValues())
+        {
+            if (item.active == false)
+                return;
+
+        }
+
+        box.filled = true;
+        box.owner = player;
+        if (player == player1)
+            score += 10;
+        else
+            score -= 10;
+
+    }
+
+
     void SetBoxEdges(ref Box box)
     {
-        if (!isInit)
-            return;
 
         int x = box.pos.x;
         int y = box.pos.y;
 
         //Left Edge
+
+        box.Edges = new BoxStruct<Edge>();
 
         if (ValidCoordinate(x - 1, y) ? nodes[x - 1, y] == null : true)
         {
@@ -109,7 +282,7 @@ public class DotsAndBoxesBoard : Board
         }
         else
         {
-            box.Edges.left = new Edge(nodes[x - 1, y].box?.Edges?.right);
+            box.Edges.left = nodes[x - 1, y].box?.Edges.right;
         }
 
         //Right Edge
@@ -120,7 +293,7 @@ public class DotsAndBoxesBoard : Board
         }
         else
         {
-            box.Edges.right = new Edge(nodes[x + 1, y].box?.Edges?.left);
+            box.Edges.right = nodes[x + 1, y].box?.Edges.left;
         }
 
         //Top Edge
@@ -131,7 +304,7 @@ public class DotsAndBoxesBoard : Board
         }
         else
         {
-            box.Edges.top = new Edge(nodes[x, y + 1].box?.Edges?.bottom);
+            box.Edges.top = nodes[x, y + 1].box?.Edges.bottom;
         }
 
         //Bottom Edge
@@ -142,7 +315,7 @@ public class DotsAndBoxesBoard : Board
         }
         else
         {
-            box.Edges.bottom = new Edge(nodes[x, y - 1].box?.Edges?.top);
+            box.Edges.bottom = nodes[x, y - 1].box?.Edges.top;
         }
     }
     /// <summary>
@@ -173,5 +346,60 @@ public class DotsAndBoxesBoard : Board
             return null;
 
         return thisPlayer == player1 ? player2 : player1;
+    }
+
+    public float alphaBeta(float depth, DotsAndBoxesBoard board, bool maximisingPlayer, float alpha = -10000, float beta = 10000)
+    {
+
+        float bestValue;
+
+        if (depth <= 0)
+        {
+            bestValue = -board.score;
+
+        }
+        else if (maximisingPlayer)
+        {
+            bestValue = alpha;
+            List<Edge> moves = board.GetEdges();
+            if (moves.Count > 0)
+                for (var i = 0; i < moves.Count; i++)
+                {
+
+                    var childValue = 0f;
+                    childValue = alphaBeta(depth - 1, board.BoardAfterMove(player2, moves[i]), false, bestValue, beta);
+
+                    bestValue = Mathf.Max(bestValue, childValue);
+                    if (beta <= bestValue)
+                    {
+                        break;
+                    }
+                }
+            else
+                bestValue = -10000;
+        }
+        else
+        {
+            bestValue = beta;
+            List<Edge> moves = board.GetEdges();
+            // Recurse for all children of node.
+            if (moves.Count > 0)
+                for (var i = 0; i < moves.Count; i++)
+                {
+
+                    var childValue = 0f;
+                    childValue = alphaBeta(depth - 1, board.BoardAfterMove(player1, moves[i]), true, alpha, bestValue);
+
+                    bestValue = Mathf.Min(bestValue, childValue);
+                    if (bestValue <= alpha)
+                    {
+                        break;
+                    }
+                }
+            else
+                bestValue = 10000;
+        }
+
+        return bestValue;
     }
 }

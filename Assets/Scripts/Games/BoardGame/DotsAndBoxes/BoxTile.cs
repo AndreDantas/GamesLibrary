@@ -11,10 +11,15 @@ public class BoxTile : MonoBehaviour
     public Position pos;
     public BoxStruct<EdgeObject> Edges;
 
+    public SpriteRenderer sr { get; internal set; }
+    private void Awake()
+    {
+        sr = GetComponent<SpriteRenderer>();
+    }
+
     public void SetEdges(BoxStruct<EdgeObject> newEdges)
     {
-        if (newEdges == null)
-            return;
+
         Edges = new BoxStruct<EdgeObject>();
         Edges.left = newEdges.left;
         Edges.right = newEdges.right;

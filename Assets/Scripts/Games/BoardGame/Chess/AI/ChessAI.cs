@@ -39,7 +39,7 @@ public class ChessAI : ChessPlayer
             float bestValue = int.MinValue;
             Move currentMove;
             ChessBoard boardAfterMove;
-            int moveCount = 0;
+
             for (int i = 0; i < allMoves.Count; i++)
             {
                 currentMove = allMoves[i];
@@ -55,8 +55,8 @@ public class ChessAI : ChessPlayer
                     bestMove = currentMove;
                 }
                 //yield return null;
-                moveCount++;
-                turnProgress = UtilityFunctions.Map(0, allMoves.Count - 1, 0f, 1f, moveCount);
+
+                turnProgress = UtilityFunctions.Map(0, allMoves.Count - 1, 0f, 1f, i);
             }
         }
         // yield return null;

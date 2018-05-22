@@ -5,16 +5,14 @@ using TMPro;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 [System.Serializable]
-public class BoxStruct<T>
+public struct BoxStruct<T>
 {
     public T top;
     public T bottom;
     public T left;
     public T right;
 
-    public BoxStruct()
-    {
-    }
+
     public BoxStruct(BoxStruct<T> other) : this(other.top, other.bottom, other.left, other.right)
     {
 

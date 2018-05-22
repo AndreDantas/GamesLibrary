@@ -103,4 +103,9 @@ public class Position : System.Object
         hashCode = hashCode * -1521134295 + y.GetHashCode();
         return hashCode;
     }
+
+    public static readonly Position Up = new Position(0, 1);
+    public static readonly Position Down = new Position(0, -1);
+    public static readonly Position Left = new Position(-1, 0);
+    public static readonly Position Right = new Position(1, 0);
 }

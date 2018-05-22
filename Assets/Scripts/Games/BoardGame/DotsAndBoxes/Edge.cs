@@ -10,6 +10,7 @@ public class Edge
     public bool active;
     public EdgePosition orientation;
     public Position pos;
+    public Player owner;
     public Edge()
     {
         active = false;
@@ -46,7 +47,11 @@ public class Edge
         this.active = other.active;
         orientation = other.orientation;
         pos = other.pos;
+        owner = other.owner;
     }
 
-
+    public override string ToString()
+    {
+        return "Orientation: " + orientation + " - Pos: " + pos + " - Active: " + active;
+    }
 }

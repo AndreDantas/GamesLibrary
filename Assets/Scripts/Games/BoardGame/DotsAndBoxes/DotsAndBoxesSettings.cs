@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 
-
+[System.Serializable]
 public class DotsAndBoxesSettingsData : BoardGameSettingsData
 {
     public DotsAndBoxesSettingsData() : base()
@@ -14,9 +14,10 @@ public class DotsAndBoxesSettingsData : BoardGameSettingsData
         rows = 4;
         topPieceColor = Colors.Blueberry;
         bottomPieceColor = Colors.PersianRed;
+        lightTileColor = Color.white;
     }
 
-    public DotsAndBoxesSettingsData(BoardGameSettingsData other) : base(other)
+    public DotsAndBoxesSettingsData(DotsAndBoxesSettingsData other) : base(other)
     {
     }
 }
@@ -35,6 +36,7 @@ public class DotsAndBoxesSettings : BoardGameSettings
 
     protected override void Awake()
     {
+        settings = new DotsAndBoxesSettingsData();
         saveName = "dots_and_boxes";
         base.Awake();
     }

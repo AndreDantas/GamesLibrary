@@ -56,6 +56,8 @@ public class BoardGameSettingsData
     }
     public BoardGameSettingsData(BoardGameSettingsData other)
     {
+        if (other == null)
+            return;
         columns = other.columns;
         rows = other.rows;
         darkTileColor = new SerializableColor(other.darkTileColor);

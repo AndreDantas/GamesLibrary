@@ -24,12 +24,11 @@ public class Box
         SetEdges(other.Edges);
     }
 
-    public BoxStruct<Edge> Edges { get; internal set; }
+    public BoxStruct<Edge> Edges;
 
     public void SetEdges(BoxStruct<Edge> newEdges)
     {
-        if (newEdges == null)
-            return;
+
         Edges = new BoxStruct<Edge>
         {
             left = new Edge(newEdges.left),
@@ -41,8 +40,6 @@ public class Box
 
     public bool UpdateFilled()
     {
-        if (Edges == null)
-            return (this.filled = false);
 
         bool filled = true;
 
