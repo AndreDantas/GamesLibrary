@@ -44,7 +44,7 @@ public class Edge
     }
     public Edge(Edge other)
     {
-        this.active = other.active;
+        active = other.active;
         orientation = other.orientation;
         pos = other.pos;
         owner = other.owner;
@@ -52,6 +52,6 @@ public class Edge
 
     public override string ToString()
     {
-        return "Orientation: " + orientation + " - Pos: " + pos + " - Active: " + active;
+        return "Orientation: " + orientation + " - Pos: " + pos + " - Active: " + active + " - Owner: " + owner?.name;
     }
 }

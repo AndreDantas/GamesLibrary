@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+[System.Serializable]
 public class DotsAndBoxesAI : Player
 {
 
@@ -34,34 +35,49 @@ public class DotsAndBoxesAI : Player
             yield break;
         Edge bestMove = null;
 
-        List<Edge> allMoves = board.GetValidEdges();
 
-        if (!allMoves.IsEmpty())
+        List<Edge> allMoves = board.GetValidEdges().Shuffle().ToNonNullList();
+        //allMoves = board.GetEdgesThatCanCompleteSquares(this);
+        ////Debug.Log(allMoves != null ? allMoves.Count : 0);
+        //if (allMoves != null ? allMoves.Count > 0 : false)
+        //    bestMove = allMoves.PickRandom();
+        //else
+        //{
+        //    allMoves = board.GetEdgesThatDontEnableCapture(this);
+        //    //Debug.Log(allMoves != null ? allMoves.Count : 0);
+        //    if (allMoves != null ? allMoves.Count > 0 : false)
+        //        bestMove = allMoves.PickRandom();
+        //    else
+        //        bestMove = board.GetValidEdges().PickRandom();
+        //}
+        //Debug.Log(allMoves.Count);
+
+        float bestValue = int.MinValue;
+        Edge currentMove;
+        DotsAndBoxesBoard boardAfterMove;
+        for (int i = 0; i < allMoves.Count; i++)
         {
+            currentMove = allMoves[i];
+            if (currentMove.active == true)
+                continue;
 
-            float bestValue = int.MinValue;
-            Edge currentMove;
-            DotsAndBoxesBoard boardAfterMove;
-            for (int i = 0; i < allMoves.Count; i++)
+            boardAfterMove = board.BoardAfterMove(this, currentMove);
+
+            float boardValue = 0f;
+
+            boardValue = boardAfterMove.alphaBeta(2, boardAfterMove, false);
+            //Debug.Log(currentMove);
+            //yield return boardAfterMove.alphaBeta(4, boardAfterMove, false, v => boardValue = v);
+            //Debug.Log(boardValue);
+
+            if (boardValue >= bestValue)
             {
-                currentMove = allMoves[i];
-                if (currentMove.active == true)
-                    continue;
-                boardAfterMove = board.BoardAfterMove(this, currentMove);
-                float boardValue = 0f;
-                boardValue = board.alphaBeta(2, boardAfterMove, false);
-
-                //yield return boardAfterMove.alphaBeta(4, boardAfterMove, false, v => boardValue = v);
-                //Debug.Log(boardValue);
-
-                if (boardValue >= bestValue)
-                {
-                    bestValue = boardValue;
-                    bestMove = currentMove;
-                }
-                turnProgress = UtilityFunctions.Map(0, allMoves.Count - 1, 0f, 1f, i);
+                bestValue = boardValue;
+                bestMove = currentMove;
             }
+            turnProgress = UtilityFunctions.Map(0, allMoves.Count - 1, 0f, 1f, i);
         }
+
 
         ////////////////
         //yield return Ninja.JumpToUnity;

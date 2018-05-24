@@ -45,6 +45,10 @@ public class DotsAndBoxesBoardgame : Boardgame
     [Space(10)]
     public TextMeshProUGUI victoryMsg;
     public GameObject aiTurnTimeIndicator;
+    public TextMeshProUGUI player1ScoreText;
+    public TextMeshProUGUI player2ScoreText;
+    public Image player1ScoreImage;
+    public Image player2ScoreImage;
     public bool canClick = true;
     private float tileRenderScale = 0.89f;
     private GameObject tilesParentObj;
@@ -59,6 +63,9 @@ public class DotsAndBoxesBoardgame : Boardgame
 
         base.Start();
         // PrepareGame();
+
+        gameObject.AddAudio(edgeCreated);
+        gameObject.AddAudio(squareFilled);
     }
 
     public void PrepareGame()
@@ -196,7 +203,7 @@ public class DotsAndBoxesBoardgame : Boardgame
             temp.transform.localPosition = new Vector3(-0.5f, 0f, 0);
 
 
-            temp.GetComponent<BoxCollider2D>().size = new Vector2(2f, 1f);
+            temp.GetComponent<BoxCollider2D>().size = new Vector2(dotSize * 20f, 1f);
 
             EdgeObject edge = temp.AddComponent<EdgeObject>();
             edge.orientation = EdgePosition.Horizontal;
@@ -227,7 +234,7 @@ public class DotsAndBoxesBoardgame : Boardgame
             temp.transform.localScale = new Vector3(edgeWidth, 1f - dotSize, 1f);
             temp.transform.localPosition = new Vector3(+0.5f, 0f, 0);
 
-            temp.GetComponent<BoxCollider2D>().size = new Vector2(2f, 1f);
+            temp.GetComponent<BoxCollider2D>().size = new Vector2(dotSize * 20f, 1f);
 
             EdgeObject edge = temp.AddComponent<EdgeObject>();
             edge.orientation = EdgePosition.Horizontal;
@@ -257,7 +264,7 @@ public class DotsAndBoxesBoardgame : Boardgame
             temp.transform.localScale = new Vector3(1f - dotSize, edgeWidth, 1f);
             temp.transform.localPosition = new Vector3(0f, +0.5f, 0);
 
-            temp.GetComponent<BoxCollider2D>().size = new Vector2(1f, 2f);
+            temp.GetComponent<BoxCollider2D>().size = new Vector2(1f, dotSize * 20f);
 
             EdgeObject edge = temp.AddComponent<EdgeObject>();
             edge.orientation = EdgePosition.Vertical;
@@ -287,7 +294,7 @@ public class DotsAndBoxesBoardgame : Boardgame
             temp.transform.localScale = new Vector3(1f - dotSize, edgeWidth, 1f);
             temp.transform.localPosition = new Vector3(0f, -0.5f, 0);
 
-            temp.GetComponent<BoxCollider2D>().size = new Vector2(1f, 2f);
+            temp.GetComponent<BoxCollider2D>().size = new Vector2(1f, dotSize * 20f);
             EdgeObject edge = temp.AddComponent<EdgeObject>();
 
             edge.orientation = EdgePosition.Vertical;
@@ -316,6 +323,12 @@ public class DotsAndBoxesBoardgame : Boardgame
             }
             box.Edges.bottom = tiles[x, y - 1].Edges.top;
         }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+            board.PrintNodes();
     }
 
     public void ConfirmRestartMatch()
@@ -363,6 +376,7 @@ public class DotsAndBoxesBoardgame : Boardgame
     {
         ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
     }
+
 
     void ReconstructBoard(DotsAndBoxesBoardData data, bool playerVsplayer = true)
     {
@@ -445,7 +459,16 @@ public class DotsAndBoxesBoardgame : Boardgame
 
         Color c = turnPlayer == board.player1 ? bottomPlayerColor : topPlayerColor;
 
+        //board.PrintNodes();
+        //Debug.Log("--------------------------");
+        //var g = new DotsAndBoxesBoard(board);
+        //g.PrintNodes();
+        //Debug.Log("--------------------------");
+        //var b = board.BoardAfterMove(turnPlayer, edge);
+        //b.PrintNodes();
+
         board.TraceEdge(edge, turnPlayer);
+
         float animTime = edgeCreated != null ? edgeCreated.length : 0;
 
         if (edge.orientation == EdgePosition.Horizontal)
@@ -454,13 +477,13 @@ public class DotsAndBoxesBoardgame : Boardgame
             yield return edgesX[edge.pos.x, edge.pos.y].Activate(c, turnPlayer, animTime);
             Position pos = edge.pos - Position.Right;
 
-            animTime = squareFilled != null ? squareFilled.length : 0;
+            //animTime = squareFilled != null ? squareFilled.length : 0;
             if (board.CheckForFill(pos))
             {
-                board.FillBox(pos, turnPlayer);
+                //board.FillBox(pos, turnPlayer);
 
                 tiles[pos.x, pos.y].sr.ChangeColorTo(c * 0.85f, animTime);
-                gameObject.PlayAudio(squareFilled);
+                gameObject.PlayAudio(edgeCreated);
                 yield return new WaitForSeconds(animTime);
                 extraTurn = true;
             }
@@ -471,13 +494,13 @@ public class DotsAndBoxesBoardgame : Boardgame
             yield return edgesY[edge.pos.x, edge.pos.y].Activate(c, turnPlayer, animTime);
             Position pos = edge.pos - Position.Up;
 
-            animTime = squareFilled != null ? squareFilled.length : 0;
+            //animTime = squareFilled != null ? squareFilled.length : 0;
             if (board.CheckForFill(pos))
             {
-                board.FillBox(pos, turnPlayer);
+                //board.FillBox(pos, turnPlayer);
 
                 tiles[pos.x, pos.y].sr.ChangeColorTo(c * 0.85f, animTime);
-                gameObject.PlayAudio(squareFilled);
+                gameObject.PlayAudio(edgeCreated);
                 yield return new WaitForSeconds(animTime);
 
                 extraTurn = true;
@@ -488,10 +511,10 @@ public class DotsAndBoxesBoardgame : Boardgame
 
         if (board.CheckForFill(edge.pos))
         {
-            board.FillBox(edge.pos, turnPlayer);
+            //board.FillBox(edge.pos, turnPlayer);
 
             tiles[edge.pos.x, edge.pos.y].sr.ChangeColorTo(c * 0.85f, animTime);
-            gameObject.PlayAudio(squareFilled);
+            gameObject.PlayAudio(edgeCreated);
             yield return new WaitForSeconds(animTime);
 
             extraTurn = true;
@@ -505,11 +528,28 @@ public class DotsAndBoxesBoardgame : Boardgame
             StartTurn();
     }
 
+    public void UpdateScore()
+    {
+        if (player1ScoreText)
+            player1ScoreText.text = board.GetFilledSquaresCount(board.player1).ToString();
+        if (player2ScoreText)
+            player2ScoreText.text = board.GetFilledSquaresCount(board.player2).ToString();
+
+        if (player1ScoreImage)
+            player1ScoreImage.color = bottomPlayerColor;
+        if (player2ScoreImage)
+            player2ScoreImage.color = topPlayerColor;
+
+
+    }
+
     public void StartTurn()
     {
 
         //RenderLastTurn();
         //RenderFlippedPieces();
+        UpdateScore();
+
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
 
@@ -524,8 +564,10 @@ public class DotsAndBoxesBoardgame : Boardgame
         }
         if (turnPlayer is DotsAndBoxesAI)
         {
-            playerTurnIndicator?.SetActive(false);
-            playerTurnBorder?.SetActive(false);
+            if (playerTurnIndicator)
+                playerTurnIndicator?.SetActive(false);
+            if (playerTurnBorder)
+                playerTurnBorder?.SetActive(false);
             StartCoroutine(AITurn());
             return;
         }

@@ -1,7 +1,14 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/GamesLibrary/Builds/DotsAndBoxes v0.7.apk
+D:/Andre Dantas/Unity/GamesLibrary/Builds/Full Game/GamesLibrary v1.5.2.apk
 SceneListBegin?
+Assets/Scenes/MainMenu.unity
+Assets/Scenes/Catchphrase.unity
+Assets/Scenes/Chess.unity
+Assets/Scenes/Checkers.unity
+Assets/Scenes/Pong.unity
+Assets/Scenes/Reversi.unity
+Assets/Scenes/Connect4.unity
 Assets/Scenes/DotsAndBoxes.unity
 SceneListEnd?
 11ac247b6cc81ec24f9696d7d42340c3 Assembly-CSharp.dll:.ButtonContentGroup
@@ -70,7 +77,7 @@ f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp-firstpass.dll:.ExampleScript
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
-c97684aa3545c610baa512bed1b7d539 Assembly-CSharp.dll:.DotsAndBoxesBoardgame
+01c8e2cc4e1af861347089cb6ee934f0 Assembly-CSharp.dll:.DotsAndBoxesBoardgame
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 49cd62a578efc0a599b810a2b66cd49c UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -122,6 +129,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 30afa8783a8bbee2e465ec9ce1efaee2 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 607d64d2c4bc76ac9876e6f7b9cc7edf UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 57aaa0c43f154436116694df26c008fb Assembly-CSharp.dll:.OptionSelectUI
+c490a86f77d5e1531488bf449cd3dd5c Assembly-CSharp.dll:.DotsAndBoxesEditPanel
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 60b2bb652410a5867a5ab9a01cd38461 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery

@@ -21,7 +21,13 @@ public class Box
         this.filled = other.filled;
         owner = other.owner;
         pos = other.pos;
-        SetEdges(other.Edges);
+        Edges = new BoxStruct<Edge>
+        {
+            left = new Edge(other.Edges.left),
+            right = new Edge(other.Edges.right),
+            top = new Edge(other.Edges.top),
+            bottom = new Edge(other.Edges.bottom)
+        };
     }
 
     public BoxStruct<Edge> Edges;
@@ -36,6 +42,21 @@ public class Box
             top = new Edge(newEdges.top),
             bottom = new Edge(newEdges.bottom)
         };
+    }
+
+    public int CompletedEdgesCount()
+    {
+        int value = 0;
+        if (Edges.left.active)
+            value++;
+        if (Edges.right.active)
+            value++;
+        if (Edges.top.active)
+            value++;
+        if (Edges.bottom.active)
+            value++;
+
+        return value;
     }
 
     public bool UpdateFilled()
@@ -54,5 +75,10 @@ public class Box
 
         this.filled = filled;
         return filled;
+    }
+
+    public override string ToString()
+    {
+        return "Filled: " + filled + " - Position: " + pos + " - Owner: " + owner?.name + "\n" + Edges;
     }
 }

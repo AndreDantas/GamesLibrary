@@ -12,7 +12,7 @@ public class DotsAndBoxesNode : Node
     public DotsAndBoxesNode(Position pos, Box box)
     {
         this.pos = pos;
-        this.box = box;
+        this.box = new Box(box);
     }
     public DotsAndBoxesNode(DotsAndBoxesNode other) : this(other.pos, other.box)
     {

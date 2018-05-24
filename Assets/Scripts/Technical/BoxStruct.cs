@@ -67,6 +67,6 @@ public struct BoxStruct<T>
 
     public override string ToString()
     {
-        return "Top: " + top.ToString() + ";Bottom: " + bottom.ToString() + "; Left: " + left.ToString() + "; Right: " + right.ToString();
+        return "Top: " + top.ToString() + ";\nBottom: " + bottom.ToString() + ";\nLeft: " + left.ToString() + ";\nRight: " + right.ToString();
     }
 }

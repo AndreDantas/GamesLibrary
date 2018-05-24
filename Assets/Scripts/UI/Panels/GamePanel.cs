@@ -100,7 +100,7 @@ public class GamePanel : SerializedMonoBehaviour
         }
 
         yield return new WaitForSeconds(animTime / 2f);
-
+        yield return null;
         moving = false;
     }
 
@@ -132,7 +132,7 @@ public class GamePanel : SerializedMonoBehaviour
 
         transform.MoveToLocal(end, animTime);
         yield return new WaitForSeconds(animTime);
-
+        yield return null;
         gameObject.SetActive(false);
         moving = false;
     }

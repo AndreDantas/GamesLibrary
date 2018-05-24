@@ -14,7 +14,7 @@ public class DotsAndBoxesSettingsData : BoardGameSettingsData
         rows = 4;
         topPieceColor = Colors.Blueberry;
         bottomPieceColor = Colors.PersianRed;
-        lightTileColor = Color.white;
+        lightTileColor = darkTileColor = Color.white;
     }
 
     public DotsAndBoxesSettingsData(DotsAndBoxesSettingsData other) : base(other)

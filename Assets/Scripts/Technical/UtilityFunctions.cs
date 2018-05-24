@@ -215,6 +215,10 @@ public static class UtilityFunctions
         return result;
     }
 
+    public static List<T> ToNonNullList<T>(this IEnumerable<T> obj)
+    {
+        return obj == null ? new List<T>() : obj.ToList();
+    }
     /// <summary>
     /// Prints all elements on the list.
     /// </summary>
@@ -317,6 +321,18 @@ public static class UtilityFunctions
 
         return (x >= 0 && x < twoDimensionalArray.GetLength(0) &&
                 y >= 0 && y < twoDimensionalArray.GetLength(1));
+    }
+    /// <summary>
+    /// Checks if the (x,y) coordinates is valid in the two-dimensional array.
+    /// </summary>
+    /// <typeparam name="T">The object Type.</typeparam>
+    /// <param name="twoDimensionalArray"></param>
+    /// <param name="x">X coordinate.</param>
+    /// <param name="y">Y coordinate</param>
+    /// <returns></returns>
+    public static bool ValidCoordinates<T>(this T[,] twoDimensionalArray, Position pos)
+    {
+        return twoDimensionalArray.ValidCoordinates(pos.x, pos.y);
     }
 
     /// <summary>

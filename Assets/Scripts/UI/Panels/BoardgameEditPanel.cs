@@ -78,20 +78,22 @@ public class BoardgameEditPanel : GamePanel
         }
         if (topPlayerColorSelect)
         {
+            topPlayerColorSelect.OnColorSelect.RemoveAndAddListener(TopPlayerColorChanged);
             topPlayerColorSelect.selectColors.Clear();
             topPlayerColorSelect.SetColors(topPlayerColors);
             topPlayerColorSelect.SetCurrentColor(settings.topPieceColor.GetColor());
             topPlayerColorSelect.UpdateUI();
-            topPlayerColorSelect.OnColorSelect.RemoveAndAddListener(TopPlayerColorChanged);
+
 
         }
         if (bottomPlayerColorSelect)
         {
+            bottomPlayerColorSelect.OnColorSelect.RemoveAndAddListener(BottomPlayerColorChanged);
             bottomPlayerColorSelect.selectColors.Clear();
             bottomPlayerColorSelect.SetColors(bottomplayerColors);
             bottomPlayerColorSelect.SetCurrentColor(settings.bottomPieceColor.GetColor());
             bottomPlayerColorSelect.UpdateUI();
-            bottomPlayerColorSelect.OnColorSelect.RemoveAndAddListener(BottomPlayerColorChanged);
+
 
         }
         if (boardPreview)
@@ -151,6 +153,18 @@ public class BoardgameEditPanel : GamePanel
 
         BoardGameSettings.instance.settings = new BoardGameSettingsData();
         Init();
+        if (topPlayerColorSelect)
+        {
+
+            topPlayerColorSelect.SetCurrentColor(0);
+            topPlayerColorSelect.UpdateUI();
+
+        }
+        if (bottomPlayerColorSelect)
+        {
+            bottomPlayerColorSelect.SetCurrentColor(0);
+            bottomPlayerColorSelect.UpdateUI();
+        }
         BoardGameSettings.instance.SaveSettings();
     }
 
