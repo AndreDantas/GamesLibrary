@@ -20,7 +20,7 @@ public class GoToMainMenu : MonoBehaviour
 
         SceneController sc = FindObjectOfType<SceneController>();
         if (sc)
-            ModalWindow.Choice("Ir para o menu principal?", new List<UnityAction>() { sc.GoToMainMenu, this.DestroySelf }, null);
+            ModalWindow.Choice(SceneController.EXIT_TO_MAINMENU.GetTextFromMainLanguage(), new List<UnityAction>() { sc.GoToMainMenu, this.DestroySelf }, null);
     }
 
 #if UNITY_EDITOR

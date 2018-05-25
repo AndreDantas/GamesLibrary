@@ -12,9 +12,14 @@ public class ModalWindow : MonoBehaviour
     public Button yesButton;
     public Button noButton;
     public Button closeButton;
-
+    TextMeshProUGUI yesText;
+    TextMeshProUGUI noText;
+    TextMeshProUGUI closeText;
     private void Start()
     {
+        yesText = yesButton?.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+        noText = noButton?.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+        closeText = closeButton?.gameObject.GetComponentInChildren<TextMeshProUGUI>();
         CloseWindow();
     }
     private void Awake()
@@ -29,12 +34,19 @@ public class ModalWindow : MonoBehaviour
         instance = this;
     }
 
+    void SetUpButtonsText()
+    {
+        instance.yesText.text = SceneController.YES.GetTextFromMainLanguage();
+        instance.noText.text = SceneController.NO.GetTextFromMainLanguage();
+        instance.closeText.text = "Ok";
+    }
+
 
     void ShowWindow()
     {
         if (window == null)
             return;
-
+        SetUpButtonsText();
         window.SetActive(true);
 
     }
@@ -79,6 +91,7 @@ public class ModalWindow : MonoBehaviour
         if (instance.window == null)
             return;
         instance.ShowWindow();
+
 
         if (instance.yesButton)
         {

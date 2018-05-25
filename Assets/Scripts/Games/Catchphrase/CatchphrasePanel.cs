@@ -19,6 +19,7 @@ public class CatchphrasePanel : GamePanel
     public CatchphraseScorePanel scorePanel;
     public List<TeamInfo> teams = new List<TeamInfo>();
     public TextMeshProUGUI roundText;
+    public List<PairLanguageText> roundTranslation;
     public TextMeshProUGUI wordText;
     public TextMeshProUGUI teamNameText;
     public TextMeshProUGUI scoreText;
@@ -61,7 +62,7 @@ public class CatchphrasePanel : GamePanel
         backgroundOldColor = teamBackground.color;
         catchphraseController.countdown = roundTime;
         catchphraseController.HideTimer();
-
+        catchphraseController.ResetWordList();
         index = -1;
         currentRound = 1;
         correctWord = false;
@@ -137,7 +138,7 @@ public class CatchphrasePanel : GamePanel
             StartCoroutine(EndGame());
             return;
         }
-        roundText.text = "Round " + currentRound + "/" + rounds;
+        roundText.text = roundTranslation.GetTextFromMainLanguage().Trim() + " " + currentRound + "/" + rounds;
 
         wordText.gameObject.SetActive(false);
         correctWordButton.gameObject.SetActive(false);
@@ -198,6 +199,7 @@ public class CatchphrasePanel : GamePanel
 
 
         wordText.gameObject.SetActive(true);
+        wordText.alignment = TextAlignmentOptions.Capline;
         catchphraseController.ShowTimer();
         currentWord = catchphraseController.NewWord();
 

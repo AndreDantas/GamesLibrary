@@ -54,6 +54,8 @@ public class ChessBoardgame : Boardgame
     public GameObject queenPrefab;
     public Color lightPieceColor = Color.white;
     public Color darkPieceColor = Color.black;
+    public List<PairLanguageText> blackPieceTranslation = new List<PairLanguageText>();
+    public List<PairLanguageText> whitePieceTranslation = new List<PairLanguageText>();
     public bool darkPiecesFlipped;
     [Space(10)]
     public AudioClip pieceMovement;
@@ -138,10 +140,31 @@ public class ChessBoardgame : Boardgame
 
     }
 #endif
+    #region Pieces's Names
+    public static readonly List<PairLanguageText> PAWN = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Peão"),
+    new PairLanguageText(SystemLanguage.English, "Pawn") };
+    public static readonly List<PairLanguageText> ROOK = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Torre"),
+    new PairLanguageText(SystemLanguage.English, "Rook") };
+    public static readonly List<PairLanguageText> KNIGHT = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Cavalo"),
+    new PairLanguageText(SystemLanguage.English, "Knight") };
+    public static readonly List<PairLanguageText> BISHOP = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Bispo"),
+    new PairLanguageText(SystemLanguage.English, "Bishop") };
+    public static readonly List<PairLanguageText> QUEEN = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Rainha"),
+    new PairLanguageText(SystemLanguage.English, "Queen") };
+    public static readonly List<PairLanguageText> KING = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Rei"),
+    new PairLanguageText(SystemLanguage.English, "King") };
 
+    #endregion
     public virtual void PrepareGame()
     {
         StopAllCoroutines();
+        selectedPiece = null;
         gameSettings = new ChessSettingsData(ChessSettings.instance.settings);
         columns = gameSettings.columns;
         rows = gameSettings.rows;
@@ -184,6 +207,7 @@ public class ChessBoardgame : Boardgame
     public virtual void PrepareGameAI()
     {
         StopAllCoroutines();
+        selectedPiece = null;
         gameSettings = new ChessSettingsData(ChessSettings.instance.settings);
         columns = gameSettings.columns;
         rows = gameSettings.rows;
@@ -575,9 +599,9 @@ public class ChessBoardgame : Boardgame
     public void ConfirmRestartMatch()
     {
         if (vsAI)
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGameAI);
+            ModalWindow.Choice(RESTART_MATCH_CONFIRM.GetTextFromMainLanguage(), PrepareGameAI);
         else
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+            ModalWindow.Choice(RESTART_MATCH_CONFIRM.GetTextFromMainLanguage(), PrepareGame);
     }
 
 
@@ -619,7 +643,7 @@ public class ChessBoardgame : Boardgame
             saveName = "AI";
 
         SaveLoad.SaveFile("/chess_game_" + saveName + "_data.dat", save);
-        ModalWindow.Message("Jogo Salvo.");
+        ModalWindow.Message(GAME_SAVED.GetTextFromMainLanguage());
     }
 
     public void LoadBoardState()
@@ -635,11 +659,11 @@ public class ChessBoardgame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(NO_GAME_SAVED.GetTextFromMainLanguage());
     }
     public void ConfirmBoardLoad()
     {
-        ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
+        ModalWindow.Choice(LOAD_GAME_CONFIRM.GetTextFromMainLanguage(), LoadBoardState);
     }
 
     void ReconstructBoard(ChessBoardSaveData data, bool playerVsplayer = true)
@@ -688,11 +712,12 @@ public class ChessBoardgame : Boardgame
             }
             FlipDarkSidePieces(darkPiecesFlipped);
             canClick = true;
+
             StartTurn();
 
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(NO_GAME_SAVED.GetTextFromMainLanguage());
     }
 
 
@@ -903,6 +928,7 @@ public class ChessBoardgame : Boardgame
     {
         RenderCheck();
         RenderLastMove();
+        selectedPiece = null;
         if (aiTurnTimeIndicator)
             aiTurnTimeIndicator.SetActive(false);
         if (victoryMsg)
@@ -1069,12 +1095,12 @@ public class ChessBoardgame : Boardgame
         {
             if (CheckForDraw())
             {
-                victoryMsg.text = "Empate";
+                victoryMsg.text = DRAW.GetTextFromMainLanguage() + ".";
             }
             else
             {
-                string winner = turnPlayer == board.player1 ? "Preto" : "Branco";
-                victoryMsg.text = winner + " venceu!";
+                string winner = turnPlayer == board.player1 ? blackPieceTranslation.GetTextFromMainLanguage() : whitePieceTranslation.GetTextFromMainLanguage();
+                victoryMsg.text = winner + " " + WINNER.GetTextFromMainLanguage() + "!";
 
             }
             victoryMsg.gameObject.SetActive(true);

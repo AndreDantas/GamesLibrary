@@ -8,6 +8,6 @@ public class StartScreenPanel : GamePanel
     public override void OnBack()
     {
         if (!ModalWindow.IsActive())
-            ModalWindow.Choice("Ir para o menu principal?", SceneController.instance.GoToMainMenu);
+            ModalWindow.Choice(SceneController.EXIT_TO_MAINMENU.GetTextFromMainLanguage(), SceneController.instance.GoToMainMenu);
     }
 }

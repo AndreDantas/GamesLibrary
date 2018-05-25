@@ -60,7 +60,15 @@ public class ChessEditPanel : GamePanel
     [SceneObjectsOnly]
     public Toggle randomMode;
     private readonly List<ChessGameMode> gameModeIndex = new List<ChessGameMode>();
-    private List<string> DisplayNameBR { get { return new List<string>() { "Torre", "Cavalo", "Bispo" }; } }
+    private List<string> DisplayName
+    {
+        get
+        {
+            return new List<string>() { ChessBoardgame.ROOK.GetTextFromMainLanguage(),
+                                        ChessBoardgame.KNIGHT.GetTextFromMainLanguage(),
+                                        ChessBoardgame.BISHOP.GetTextFromMainLanguage()};
+        }
+    }
     private void Start()
     {
         Init();
@@ -114,9 +122,9 @@ public class ChessEditPanel : GamePanel
                 addedPiece.gameObject.SetActive(true);
                 List<StringObjectPair> options = new List<StringObjectPair>();
                 List<string> piecesNames = new List<string>() { "rook", "knight", "bishop" };
-                for (int i = 0; i < DisplayNameBR.Count; i++)
+                for (int i = 0; i < DisplayName.Count; i++)
                 {
-                    options.Add(new StringObjectPair(DisplayNameBR[i], piecesNames[i]));
+                    options.Add(new StringObjectPair(DisplayName[i], piecesNames[i]));
                 }
                 addedPiece.options = options;
                 addedPiece.SetCurrentOption(piecesNames.IndexOf(settings.addedPiece));
@@ -136,9 +144,9 @@ public class ChessEditPanel : GamePanel
                 removedPiece.gameObject.SetActive(true);
                 List<StringObjectPair> options = new List<StringObjectPair>();
                 List<string> piecesNames = new List<string>() { "rook", "knight", "bishop" };
-                for (int i = 0; i < DisplayNameBR.Count; i++)
+                for (int i = 0; i < DisplayName.Count; i++)
                 {
-                    options.Add(new StringObjectPair(DisplayNameBR[i], piecesNames[i]));
+                    options.Add(new StringObjectPair(DisplayName[i], piecesNames[i]));
                 }
                 removedPiece.options = options;
                 removedPiece.SetCurrentOption(piecesNames.IndexOf(settings.removedPiece));
@@ -206,9 +214,9 @@ public class ChessEditPanel : GamePanel
                 addedPiece.gameObject.SetActive(true);
                 List<StringObjectPair> options = new List<StringObjectPair>();
                 List<string> piecesNames = new List<string>() { "rook", "knight", "bishop" };
-                for (int i = 0; i < DisplayNameBR.Count; i++)
+                for (int i = 0; i < DisplayName.Count; i++)
                 {
-                    options.Add(new StringObjectPair(DisplayNameBR[i], piecesNames[i]));
+                    options.Add(new StringObjectPair(DisplayName[i], piecesNames[i]));
                 }
                 addedPiece.options = options;
                 addedPiece.SetCurrentOption(piecesNames.IndexOf(settings.addedPiece));
@@ -228,9 +236,9 @@ public class ChessEditPanel : GamePanel
                 removedPiece.gameObject.SetActive(true);
                 List<StringObjectPair> options = new List<StringObjectPair>();
                 List<string> piecesNames = new List<string>() { "rook", "knight", "bishop" };
-                for (int i = 0; i < DisplayNameBR.Count; i++)
+                for (int i = 0; i < DisplayName.Count; i++)
                 {
-                    options.Add(new StringObjectPair(DisplayNameBR[i], piecesNames[i]));
+                    options.Add(new StringObjectPair(DisplayName[i], piecesNames[i]));
                 }
                 removedPiece.options = options;
                 removedPiece.SetCurrentOption(piecesNames.IndexOf(settings.removedPiece));

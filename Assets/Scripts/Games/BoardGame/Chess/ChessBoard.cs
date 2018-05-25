@@ -52,7 +52,8 @@ public class ChessBoard : Board
         player2 = oldBoard.player2;
         isInit = oldBoard.isInit;
         movesLog = new List<ChessMovesLog>();
-        movesLog.AddRange(oldBoard.movesLog);
+        if (oldBoard.movesLog != null ? oldBoard.movesLog.Count > 0 : false)
+            movesLog.AddRange(oldBoard.movesLog);
     }
 
 

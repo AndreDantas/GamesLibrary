@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using TMPro;
+using Sirenix.OdinInspector;
+[System.Serializable]
+public struct WordListInfo
+{
+    public TextAsset wordList;
+    public SystemLanguage language;
+}
 public class CatchphraseController : MonoBehaviour
 {
 
@@ -482,7 +489,10 @@ Worm
 
 X-ray";
     #endregion
-    List<string> wordList;
+    public List<WordListInfo> wordLists = new List<WordListInfo>();
+    List<string> currentWordList;
+    [ShowInInspector]
+    List<string> wordsToUse;
     public bool finished
     {
         get
@@ -493,23 +503,57 @@ X-ray";
                 return false;
         }
     }
-    private void Start()
+    private void Awake()
     {
-        wordList = new List<string>();
+        LoadWords();
+
+    }
+
+    public void LoadWords()
+    {
+        currentWordList = new List<string>();
+        foreach (var item in wordLists)
+        {
+            if (GameLanguage.language.systLanguage == item.language)
+            {
+                currentWordList = GetWordsFromFile(item.wordList);
+                break;
+            }
+        }
+        if (currentWordList.Count > 0)
+            return;
         string[] temp = Regex.Split(words, @"\r?\n|\r");
         foreach (string s in temp)
         {
             if (s.Trim() == "")
                 continue;
-            wordList.Add(s);
+            currentWordList.Add(s);
         }
+        ResetWordList();
         //NewWord();
+    }
 
+    public void ResetWordList()
+    {
+        wordsToUse = new List<string>(currentWordList);
+    }
+
+    List<string> GetWordsFromFile(TextAsset file)
+    {
+        if (file == null)
+            return new List<string>();
+        return file.ToString().Replace(System.Environment.NewLine, "").Split(',').ToList();
     }
 
     public string NewWord()
     {
-        string word = wordList[Random.Range(0, wordList.Count)];
+        if (wordsToUse.Count == 0)
+            ResetWordList();
+        int random = Random.Range(0, wordsToUse.Count);
+
+        string word = wordsToUse[random];
+        wordsToUse.RemoveAt(random);
+
         wordText.text = word;
         if (timer)
         {

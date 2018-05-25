@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-public abstract class Boardgame : MonoBehaviour
+public abstract class Boardgame : Game
 {
     [Header("Board Settings")]
     public int columns = 8;

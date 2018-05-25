@@ -135,6 +135,7 @@ public class CheckersBoardgame : Boardgame
 
     public void PrepareGameAI()
     {
+
         StopAllCoroutines();
         gameSettings = new CheckersSettingsData(CheckersSettings.instance.settings);
         // Board settings

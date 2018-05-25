@@ -162,4 +162,19 @@ public class SceneController : MonoBehaviour
         current = other;
         moving = false;
     }
+
+    #region DEFAULT_MESSAGES
+    public static readonly List<PairLanguageText> EXIT_TO_MAINMENU = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Ir para o menu principal?"),
+    new PairLanguageText(SystemLanguage.English, "Go to main menu?") };
+
+    public static readonly List<PairLanguageText> YES = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Sim"),
+    new PairLanguageText(SystemLanguage.English, "Yes") };
+    public static readonly List<PairLanguageText> NO = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Não"),
+    new PairLanguageText(SystemLanguage.English, "No") };
+
+
+    #endregion
 }

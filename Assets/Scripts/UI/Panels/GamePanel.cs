@@ -7,6 +7,7 @@ using Sirenix.OdinInspector;
 public class GamePanel : SerializedMonoBehaviour
 {
 
+
     /// <summary>
     /// The panel's animation time.
     /// </summary>

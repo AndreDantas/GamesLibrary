@@ -10,14 +10,23 @@ public class PairLanguageText
     public SystemLanguage language;
     [TextArea]
     public string text;
+
+    public PairLanguageText(SystemLanguage language, string text)
+    {
+        this.language = language;
+        this.text = text;
+    }
 }
 public class ChangeTextLanguage : MonoBehaviour
 {
-    protected TextMeshProUGUI text;
+    protected TextMeshProUGUI textTMP;
+    protected Text text;
     public List<PairLanguageText> languagesAndText = new List<PairLanguageText>();
     private void Start()
     {
-        text = GetComponent<TextMeshProUGUI>();
+        textTMP = GetComponent<TextMeshProUGUI>();
+        text = GetComponent<Text>();
+
         ChangeLanguage();
     }
 
@@ -31,8 +40,11 @@ public class ChangeTextLanguage : MonoBehaviour
             {
                 if (lt.language == GameLanguage.language.systLanguage)
                 {
-                    text.text = lt.text;
-                    break;
+                    if (textTMP)
+                        textTMP.text = lt.text;
+                    if (text)
+                        text.text = lt.text;
+                    return;
                 }
             }
         }
@@ -47,7 +59,7 @@ public class ChangeTextLanguage : MonoBehaviour
         bool hasText = false;
         foreach (var component in components)
         {
-            if (component is TextMeshProUGUI)
+            if (component is TextMeshProUGUI || component is Text)
                 hasText = true;
 
 

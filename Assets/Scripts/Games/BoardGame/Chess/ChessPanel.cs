@@ -104,6 +104,6 @@ public class ChessPanel : GamePanel
 
     public override void OnBack()
     {
-        ModalWindow.Choice("Sair da partida?", base.OnBack);
+        ModalWindow.Choice(Game.EXIT_MATCH_CONFIRM.GetTextFromMainLanguage(), base.OnBack);
     }
 }
