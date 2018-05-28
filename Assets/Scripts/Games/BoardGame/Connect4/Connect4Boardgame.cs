@@ -48,7 +48,7 @@ public class Connect4Boardgame : Boardgame
     public TextMeshProUGUI victoryMsg;
     public GameObject aiTurnTimeIndicator;
     public TextMeshProUGUI titleText;
-    public string gameName = "Conectar";
+    public string gameName = GameTranslations.CONNECT.Get();
     public bool canClick = true;
     private float tileRenderScale = 0.89f;
     private GameObject tilesParentObj;
@@ -61,6 +61,7 @@ public class Connect4Boardgame : Boardgame
 
     protected override void Start()
     {
+        gameName = GameTranslations.CONNECT.Get();
         base.Start();
         if (victoryMsg)
             victoryMsg.gameObject.SetActive(false);
@@ -123,8 +124,8 @@ public class Connect4Boardgame : Boardgame
         tileColor = gameSettings.darkTileColor;
         board = new Connect4Board(columns, rows);
         board.ConnectTarget = gameSettings.connectTarget;
-        board.player1 = new Player("Jogador 1");
-        board.player2 = new Player("Jogador 2");
+        board.player1 = new Player(GameTranslations.PLAYER_NAME.Get() + " 1");
+        board.player2 = new Player(GameTranslations.PLAYER_NAME.Get() + " 2");
         board.InitBoard();
         turnPlayer = board.player1;
         RenderMap();
@@ -148,9 +149,9 @@ public class Connect4Boardgame : Boardgame
         board = new Connect4Board(columns, rows);
         board.InitBoard();
         board.ConnectTarget = gameSettings.connectTarget;
-        board.player1 = new Player("Jogador 1");
+        board.player1 = new Player(GameTranslations.PLAYER_NAME.Get() + " 1");
         board.player2 = new Connect4AI(board);
-        board.player2.name = "Computador";
+        board.player2.name = GameTranslations.AI_NAME.Get();
 
         turnPlayer = board.player1;
         RenderMap();
@@ -250,9 +251,9 @@ public class Connect4Boardgame : Boardgame
     public void ConfirmRestartMatch()
     {
         if (vsAI)
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGameAI);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGameAI);
         else
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGame);
     }
     public void SaveBoardState()
     {
@@ -271,7 +272,7 @@ public class Connect4Boardgame : Boardgame
             saveName = "AI";
 
         SaveLoad.SaveFile("/connect4_game_" + saveName + "_data.dat", save);
-        ModalWindow.Message("Jogo Salvo.");
+        ModalWindow.Message(GameTranslations.GAME_SAVED.Get());
     }
 
     public void LoadBoardState()
@@ -287,11 +288,11 @@ public class Connect4Boardgame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
     }
     public void ConfirmBoardLoad()
     {
-        ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
+        ModalWindow.Choice(GameTranslations.LOAD_GAME_CONFIRM.Get(), LoadBoardState);
     }
 
     void ReconstructBoard(Connect4BoardSaveData data, bool playerVsplayer = true)
@@ -343,7 +344,7 @@ public class Connect4Boardgame : Boardgame
             canClick = true;
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
     }
     /// <summary>
     /// Changes the color of the pieces at runtime.
@@ -481,11 +482,11 @@ public class Connect4Boardgame : Boardgame
             string winner;
             if (hitConnect)
             {
-                winner = turnPlayer == board.player1 ? "Jogador 2" : "Jogador 1";
-                winner += " venceu!";
+                winner = board.OtherPlayer(turnPlayer).name;
+                winner += " " + GameTranslations.WON.Get();
             }
             else
-                winner = "Empate!";
+                winner = GameTranslations.DRAW.Get() + "!";
             victoryMsg.text = winner;
             victoryMsg.gameObject.SetActive(true);
         }

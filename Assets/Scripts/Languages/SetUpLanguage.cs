@@ -8,7 +8,12 @@ public static class GameLanguage
     public static LanguageObj language;
     public static readonly SystemLanguage DEFAULT_LANGUAGE = SystemLanguage.Portuguese;
 
-    public static string GetTextFromMainLanguage(this List<PairLanguageText> list)
+    /// <summary>
+    /// Returns the text from the current language.
+    /// </summary>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    public static string Get(this List<PairLanguageText> list)
     {
         if (list == null || language == null)
             return "";
@@ -62,6 +67,7 @@ public class LanguageObj
 
     }
 }
+[DisallowMultipleComponent]
 public class SetUpLanguage : MonoBehaviour
 {
     [ValueDropdown("AvailableLanguages")]
@@ -77,6 +83,7 @@ public class SetUpLanguage : MonoBehaviour
             return;
         }
         instance = this;
+
         LoadLanguage();
     }
     void LoadLanguage()

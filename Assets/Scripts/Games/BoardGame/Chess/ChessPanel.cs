@@ -104,6 +104,6 @@ public class ChessPanel : GamePanel
 
     public override void OnBack()
     {
-        ModalWindow.Choice(Game.EXIT_MATCH_CONFIRM.GetTextFromMainLanguage(), base.OnBack);
+        ModalWindow.Choice(GameTranslations.EXIT_MATCH_CONFIRM.Get(), base.OnBack);
     }
 }

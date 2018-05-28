@@ -23,7 +23,8 @@ public class PongMatchSettingsPanel : GamePanel
 
         if (matchSpeed)
         {
-            matchSpeed.options = new List<StringObjectPair> { new StringObjectPair("Normal", 1), new StringObjectPair("Rápida", 0) };
+            matchSpeed.options = new List<StringObjectPair> { new StringObjectPair(GameTranslations.GAME_SPEED_NORMAL.Get(), 1),
+                                                            new StringObjectPair(GameTranslations.GAME_SPEED_FAST.Get(), 0) };
             matchSpeed.UpdateUI();
             matchSpeed.OnOptionChanged.AddListener(OnOptionChanged);
         }

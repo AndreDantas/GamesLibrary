@@ -2073,7 +2073,7 @@ Prefab:
         type: 2}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2071680427}
+      objectReference: {fileID: 869026766}
     - target: {fileID: 114384287963055072, guid: 54b339b1d30417d49a8a457e4e9d4e04,
         type: 2}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -2089,6 +2089,10 @@ Prefab:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 1030552427115576, guid: 54b339b1d30417d49a8a457e4e9d4e04, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114186309598127410, guid: 54b339b1d30417d49a8a457e4e9d4e04, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 54b339b1d30417d49a8a457e4e9d4e04, type: 2}
@@ -2099,6 +2103,27 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 401605349}
   m_Script: {fileID: 11500000, guid: 95f8969588aa31d4685b976bc9052e6e, type: 3}
+--- !u!1 &401605351 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1899253040973696, guid: 54b339b1d30417d49a8a457e4e9d4e04,
+    type: 2}
+  m_PrefabInternal: {fileID: 401605349}
+--- !u!114 &401605352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 401605351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: Toque na tela para continuar
+  - language: 10
+    text: Touch the screen to continue
 --- !u!1 &404779879
 GameObject:
   m_ObjectHideFlags: 0
@@ -2607,6 +2632,7 @@ GameObject:
   - component: {fileID: 526874126}
   - component: {fileID: 526874128}
   - component: {fileID: 526874127}
+  - component: {fileID: 526874129}
   m_Layer: 5
   m_Name: TextMeshPro Text
   m_TagString: Untagged
@@ -2751,6 +2777,22 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 526874125}
+--- !u!114 &526874129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 526874125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: Pausado
+  - language: 10
+    text: Paused
 --- !u!1 &530348633
 GameObject:
   m_ObjectHideFlags: 0
@@ -3571,6 +3613,29 @@ Prefab:
         type: 2}
       propertyPath: m_PreserveAspect
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114107821106754954, guid: 4ced58468adc6c441876377d869cc910,
+        type: 2}
+      propertyPath: valueUnit
+      value: pt
+      objectReference: {fileID: 0}
+    - target: {fileID: 1540186346780808, guid: 4ced58468adc6c441876377d869cc910, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114107821106754954, guid: 4ced58468adc6c441876377d869cc910,
+        type: 2}
+      propertyPath: _value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1532981492531512, guid: 4ced58468adc6c441876377d869cc910, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114563606949142206, guid: 4ced58468adc6c441876377d869cc910,
+        type: 2}
+      propertyPath: m_text
+      value: 1pt
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4ced58468adc6c441876377d869cc910, type: 2}
@@ -4978,7 +5043,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   screenCenter: {x: 0, y: 0}
-  onBackPanel: {fileID: 2071680427}
+  onBackPanel: {fileID: 401605350}
   panelObjects:
   - {fileID: 1914135814}
   - {fileID: 2131243615}
@@ -5137,6 +5202,7 @@ GameObject:
   - component: {fileID: 890988520}
   - component: {fileID: 890988522}
   - component: {fileID: 890988521}
+  - component: {fileID: 890988523}
   m_Layer: 5
   m_Name: PlayUntil
   m_TagString: Untagged
@@ -5160,8 +5226,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -137.5, y: 240}
-  m_SizeDelta: {x: -400, y: 150}
+  m_AnchoredPosition: {x: -150, y: 240}
+  m_SizeDelta: {x: -380, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &890988521
 MonoBehaviour:
@@ -5182,7 +5248,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: "Jogar at\xE9:"
+  m_text: 'Play until:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e30a6112c96110a478672fe1cc907e63, type: 2}
   m_sharedMaterial: {fileID: 21696823459924208, guid: e30a6112c96110a478672fe1cc907e63,
@@ -5219,7 +5285,7 @@ MonoBehaviour:
   m_fontStyle: 0
   m_textAlignment: 8224
   m_isAlignmentEnumConverted: 1
-  m_characterSpacing: 0
+  m_characterSpacing: -4
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5250,7 +5316,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 890988521}
-    characterCount: 10
+    characterCount: 11
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -5282,6 +5348,22 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 890988519}
+--- !u!114 &890988523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 890988519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: "Jogar at\xE9:"
+  - language: 10
+    text: 'Play until:'
 --- !u!1 &918214938
 GameObject:
   m_ObjectHideFlags: 0
@@ -5292,6 +5374,7 @@ GameObject:
   - component: {fileID: 918214941}
   - component: {fileID: 918214940}
   - component: {fileID: 918214939}
+  - component: {fileID: 918214942}
   m_Layer: 5
   m_Name: PlayVsAI
   m_TagString: Untagged
@@ -5437,6 +5520,22 @@ RectTransform:
   m_AnchoredPosition: {x: -137.5, y: -210}
   m_SizeDelta: {x: -390, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &918214942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 918214938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: Jogar vs COM
+  - language: 10
+    text: Play vs AI
 --- !u!1 &925745961
 GameObject:
   m_ObjectHideFlags: 0
@@ -5665,6 +5764,7 @@ GameObject:
   - component: {fileID: 1005058778}
   - component: {fileID: 1005058780}
   - component: {fileID: 1005058779}
+  - component: {fileID: 1005058781}
   m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
@@ -5711,7 +5811,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Editar
+  m_text: Settings
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e30a6112c96110a478672fe1cc907e63, type: 2}
   m_sharedMaterial: {fileID: 21696823459924208, guid: e30a6112c96110a478672fe1cc907e63,
@@ -5779,7 +5879,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1005058779}
-    characterCount: 6
+    characterCount: 8
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -5812,6 +5912,22 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1005058777}
+--- !u!114 &1005058781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1005058777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: Editar
+  - language: 10
+    text: Settings
 --- !u!1 &1007518899
 GameObject:
   m_ObjectHideFlags: 0
@@ -6999,6 +7115,7 @@ GameObject:
   - component: {fileID: 1487164124}
   - component: {fileID: 1487164126}
   - component: {fileID: 1487164125}
+  - component: {fileID: 1487164127}
   m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
@@ -7146,6 +7263,22 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1487164123}
+--- !u!114 &1487164127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1487164123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: "Come\xE7ar"
+  - language: 10
+    text: Start
 --- !u!1 &1518664706
 GameObject:
   m_ObjectHideFlags: 0
@@ -7459,6 +7592,7 @@ GameObject:
   - component: {fileID: 1643249923}
   - component: {fileID: 1643249925}
   - component: {fileID: 1643249924}
+  - component: {fileID: 1643249926}
   m_Layer: 5
   m_Name: MuteSound
   m_TagString: Untagged
@@ -7604,6 +7738,22 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1643249922}
+--- !u!114 &1643249926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1643249922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: 'Silenciar o audio:'
+  - language: 10
+    text: Mute sound
 --- !u!1 &1648045830
 GameObject:
   m_ObjectHideFlags: 0
@@ -7724,6 +7874,7 @@ GameObject:
   - component: {fileID: 1839308756}
   - component: {fileID: 1839308758}
   - component: {fileID: 1839308757}
+  - component: {fileID: 1839308759}
   m_Layer: 5
   m_Name: MatchSpeed
   m_TagString: Untagged
@@ -7869,6 +8020,22 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1839308755}
+--- !u!114 &1839308759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1839308755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: Velocidade
+  - language: 10
+    text: Speed
 --- !u!1 &1873526455
 GameObject:
   m_ObjectHideFlags: 0

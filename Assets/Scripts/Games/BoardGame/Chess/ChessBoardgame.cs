@@ -599,9 +599,9 @@ public class ChessBoardgame : Boardgame
     public void ConfirmRestartMatch()
     {
         if (vsAI)
-            ModalWindow.Choice(RESTART_MATCH_CONFIRM.GetTextFromMainLanguage(), PrepareGameAI);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGameAI);
         else
-            ModalWindow.Choice(RESTART_MATCH_CONFIRM.GetTextFromMainLanguage(), PrepareGame);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGame);
     }
 
 
@@ -643,7 +643,7 @@ public class ChessBoardgame : Boardgame
             saveName = "AI";
 
         SaveLoad.SaveFile("/chess_game_" + saveName + "_data.dat", save);
-        ModalWindow.Message(GAME_SAVED.GetTextFromMainLanguage());
+        ModalWindow.Message(GameTranslations.GAME_SAVED.Get());
     }
 
     public void LoadBoardState()
@@ -659,11 +659,11 @@ public class ChessBoardgame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message(NO_GAME_SAVED.GetTextFromMainLanguage());
+            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
     }
     public void ConfirmBoardLoad()
     {
-        ModalWindow.Choice(LOAD_GAME_CONFIRM.GetTextFromMainLanguage(), LoadBoardState);
+        ModalWindow.Choice(GameTranslations.LOAD_GAME_CONFIRM.Get(), LoadBoardState);
     }
 
     void ReconstructBoard(ChessBoardSaveData data, bool playerVsplayer = true)
@@ -717,7 +717,7 @@ public class ChessBoardgame : Boardgame
 
         }
         else
-            ModalWindow.Message(NO_GAME_SAVED.GetTextFromMainLanguage());
+            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
     }
 
 
@@ -1095,12 +1095,12 @@ public class ChessBoardgame : Boardgame
         {
             if (CheckForDraw())
             {
-                victoryMsg.text = DRAW.GetTextFromMainLanguage() + ".";
+                victoryMsg.text = GameTranslations.DRAW.Get() + ".";
             }
             else
             {
-                string winner = turnPlayer == board.player1 ? blackPieceTranslation.GetTextFromMainLanguage() : whitePieceTranslation.GetTextFromMainLanguage();
-                victoryMsg.text = winner + " " + WINNER.GetTextFromMainLanguage() + "!";
+                string winner = turnPlayer == board.player1 ? blackPieceTranslation.Get() : whitePieceTranslation.Get();
+                victoryMsg.text = winner + " " + GameTranslations.WON.Get() + "!";
 
             }
             victoryMsg.gameObject.SetActive(true);

@@ -235,8 +235,6 @@ public static class UtilityFunctions
             }
     }
 
-
-
     /// <summary>
     /// Fills a list with the contents of another list, without increasing or decreasing the size.
     /// </summary>
@@ -257,6 +255,7 @@ public static class UtilityFunctions
 
         return l;
     }
+
     /// <summary>
     /// Is the list empty?
     /// </summary>
@@ -267,6 +266,12 @@ public static class UtilityFunctions
     {
         return list?.Count == 0;
     }
+
+    public static bool ValidIndex<T>(this List<T> list, int index)
+    {
+        return (index >= 0 && index < list.Count);
+    }
+
     #endregion
 
     #region Arrays
@@ -496,6 +501,27 @@ public static class UtilityFunctions
     {
         UnityEngine.Object.Destroy(c);
     }
+
+    /// <summary>
+    /// Deactivates the GameObject.
+    /// </summary>
+    /// <param name="g"></param>
+    public static void Deactivate(this GameObject g)
+    {
+        g.SetActive(false);
+    }
+
+    /// <summary>
+    /// Activates the GameObject.
+    /// </summary>
+    /// <param name="g"></param>
+    public static void Activate(this GameObject g)
+    {
+        g.SetActive(true);
+    }
+
+
+
     /// <summary>
     /// Destroys all child objects on transform.
     /// </summary>
@@ -514,7 +540,25 @@ public static class UtilityFunctions
         }
 
     }
+    /// <summary>
+    /// Destroys all child objects on transform that have the component.
+    /// </summary>
+    /// <param name="parent"></param>
+    public static void DestroyChildren<T>(this Transform parent) where T : Component
+    {
+        List<GameObject> destroyList = new List<GameObject>();
+        foreach (Transform child in parent.transform)
+        {
+            if (child.gameObject.CheckForComponent<T>())
+                destroyList.Add(child.gameObject);
+        }
 
+        for (int i = destroyList.Count - 1; i >= 0; i--)
+        {
+            UnityEngine.Object.Destroy(destroyList[i]);
+        }
+
+    }
     /// <summary>
     /// Changes the GameObject's scale without affecting the children.
     /// </summary>
@@ -530,6 +574,58 @@ public static class UtilityFunctions
         }
         parent.localScale = scale;
         foreach (Transform child in children) child.parent = parent;
+    }
+    #endregion
+
+    #region String
+    public static string RemoveLineEndings(this string value)
+    {
+        if (String.IsNullOrEmpty(value))
+        {
+            return value;
+        }
+        string lineSeparator = ((char)0x2028).ToString();
+        string paragraphSeparator = ((char)0x2029).ToString();
+
+        return value.Replace("\r\n", string.Empty)
+                    .Replace("\n", string.Empty)
+                    .Replace("\r", string.Empty)
+                    .Replace(lineSeparator, string.Empty)
+                    .Replace(paragraphSeparator, string.Empty)
+                    .Replace("\u200B", "");
+    }
+
+    public static bool ContainsIgnoreCase(this List<string> l, string s)
+    {
+        if (l == null)
+            return false;
+        for (int i = 0; i < l.Count; i++)
+        {
+            if (l[i].ToLower().Trim().RemoveZeroWidthSpace() == s.ToLower().Trim().RemoveZeroWidthSpace())
+                return true;
+        }
+
+        return false;
+    }
+
+    public static string FirstCharToUpper(this string input)
+    {
+        switch (input)
+        {
+            case null: throw new ArgumentNullException(nameof(input));
+            case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
+            default: return input.First().ToString().ToUpper() + input.Substring(1);
+        }
+    }
+
+    public static string RemoveZeroWidthSpace(this string value)
+    {
+        if (String.IsNullOrEmpty(value))
+        {
+            return value;
+        }
+
+        return value.Replace("\u200B", "");
     }
     #endregion
 
@@ -577,6 +673,25 @@ public static class UtilityFunctions
         y.AddListener(listener);
     }
     /// <summary>
+    /// Removes and adds a listener.
+    /// </summary>
+    /// <param name="y"></param>
+    /// <param name="listener"></param>
+    public static void RemoveAndAddListener<T1, T2>(this UnityEvent<T1, T2> y, UnityAction<T1, T2> listener)
+    {
+        y.RemoveListener(listener);
+        y.AddListener(listener);
+    }/// <summary>
+     /// Removes and adds a listener.
+     /// </summary>
+     /// <param name="y"></param>
+     /// <param name="listener"></param>
+    public static void RemoveAndAddListener<T1, T2, T3>(this UnityEvent<T1, T2, T3> y, UnityAction<T1, T2, T3> listener)
+    {
+        y.RemoveListener(listener);
+        y.AddListener(listener);
+    }
+    /// <summary>
     /// Checks if the pointer was over a UI element.
     /// </summary>
     /// <returns></returns>
@@ -595,9 +710,9 @@ public static class UtilityFunctions
     /// Draws bounds on a DrawGizmos function.
     /// </summary>
     /// <param name="b"></param>
-    public static void DrawBounds(Bounds b)
+    public static void DrawBounds(Bounds b, Color? gizmosColor = null)
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = gizmosColor ?? Color.green;
         Gizmos.DrawWireCube(b.center, b.size);
     }
     /// <summary>

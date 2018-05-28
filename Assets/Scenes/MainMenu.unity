@@ -8069,7 +8069,7 @@ MonoBehaviour:
   - language: 28
     text: "Adivinha\xE7\xE3o"
   - language: 10
-    text: Guess
+    text: Word Guess
 --- !u!1001 &1378237813
 Prefab:
   m_ObjectHideFlags: 0

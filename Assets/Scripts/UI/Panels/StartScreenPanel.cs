@@ -8,6 +8,6 @@ public class StartScreenPanel : GamePanel
     public override void OnBack()
     {
         if (!ModalWindow.IsActive())
-            ModalWindow.Choice(SceneController.EXIT_TO_MAINMENU.GetTextFromMainLanguage(), SceneController.instance.GoToMainMenu);
+            ModalWindow.Choice(SystemTranslations.EXIT_TO_MAINMENU.Get(), SceneController.instance.GoToMainMenu);
     }
 }

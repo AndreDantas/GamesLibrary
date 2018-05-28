@@ -64,9 +64,9 @@ public class ChessEditPanel : GamePanel
     {
         get
         {
-            return new List<string>() { ChessBoardgame.ROOK.GetTextFromMainLanguage(),
-                                        ChessBoardgame.KNIGHT.GetTextFromMainLanguage(),
-                                        ChessBoardgame.BISHOP.GetTextFromMainLanguage()};
+            return new List<string>() { ChessBoardgame.ROOK.Get(),
+                                        ChessBoardgame.KNIGHT.Get(),
+                                        ChessBoardgame.BISHOP.Get()};
         }
     }
     private void Start()

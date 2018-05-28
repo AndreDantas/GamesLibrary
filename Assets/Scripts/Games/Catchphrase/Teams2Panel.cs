@@ -16,6 +16,7 @@ public class Teams2Panel : GamePanel
     public TeamInputInfo team2;
     public ValueSelectUI roundsInput;
     public ValueSelectUI roundTimeInput;
+    public Toggle extraWordsToggle;
     public CatchphrasePanel gamePanel;
 
     public override IEnumerator Enter()
@@ -57,6 +58,11 @@ public class Teams2Panel : GamePanel
         temp.teamColor = team2.teamImg.color;
         temp.teamName = team2.teamInput.text;
         team.Add(temp);
+
+        if (extraWordsToggle)
+        {
+            gamePanel.useExtraWords = extraWordsToggle.isOn;
+        }
 
         SceneController.HideMainMenuButton();
         //Set game panel teams

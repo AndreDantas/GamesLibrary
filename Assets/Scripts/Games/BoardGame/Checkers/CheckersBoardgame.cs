@@ -324,9 +324,9 @@ public class CheckersBoardgame : Boardgame
     public void ConfirmRestartMatch()
     {
         if (vsAI)
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGameAI);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGameAI);
         else
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGame);
     }
 
     public void SaveBoardState()
@@ -349,12 +349,12 @@ public class CheckersBoardgame : Boardgame
             saveName = "AI";
 
         SaveLoad.SaveFile("/checkers_game_" + saveName + "_data.dat", save);
-        ModalWindow.Message("Jogo Salvo.");
+        ModalWindow.Message(GameTranslations.GAME_SAVED.Get());
     }
 
     public void ConfirmBoardLoad()
     {
-        ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
+        ModalWindow.Choice(GameTranslations.LOAD_GAME_CONFIRM.Get(), LoadBoardState);
     }
 
 
@@ -371,7 +371,7 @@ public class CheckersBoardgame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
 
     }
 
@@ -749,13 +749,13 @@ public class CheckersBoardgame : Boardgame
             string winner;
             if (vsAI)
             {
-                winner = turnPlayer == board.playerTop ? "Jogador 1" : "Computador";
+                winner = turnPlayer == board.playerTop ? GameTranslations.PLAYER_NAME.Get() + " 1" : GameTranslations.AI_NAME.Get();
             }
             else
             {
-                winner = turnPlayer == board.playerTop ? "Jogador 1" : "Jogador 2";
+                winner = turnPlayer == board.playerTop ? GameTranslations.PLAYER_NAME.Get() + " 1" : GameTranslations.PLAYER_NAME.Get() + " 2";
             }
-            victoryMsg.text = winner + " venceu!";
+            victoryMsg.text = winner + " " + GameTranslations.WON.Get();
             victoryMsg.gameObject.SetActive(true);
         }
 

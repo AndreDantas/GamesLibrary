@@ -101,8 +101,8 @@ public class ReversiBoardGame : Boardgame
         lightTile = gameSettings.lightTileColor;
 
         board = new ReversiBoard(columns, rows);
-        board.player1 = new Player("Jogador 1");
-        board.player2 = new Player("Jogador 2");
+        board.player1 = new Player(GameTranslations.PLAYER_NAME.Get() + " 1");
+        board.player2 = new Player(GameTranslations.PLAYER_NAME.Get() + " 2");
         board.InitBoard();
         turnPlayer = board.player1;
         RenderMap();
@@ -126,9 +126,9 @@ public class ReversiBoardGame : Boardgame
 
         board = new ReversiBoard(columns, rows);
         board.InitBoard();
-        board.player1 = new Player("Jogador 1");
+        board.player1 = new Player(GameTranslations.PLAYER_NAME.Get() + " 1");
         board.player2 = new ReversiAI(board);
-        board.player2.name = "Computador";
+        board.player2.name = GameTranslations.AI_NAME.Get();
 
         turnPlayer = board.player1;
         RenderMap();
@@ -265,9 +265,9 @@ public class ReversiBoardGame : Boardgame
     public void ConfirmRestartMatch()
     {
         if (vsAI)
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGameAI);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGameAI);
         else
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGame);
     }
     public void SaveBoardState()
     {
@@ -286,7 +286,7 @@ public class ReversiBoardGame : Boardgame
             saveName = "AI";
 
         SaveLoad.SaveFile("/reversi_game_" + saveName + "_data.dat", save);
-        ModalWindow.Message("Jogo Salvo.");
+        ModalWindow.Message(GameTranslations.GAME_SAVED.Get());
     }
 
     public void LoadBoardState()
@@ -302,11 +302,11 @@ public class ReversiBoardGame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
     }
     public void ConfirmBoardLoad()
     {
-        ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
+        ModalWindow.Choice(GameTranslations.LOAD_GAME_CONFIRM.Get(), LoadBoardState);
     }
 
     void ReconstructBoard(ReversiBoardSaveData data, bool playerVsplayer = true)
@@ -359,7 +359,7 @@ public class ReversiBoardGame : Boardgame
             canClick = true;
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
     }
 
     public IEnumerator MakeAMove(Position pos)
@@ -473,7 +473,7 @@ public class ReversiBoardGame : Boardgame
             {
                 playerPassedObject.SetActive(true);
                 playerPassedObject.transform.localScale = new Vector3(1f, 0f, 1f);
-                playerPassedText.text = turnPlayer.name + " passou";
+                playerPassedText.text = turnPlayer.name + GameTranslations.PASSED.Get().ToLower();
                 playerPassedObject.transform.ScaleTo(new Vector3(1f, 1f, 1f), 0.5f, EasingEquations.EaseInOutElastic);
                 SceneController.LockPanel();
                 yield return new WaitForSeconds(0.8f);
@@ -526,11 +526,11 @@ public class ReversiBoardGame : Boardgame
 
             string winner;
             if (player1Score > player2Score)
-                winner = board.player1.name + " venceu!";
+                winner = board.player1.name + " " + GameTranslations.WON.Get();
             else if (player2Score > player1Score)
-                winner = board.player2.name + " venceu!";
+                winner = board.player2.name + " " + GameTranslations.WON.Get();
             else
-                winner = "Empate!";
+                winner = GameTranslations.DRAW.Get();
             victoryMsg.text = winner;
             victoryMsg.gameObject.SetActive(true);
         }

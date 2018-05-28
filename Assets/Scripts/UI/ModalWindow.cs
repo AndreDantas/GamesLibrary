@@ -36,8 +36,8 @@ public class ModalWindow : MonoBehaviour
 
     void SetUpButtonsText()
     {
-        instance.yesText.text = SceneController.YES.GetTextFromMainLanguage();
-        instance.noText.text = SceneController.NO.GetTextFromMainLanguage();
+        instance.yesText.text = SystemTranslations.YES.Get();
+        instance.noText.text = SystemTranslations.NO.Get();
         instance.closeText.text = "Ok";
     }
 

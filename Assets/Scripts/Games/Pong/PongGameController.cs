@@ -253,7 +253,7 @@ public class PongGameController : MonoBehaviour
             TextMeshProUGUI text = middleButton.GetComponentInChildren<TextMeshProUGUI>();
             if (text)
             {
-                text.text = "Começar";
+                text.text = GameTranslations.START.Get();
             }
         }
         if (restartMatchButton)
@@ -293,11 +293,11 @@ public class PongGameController : MonoBehaviour
         //PrepareGame();
         if (matchSettings.topPlayerScore >= matchSettings.scoreTarget)
         {
-            topPlayerScore.text = "Venceu!";
+            topPlayerScore.text = GameTranslations.WINNER.Get() + "!";
         }
         else
         {
-            bottomPlayerScore.text = "Venceu!";
+            bottomPlayerScore.text = GameTranslations.WINNER.Get() + "!";
         }
         if (restartMatchButton)
             restartMatchButton.SetActive(false);
@@ -314,7 +314,7 @@ public class PongGameController : MonoBehaviour
             TextMeshProUGUI text = middleButton.GetComponentInChildren<TextMeshProUGUI>();
             if (text)
             {
-                text.text = "Recomeçar";
+                text.text = GameTranslations.RESTART.Get();
             }
         }
     }
@@ -323,7 +323,7 @@ public class PongGameController : MonoBehaviour
     public void RestartGame()
     {
         PauseGame();
-        ModalWindow.Choice("Recomeçar partida?", PrepareGame);
+        ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGame);
     }
 
     public void OnExitGame()

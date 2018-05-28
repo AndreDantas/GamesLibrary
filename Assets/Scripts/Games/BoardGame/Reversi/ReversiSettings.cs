@@ -51,7 +51,7 @@ public class ReversiSettings : BoardGameSettings
             Destroy(gameObject);
         }
         instance = this;
-        saveName = "reversi";
+        saveName = "othello";
         LoadSettings();
     }
 }

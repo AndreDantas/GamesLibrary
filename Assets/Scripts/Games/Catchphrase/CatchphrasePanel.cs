@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+
 [System.Serializable]
 public class TeamInfo
 {
@@ -17,6 +18,8 @@ public class CatchphrasePanel : GamePanel
     public static int MAX_ROUNDS = 10;
     public CatchphraseController catchphraseController;
     public CatchphraseScorePanel scorePanel;
+    public AudioClip correctWordAudio;
+
     public List<TeamInfo> teams = new List<TeamInfo>();
     public TextMeshProUGUI roundText;
     public List<PairLanguageText> roundTranslation;
@@ -24,7 +27,9 @@ public class CatchphrasePanel : GamePanel
     public TextMeshProUGUI teamNameText;
     public TextMeshProUGUI scoreText;
     public Button correctWordButton;
+    public bool useExtraWords;
     public Image teamBackground;
+
     List<TeamWord> wordList;
     bool gameStart;
     bool correctWord;
@@ -55,6 +60,7 @@ public class CatchphrasePanel : GamePanel
     {
         if (catchphraseController == null)
             catchphraseController = GetComponent<CatchphraseController>();
+        gameObject.AddAudio(correctWordAudio);
     }
 
     public void PrepareGame()
@@ -62,6 +68,8 @@ public class CatchphrasePanel : GamePanel
         backgroundOldColor = teamBackground.color;
         catchphraseController.countdown = roundTime;
         catchphraseController.HideTimer();
+        if (useExtraWords)
+            catchphraseController.extraWords = AddWordsPanel.addedWords;
         catchphraseController.ResetWordList();
         index = -1;
         currentRound = 1;
@@ -84,7 +92,7 @@ public class CatchphrasePanel : GamePanel
     public void ConfirmExitGame()
     {
         PauseGame();
-        ModalWindow.Choice("Sair da partida?", ForceExitGame, ResumeGame);
+        ModalWindow.Choice(GameTranslations.EXIT_MATCH_CONFIRM.Get(), ForceExitGame, ResumeGame);
     }
 
     void ForceExitGame()
@@ -138,7 +146,7 @@ public class CatchphrasePanel : GamePanel
             StartCoroutine(EndGame());
             return;
         }
-        roundText.text = roundTranslation.GetTextFromMainLanguage().Trim() + " " + currentRound + "/" + rounds;
+        roundText.text = roundTranslation.Get().Trim() + " " + currentRound + "/" + rounds;
 
         wordText.gameObject.SetActive(false);
         correctWordButton.gameObject.SetActive(false);
@@ -180,7 +188,7 @@ public class CatchphrasePanel : GamePanel
         HideUI();
         teamBackground.color = backgroundOldColor;
         wordText.gameObject.SetActive(true);
-        wordText.text = "Fim de Jogo";
+        wordText.text = GameTranslations.GAME_END.Get();
         yield return new WaitForSeconds(2f);
         scorePanel.team1Result = teams[0];
         scorePanel.team2Result = teams[1];
@@ -210,7 +218,7 @@ public class CatchphrasePanel : GamePanel
         yield return null;
         TeamWord temp = new TeamWord();
         temp.teamName = teams[index].teamName;
-        temp.word = currentWord;
+        temp.word = currentWord.RemoveLineEndings();
         temp.correct = correctWord;
         correctWord = false;
         wordList.Add(temp);
@@ -225,7 +233,7 @@ public class CatchphrasePanel : GamePanel
     public void CorrectWord()
     {
         teams[index].teamScore++;
-
+        gameObject.PlayAudio(correctWordAudio);
         correctWord = true;
         StartCoroutine(EndRound());
 

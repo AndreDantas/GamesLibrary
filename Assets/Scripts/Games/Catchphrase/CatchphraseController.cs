@@ -4,12 +4,7 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 using TMPro;
 using Sirenix.OdinInspector;
-[System.Serializable]
-public struct WordListInfo
-{
-    public TextAsset wordList;
-    public SystemLanguage language;
-}
+
 public class CatchphraseController : MonoBehaviour
 {
 
@@ -489,7 +484,7 @@ Worm
 
 X-ray";
     #endregion
-    public List<WordListInfo> wordLists = new List<WordListInfo>();
+    public List<string> extraWords = new List<string>();
     List<string> currentWordList;
     [ShowInInspector]
     List<string> wordsToUse;
@@ -512,11 +507,12 @@ X-ray";
     public void LoadWords()
     {
         currentWordList = new List<string>();
-        foreach (var item in wordLists)
+        foreach (var item in CatchphraseWordsFiles.instance.wordLists)
         {
             if (GameLanguage.language.systLanguage == item.language)
             {
-                currentWordList = GetWordsFromFile(item.wordList);
+                currentWordList = CatchphraseWordsFiles.GetWordsFromFile(item.wordList);
+                ResetWordList();
                 break;
             }
         }
@@ -527,7 +523,7 @@ X-ray";
         {
             if (s.Trim() == "")
                 continue;
-            currentWordList.Add(s);
+            currentWordList.Add(s.Trim().RemoveLineEndings());
         }
         ResetWordList();
         //NewWord();
@@ -536,14 +532,16 @@ X-ray";
     public void ResetWordList()
     {
         wordsToUse = new List<string>(currentWordList);
+        wordsToUse.AddRange(extraWords);
+        for (int i = wordsToUse.Count - 1; i >= 0; i--)
+        {
+            if (wordsToUse[i].Trim() == "")
+                wordsToUse.RemoveAt(i);
+        }
+        // wordsToUse.PrintAll();
     }
 
-    List<string> GetWordsFromFile(TextAsset file)
-    {
-        if (file == null)
-            return new List<string>();
-        return file.ToString().Replace(System.Environment.NewLine, "").Split(',').ToList();
-    }
+
 
     public string NewWord()
     {
@@ -554,7 +552,7 @@ X-ray";
         string word = wordsToUse[random];
         wordsToUse.RemoveAt(random);
 
-        wordText.text = word;
+        wordText.text = word.RemoveLineEndings();
         if (timer)
         {
 

@@ -97,7 +97,7 @@ public class PongPanel : GamePanel
         if (pongGame)
         {
             pongGame.PauseGame();
-            ModalWindow.Choice("Sair da partida?", base.OnBack);
+            ModalWindow.Choice(GameTranslations.EXIT_MATCH_CONFIRM.Get(), base.OnBack);
             return;
         }
         base.OnBack();

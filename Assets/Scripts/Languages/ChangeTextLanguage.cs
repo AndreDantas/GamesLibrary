@@ -8,7 +8,7 @@ using Sirenix.OdinInspector;
 public class PairLanguageText
 {
     public SystemLanguage language;
-    [TextArea]
+    [MultiLineProperty(10)]
     public string text;
 
     public PairLanguageText(SystemLanguage language, string text)
@@ -16,7 +16,15 @@ public class PairLanguageText
         this.language = language;
         this.text = text;
     }
+
+
+    public static implicit operator string(PairLanguageText t)
+    {
+        return t.text;
+    }
+
 }
+[DisallowMultipleComponent]
 public class ChangeTextLanguage : MonoBehaviour
 {
     protected TextMeshProUGUI textTMP;

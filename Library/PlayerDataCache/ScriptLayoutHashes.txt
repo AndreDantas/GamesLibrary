@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/GamesLibrary/Builds/Full Game/GamesLibrary v1.5.2.apk
+D:/Andre Dantas/Unity/GamesLibrary/Builds/Full Game/GamesLibrary v1.5.4.apk
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/Catchphrase.unity
@@ -14,8 +14,10 @@ SceneListEnd?
 11ac247b6cc81ec24f9696d7d42340c3 Assembly-CSharp.dll:.ButtonContentGroup
 bf1bc715f5981b498cb75abecad95456 Assembly-CSharp-firstpass.dll:.SetDirty
 264dffe0c3cc1cbe814fb323f3ee9e6d Assembly-CSharp.dll:.ScreenBounds
+258525655b979ce87425653c05549115 Assembly-CSharp.dll:.AddWordsPanel
 fb2a23c8f326cb10eb99c7f3c156f3d0 Assembly-CSharp.dll:.ReversiPanel
 401eb18f14a80566e6eb295af1a5e79d Assembly-CSharp.dll:.CheckersEditPanel
+a44e599dc2a4544880ca7484ced86351 Assembly-CSharp.dll:.ErrorTextController
 422d759f4ee90db5e16d931ea88493e1 Assembly-CSharp.dll:.Connect4Boardgame
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 cf455f7a806648c6ed4c7d3e3f8a0e03 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
@@ -33,7 +35,7 @@ a329f0a8d3fb8954f71567cb3cbab1f9 Assembly-CSharp.dll:.Connect4EditPanel
 2c4d783368d5d4945da027170d2c47b9 Assembly-CSharp.dll:.SpriteRendererRandomColorChange
 9935f602d7488df924405402ec1818b9 Assembly-CSharp.dll:.Connect4Panel
 bd825f7237409f12b74ab0f192870073 Assembly-CSharp.dll:.DotsAndBoxesPanel
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SetUpLanguage
+c5b18ad3295fc314807c885dead2bdd9 Assembly-CSharp.dll:.SetUpLanguage
 4f3115c8562904ca2fee94ea4c7b2dd2 Assembly-CSharp-firstpass.dll:.UICornersGradient
 820d8a46b6c0274667a98e2f0f425aef Assembly-CSharp.dll:.ChessPanel
 4e28a807c3d945f6df83ee8b4948b494 Assembly-CSharp.dll:.DotsAndBoxesSettings
@@ -116,6 +118,7 @@ f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 f1742020d2fd1fab5d2a34aab833e9e0 Assembly-CSharp.dll:.ChessSettings
 837d8fe87a582b72c0211f8571731fb1 Assembly-CSharp.dll:.SpriteSwap
 05524b8f659e7bfe5756d1335fec24ba Sirenix.Utilities.dll:Sirenix.Utilities.ProjectPathFinder
+5e0ff2ab1fa498417c2fa6d52a4276bc Assembly-CSharp.dll:.CatchphraseWordsFiles
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 cf455f7a806648c6ed4c7d3e3f8a0e03 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 13bdb7c23815c33a33b37b0ba8dd39be UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
@@ -208,9 +211,10 @@ e763036081c708b34f78f5a56f72c23d TextMeshPro-2017.3-1.0.56-Runtime.dll:TMPro.TMP
 5833a86cc374f497ae8d9fb9d8c3e5f4 TextMeshPro-2017.3-1.0.56-Runtime.dll:TMPro.TMP_SubMeshUI
 d672cee35261f9935d5ce974c746730f TextMeshPro-2017.3-1.0.56-Runtime.dll:TMPro.TMP_Text
 2b54175828251329350e922966c6d111 Assembly-CSharp.dll:.ObjectFocus
+f72800ac843d1c3a58970a116a5a1005 Assembly-CSharp.dll:WordListUI.WordList
 a70544fdae53964f351a9c6bf3df3aff Assembly-CSharp.dll:.BoardgameTile
 4e28a807c3d945f6df83ee8b4948b494 Assembly-CSharp.dll:.Connect4Settings
-1dd1031b422d201db1359ffe196d7477 Assembly-CSharp.dll:.CatchphrasePanel
+5fac87181c8acb2728bb61a0c9bcbecf Assembly-CSharp.dll:.CatchphrasePanel
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GameQualitySettings
 05524b8f659e7bfe5756d1335fec24ba TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.EditorUtilities.DropdownEditor
 05524b8f659e7bfe5756d1335fec24ba TextMeshPro-2017.3-1.0.56-Editor.dll:TMPro.EditorUtilities.TMP_ColorGradientEditor
@@ -255,7 +259,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 64685af2fb41b96606df0d9fbd02cc2d Assembly-CSharp.dll:.BoardImage
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ShowFps
-ced9fae307a884e12a67e73874500934 Assembly-CSharp.dll:.ChessBoardgame
+323f9f98cd0f0683f44930d24b0e9151 Assembly-CSharp.dll:.ChessBoardgame
 c490a86f77d5e1531488bf449cd3dd5c Assembly-CSharp.dll:.ReversiEditPanel
 2d0fc8b01950fd0172cba7f4229a7710 Assembly-CSharp.dll:.BoxTile
 ab58f03a521697c8e2b9792c5d1f5b8b Assembly-CSharp.dll:.ChangeToRandomColor
@@ -289,7 +293,7 @@ dd5f554da8fa9bb51245fea02eb26d69 Sirenix.OdinInspector.Editor.dll:Sirenix.OdinIn
 64eb32cc721b1cc68a91ed57461e188c UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.RemoteTestResultSender
 264dffe0c3cc1cbe814fb323f3ee9e6d Assembly-CSharp.dll:.PongBounds
 6e859d582d534be69952a982d7ca70b4 Assembly-CSharp.dll:.ModalWindow
-20feb7d92fd6a470fe39a6719796bb1c Assembly-CSharp.dll:.Teams2Panel
+7148dfe4c0f10a4a62b730de8bc58ec5 Assembly-CSharp.dll:.Teams2Panel
 9e0ef5bf862444b5dc48b5a99554ce7c UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioListenerExtension
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
@@ -301,6 +305,7 @@ e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 2b1b4ae1ee1a431d6cbcc5485d903dfa Assembly-CSharp.dll:.EdgeObject
 9d7875ebe3700084e885f1905b93694b Assembly-CSharp.dll:.PongGameController
+933df68e2dc48094780cc712bcecdccd Assembly-CSharp.dll:WordListUI.Word
 b99c43181e1b9a8d844ed98e0c6bd0e1 Assembly-CSharp.dll:.LoadingCircle
 a70544fdae53964f351a9c6bf3df3aff Assembly-CSharp.dll:.ReversiTile
 6085c796547fa78d0d942b0829787cb8 Assembly-CSharp.dll:.PongPanel
@@ -311,7 +316,8 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 c490a86f77d5e1531488bf449cd3dd5c Assembly-CSharp.dll:.BoardgameEditPanel
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BringToFront
-cd0b45d4db7647cb03c1c58b5daf1c2b Assembly-CSharp.dll:.CatchphraseController
+fe05f8985de343e50ae428542234be2a Assembly-CSharp.dll:.CatchphraseController
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:WordListUI.WordListUI
 f68e425d4065a667f031441d649233af Assembly-CSharp.dll:.PongMatchSettingsPanel
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 53e4e88c85e3a7849f042b1e828bc003 Assembly-CSharp.dll:.ObjectSelectUI
@@ -322,4 +328,5 @@ d2d0b7843a0d03c9b656702e3f357810 Assembly-CSharp.dll:.ChessEditPanel
 f9462d34d4e7f69a9b6f39732062fe31 Assembly-CSharp.dll:.CheckersSettings
 c2f5ce41cd75e17442b437e3b9dbb6b0 Assembly-CSharp-firstpass.dll:.SpriteOutline
 e1ce179b956825a1333a0a697e0b083f Sirenix.Serialization.Config.dll:Sirenix.Serialization.GlobalSerializationConfig
+ab44f1bb54ce41308e5630dd331f10cc Assembly-CSharp.dll:.EditableWord
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CUIColorPicker
