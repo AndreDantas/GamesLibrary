@@ -37,7 +37,6 @@ namespace WordListUI
 
         protected virtual void OnDestroy()
         {
-
             onDestroy?.Invoke(this, text.text.RemoveZeroWidthSpace());
         }
     }

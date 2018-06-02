@@ -19,6 +19,9 @@ public static class SystemTranslations
         new PairLanguageText(SystemLanguage.Portuguese, "Não"),
     new PairLanguageText(SystemLanguage.English, "No") };
 
+    public static readonly List<PairLanguageText> CLOSE_APPLICATION = new List<PairLanguageText> {
+        new PairLanguageText(SystemLanguage.Portuguese, "Fechar aplicação?"),
+    new PairLanguageText(SystemLanguage.English, "Close the app?") };
 
 
     #endregion

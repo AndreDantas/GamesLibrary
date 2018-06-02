@@ -256,6 +256,13 @@ public static class UtilityFunctions
         return l;
     }
 
+    public static void TryAddRange<T>(this List<T> l, List<T> other)
+    {
+        if (other != null)
+            l.AddRange(other);
+    }
+
+
     /// <summary>
     /// Is the list empty?
     /// </summary>

@@ -34,8 +34,9 @@ public class EdgeObject : MonoBehaviour, IPointerClickHandler
         owner = player;
         if (sr)
         {
+            sr.color.ChangeAlpha(0f);
             sr.enabled = true;
-            sr.color = sr.color.ChangeAlpha(0f);
+
             sr.ChangeColorTo(c, animTime);
             yield return new WaitForSeconds(animTime);
             sr.color = c;

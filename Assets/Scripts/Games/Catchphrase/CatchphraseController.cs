@@ -532,7 +532,7 @@ X-ray";
     public void ResetWordList()
     {
         wordsToUse = new List<string>(currentWordList);
-        wordsToUse.AddRange(extraWords);
+        wordsToUse.TryAddRange(extraWords);
         for (int i = wordsToUse.Count - 1; i >= 0; i--)
         {
             if (wordsToUse[i].Trim() == "")

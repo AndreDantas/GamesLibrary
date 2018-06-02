@@ -125,14 +125,16 @@ public class AddWordsPanel : GamePanel
         }
     }
 
+    void SaveWords()
+    {
+        CatchphraseWordsFiles.instance.extraWords = addedWords;
+        CatchphraseWordsFiles.SaveWords();
+    }
 
     void LoadWords()
     {
-        string path = "catchprase_extra_words_" + GameLanguage.language.systLanguage.ToString().ToLower() + ".dat";
-
-        addedWords = SaveLoad.LoadFile<List<string>>(path);
-
-
+        addedWords = new List<string>();
+        addedWords.TryAddRange(CatchphraseWordsFiles.instance.extraWords);
         if (wordList)
         {
             wordList.ResetList();
@@ -148,12 +150,5 @@ public class AddWordsPanel : GamePanel
                 defaultWords = CatchphraseWordsFiles.GetWordsFromFile(item.wordList);
             }
         }
-    }
-
-    void SaveWords()
-    {
-        string path = "catchprase_extra_words_" + GameLanguage.language.systLanguage.ToString().ToLower() + ".dat";
-        SaveLoad.SaveFile(path, addedWords);
-
     }
 }

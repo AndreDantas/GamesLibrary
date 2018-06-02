@@ -41,7 +41,7 @@ public class EditableWord : Word
             currentText = text.text;
     }
 
-    public void EditText()
+    protected void EditText()
     {
         if (!input)
             return;
@@ -63,7 +63,7 @@ public class EditableWord : Word
 
     }
 
-    public void OnInputSubmit(string newText)
+    protected void OnInputSubmit(string newText)
     {
         input.enabled = false;
         //input.interactable = false;

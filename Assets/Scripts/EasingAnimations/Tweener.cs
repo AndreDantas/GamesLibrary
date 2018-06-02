@@ -108,6 +108,23 @@ public class RectTransformAnchoredPositionTweener : Vector3Tweener
     }
 }
 
+public class RectTransformAnchorsMaxTweener : Vector3Tweener
+{
+    protected override void OnUpdate(object sender, EventArgs e)
+    {
+        base.OnUpdate(sender, e);
+        ((RectTransform)transform).anchorMax = currentValue;
+    }
+}
+public class RectTransformAnchorsMinTweener : Vector3Tweener
+{
+    protected override void OnUpdate(object sender, EventArgs e)
+    {
+        base.OnUpdate(sender, e);
+        ((RectTransform)transform).anchorMin = currentValue;
+    }
+}
+
 public class RectTransformSizeTweener : Vector3Tweener
 {
     protected override void OnUpdate(object sender, EventArgs e)

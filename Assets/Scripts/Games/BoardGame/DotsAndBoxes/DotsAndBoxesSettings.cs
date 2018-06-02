@@ -32,6 +32,8 @@ public class DotsAndBoxesSettings : BoardGameSettings
         {
             settings = load;
         }
+        else
+            settings = new DotsAndBoxesSettingsData();
     }
 
     protected override void Awake()

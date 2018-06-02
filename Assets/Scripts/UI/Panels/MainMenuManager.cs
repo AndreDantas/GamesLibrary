@@ -27,7 +27,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ModalWindow.Choice("Fechar aplicação?", QuitApp);
+            ConfirmAppExit();
         }
     }
 
@@ -38,6 +38,12 @@ public class MainMenuManager : MonoBehaviour
 #else
             Application.Quit();
 #endif
+    }
+
+    public void ConfirmAppExit()
+    {
+
+        ModalWindow.Choice(SystemTranslations.CLOSE_APPLICATION.Get(), QuitApp);
     }
 
     public void BeginFade(int direction)

@@ -70,11 +70,11 @@ public class PongMatchSettingsPanel : GamePanel
 
             if ((int)obj == 0)
             {
-                pongGame.initialBallSpeed = 6f;
-                pongGame.maxBallSpeed = 14f;
+                pongGame.initialBallSpeed = 7f;
+                pongGame.maxBallSpeed = 15f;
                 pongGame.ballHitsToMaxSpeed = 15;
                 pongGame.topPlayer.racket.racketSpeed = pongGame.bottomPlayer.racket.racketSpeed = 1f;
-                pongGame.topPlayer.aiSpeed = pongGame.bottomPlayer.aiSpeed = 0.11f;
+                pongGame.topPlayer.aiSpeed = pongGame.bottomPlayer.aiSpeed = 0.12f;
             }
             else
             {

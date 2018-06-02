@@ -15,6 +15,7 @@ public class BoardImagePiece
 public class BoardImage : SerializedMonoBehaviour
 {
     [Title("Board")]
+    public bool buildOnAwake = false;
     [AssetsOnly]
     public GameObject tilePrefab;
     public Color darkTile = Color.black;
@@ -38,6 +39,15 @@ public class BoardImage : SerializedMonoBehaviour
     protected GameObject topPiecesParent;
     public GameObject[,] pieces { get; internal set; }
 
+
+    protected virtual void Awake()
+    {
+        if (buildOnAwake)
+        {
+            BuildBoard();
+            PlacePiecesNormal();
+        }
+    }
     protected virtual void OnValidate()
     {
         UpdateGrid();

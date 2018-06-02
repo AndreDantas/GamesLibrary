@@ -42,7 +42,7 @@ public static class GameTranslations
         new PairLanguageText(SystemLanguage.Portuguese, "Carregar jogo salvo?"),
     new PairLanguageText(SystemLanguage.English, "Load saved game?") };
 
-    public static readonly List<PairLanguageText> NO_GAME_SAVED = new List<PairLanguageText> {
+    public static readonly List<PairLanguageText> NO_SAVED_GAME = new List<PairLanguageText> {
         new PairLanguageText(SystemLanguage.Portuguese, "Sem jogo salvo."),
     new PairLanguageText(SystemLanguage.English, "No saved game.") };
 

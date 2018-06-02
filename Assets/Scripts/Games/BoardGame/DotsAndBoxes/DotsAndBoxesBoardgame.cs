@@ -37,8 +37,6 @@ public class DotsAndBoxesBoardgame : Boardgame
 
     public Player turnPlayer { get; internal set; }
 
-    [Header("Renders")]
-    public ProceduralMeshRenderer lastMoveRender;
     [Space(10)]
     public AudioClip edgeCreated;
     public AudioClip squareFilled;
@@ -80,8 +78,8 @@ public class DotsAndBoxesBoardgame : Boardgame
         tileColor = gameSettings.lightTileColor;
         board = new DotsAndBoxesBoard(columns, rows);
 
-        board.player1 = new Player("Jogador 1");
-        board.player2 = new Player("Jogador 2");
+        board.player1 = new Player(GameTranslations.PLAYER_NAME.Get() + " 1");
+        board.player2 = new Player(GameTranslations.PLAYER_NAME.Get() + " 2");
         board.InitBoard();
         turnPlayer = board.player1;
         RenderMap();
@@ -105,9 +103,9 @@ public class DotsAndBoxesBoardgame : Boardgame
         tileColor = gameSettings.lightTileColor;
         board = new DotsAndBoxesBoard(columns, rows);
 
-        board.player1 = new Player("Jogador 1");
+        board.player1 = new Player(GameTranslations.PLAYER_NAME.Get() + " 1");
         board.player2 = new DotsAndBoxesAI(board);
-        board.player2.name = "Computador";
+        board.player2.name = GameTranslations.AI_NAME.Get();
         board.InitBoard();
         turnPlayer = board.player1;
         RenderMap();
@@ -334,9 +332,9 @@ public class DotsAndBoxesBoardgame : Boardgame
     public void ConfirmRestartMatch()
     {
         if (vsAI)
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGameAI);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGameAI);
         else
-            ModalWindow.Choice("Reiniciar jogo?", PrepareGame);
+            ModalWindow.Choice(GameTranslations.RESTART_MATCH_CONFIRM.Get(), PrepareGame);
     }
     public void SaveBoardState()
     {
@@ -354,7 +352,7 @@ public class DotsAndBoxesBoardgame : Boardgame
             saveName = "AI";
 
         SaveLoad.SaveFile("/dots_and_boxes_game_" + saveName + "_data.dat", save);
-        ModalWindow.Message("Jogo Salvo.");
+        ModalWindow.Message(GameTranslations.GAME_SAVED.Get());
     }
 
     public void LoadBoardState()
@@ -370,11 +368,11 @@ public class DotsAndBoxesBoardgame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
     }
     public void ConfirmBoardLoad()
     {
-        ModalWindow.Choice("Carregar jogo salvo?", LoadBoardState);
+        ModalWindow.Choice(GameTranslations.LOAD_GAME_CONFIRM.Get(), LoadBoardState);
     }
 
 
@@ -446,7 +444,7 @@ public class DotsAndBoxesBoardgame : Boardgame
             canClick = true;
         }
         else
-            ModalWindow.Message("Sem jogos salvos.");
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
     }
 
     public IEnumerator MakeAMove(Edge edge)
@@ -635,11 +633,11 @@ public class DotsAndBoxesBoardgame : Boardgame
                 }
             }
             if (score1 > score2)
-                winner = board.player1.name + " venceu!";
+                winner = board.player1.name + GameTranslations.WON.Get() + "!";
             else if (score2 > score1)
-                winner = board.player2.name + " venceu!";
+                winner = board.player2.name + GameTranslations.WON.Get() + "!";
             else
-                winner = "Empate!";
+                winner = GameTranslations.DRAW.Get();
 
             victoryMsg.text = winner;
             victoryMsg.gameObject.SetActive(true);

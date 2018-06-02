@@ -371,7 +371,7 @@ public class CheckersBoardgame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
 
     }
 

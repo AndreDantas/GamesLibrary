@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public static class TransformExtensions
 {
+    #region Transform
     public static Tweener MoveTo(this Transform t, Vector3 position)
     {
         return MoveTo(t, position, Tweener.DefaultDuration);
@@ -108,7 +109,9 @@ public static class TransformExtensions
         tweener.easingControl.Play();
         return tweener;
     }
+    #endregion
 
+    #region RectTransform
     public static Tweener MoveTo(this RectTransform t, Vector2 position)
     {
         return MoveTo(t, position, Tweener.DefaultDuration);
@@ -150,4 +153,43 @@ public static class TransformExtensions
         tweener.easingControl.Play();
         return tweener;
     }
+    public static Tweener SetAnchorsMaxTo(this RectTransform t, Vector2 size)
+    {
+        return SetAnchorsMaxTo(t, size, Tweener.DefaultDuration);
+    }
+
+    public static Tweener SetAnchorsMaxTo(this RectTransform t, Vector2 size, float duration)
+    {
+        return SetAnchorsMaxTo(t, size, duration, Tweener.DefaultEquation);
+    }
+    public static Tweener SetAnchorsMaxTo(this RectTransform t, Vector2 anchors, float duration, Func<float, float, float, float> equation)
+    {
+        RectTransformAnchorsMaxTweener tweener = t.gameObject.AddComponent<RectTransformAnchorsMaxTweener>();
+        tweener.startValue = t.anchorMax;
+        tweener.endValue = anchors;
+        tweener.easingControl.duration = duration;
+        tweener.easingControl.equation = equation;
+        tweener.easingControl.Play();
+        return tweener;
+    }
+    public static Tweener SetAnchorsMinTo(this RectTransform t, Vector2 size)
+    {
+        return SetAnchorsMinTo(t, size, Tweener.DefaultDuration);
+    }
+
+    public static Tweener SetAnchorsMinTo(this RectTransform t, Vector2 size, float duration)
+    {
+        return SetAnchorsMinTo(t, size, duration, Tweener.DefaultEquation);
+    }
+    public static Tweener SetAnchorsMinTo(this RectTransform t, Vector2 anchors, float duration, Func<float, float, float, float> equation)
+    {
+        RectTransformAnchorsMinTweener tweener = t.gameObject.AddComponent<RectTransformAnchorsMinTweener>();
+        tweener.startValue = t.anchorMin;
+        tweener.endValue = anchors;
+        tweener.easingControl.duration = duration;
+        tweener.easingControl.equation = equation;
+        tweener.easingControl.Play();
+        return tweener;
+    }
+    #endregion
 }

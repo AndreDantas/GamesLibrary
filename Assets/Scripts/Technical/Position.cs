@@ -22,6 +22,40 @@ public class Position : System.Object
         y = oldPos.y;
     }
 
+    /// <summary>
+    /// Returns a list of random Positions from an area.
+    /// </summary>
+    /// <param name="amount">The number of random positions.</param>
+    /// <param name="rangeX">The X range of the area</param>
+    /// <param name="rangeY">The Y range of the area</param>
+    /// <param name="allowDuplicates">If the same position can be generated.</param>
+    /// <returns></returns>
+    public static List<Position> GenerateRandomPositions(int amount, int rangeX = 8, int rangeY = 8, bool allowDuplicates = false)
+    {
+        rangeX = UtilityFunctions.ClampMin(rangeX, 1);
+        rangeY = UtilityFunctions.ClampMin(rangeY, 1);
+        amount = UtilityFunctions.ClampMax(amount, rangeY * rangeX);
+
+        List<Position> result = new List<Position>();
+        List<Position> availablePositions = new List<Position>();
+        for (int i = 0; i < rangeY; i++)
+        {
+            for (int j = 0; j < rangeX; j++)
+            {
+                availablePositions.Add(new Position(j, i));
+            }
+        }
+        for (int i = 0; i < amount; i++)
+        {
+            int randomIndex = Random.Range(0, availablePositions.Count);
+            result.Add(availablePositions[randomIndex]);
+            if (!allowDuplicates)
+                availablePositions.RemoveAt(randomIndex);
+        }
+
+        return result;
+    }
+
     public static bool operator ==(Position a, Position b)
     {
         // If both are null, or both are same instance, return true.

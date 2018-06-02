@@ -31,15 +31,10 @@ namespace WordListUI
         bool quitting;
 
         /// <summary>
-        /// The prefab of the word.
+        /// The prefab of the word. (Needs to have a Word component)
         /// </summary>
-        [AssetsOnly, ValidateInput("ValidPrefab")]
         public GameObject wordPrefab;
 
-        bool ValidPrefab(GameObject prefab)
-        {
-            return prefab.CheckForComponent<Word>();
-        }
 
         /// <summary>
         /// If the same word can be added again.
@@ -49,18 +44,29 @@ namespace WordListUI
         /// If empty strings are allowed.
         /// </summary>
         public bool allowEmpty = false;
+
         protected bool loadingList;
 
         [ReadOnly, SerializeField]
         protected List<string> currentWords = new List<string>();
 
+
         public delegate void OnWordAddedEventHandler(Word w, string word);
+        /// <summary>
+        /// Event when a word is added to the list.
+        /// </summary>
         public OnWordAddedEventHandler onWordAdded;
 
         public delegate void OnWordChangedEventHandler(Word w, string oldWord, string newWord);
+        /// <summary>
+        /// Event when a word changes.
+        /// </summary>
         public OnWordChangedEventHandler onWordChanged;
 
         public delegate void OnWordRemovedEventHandler(string word);
+        /// <summary>
+        /// Event when a word is removed.
+        /// </summary>
         public OnWordRemovedEventHandler onWordRemoved;
 
 

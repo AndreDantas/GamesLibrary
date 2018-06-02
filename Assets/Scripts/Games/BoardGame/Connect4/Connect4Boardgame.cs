@@ -288,7 +288,7 @@ public class Connect4Boardgame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
     }
     public void ConfirmBoardLoad()
     {
@@ -344,7 +344,7 @@ public class Connect4Boardgame : Boardgame
             canClick = true;
         }
         else
-            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
     }
     /// <summary>
     /// Changes the color of the pieces at runtime.

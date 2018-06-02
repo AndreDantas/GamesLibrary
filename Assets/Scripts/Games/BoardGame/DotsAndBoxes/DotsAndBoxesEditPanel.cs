@@ -31,12 +31,18 @@ public class DotsAndBoxesEditPanel : BoardgameEditPanel
 
     protected override void ExtraSettings()
     {
+
+    }
+
+    protected override void BottomPlayerColorChanged(Color c)
+    {
         if (boardPreview)
         {
-            boardPreview.lightTile = Colors.GraniteGray;
-            boardPreview.darkTile = Colors.GraniteGray;
-            boardPreview.BuildBoard();
+            boardPreview.bottomPieceColor = c;
+            boardPreview.UpdateGrid();
+
         }
+        settings.bottomPieceColor = c;
     }
 
     public override void ResetSettings()

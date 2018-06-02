@@ -5586,6 +5586,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  buildOnAwake: 0
   tilePrefab: {fileID: 1231836701818208, guid: 217b144d512a7b148929fff021358cef, type: 2}
   darkTile: {r: 0.7490196, g: 0.5019608, b: 0.30980393, a: 1}
   lightTile: {r: 1, g: 0.81960785, b: 0.68235296, a: 1}

@@ -99,6 +99,16 @@ public class CheckersSettings : MonoBehaviour
         {
             settings = load;
         }
+        else
+            settings = new CheckersSettingsData();
+        SaveSettings();
+    }
+    [ButtonGroup("G1")]
+    [Button(ButtonSizes.Medium)]
+    public void ResetSettings()
+    {
+        settings = new CheckersSettingsData();
+        SaveSettings();
     }
 
     private void Awake()

@@ -69,7 +69,7 @@ public class CatchphrasePanel : GamePanel
         catchphraseController.countdown = roundTime;
         catchphraseController.HideTimer();
         if (useExtraWords)
-            catchphraseController.extraWords = AddWordsPanel.addedWords;
+            catchphraseController.extraWords = CatchphraseWordsFiles.instance.extraWords;
         catchphraseController.ResetWordList();
         index = -1;
         currentRound = 1;

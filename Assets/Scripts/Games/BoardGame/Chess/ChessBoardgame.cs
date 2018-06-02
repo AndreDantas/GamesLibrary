@@ -659,7 +659,7 @@ public class ChessBoardgame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
     }
     public void ConfirmBoardLoad()
     {
@@ -717,7 +717,7 @@ public class ChessBoardgame : Boardgame
 
         }
         else
-            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
     }
 
 

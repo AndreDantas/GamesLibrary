@@ -98,6 +98,6 @@ public class DotsAndBoxesPanel : GamePanel
 
     public override void OnBack()
     {
-        ModalWindow.Choice("Sair da partida?", base.OnBack);
+        ModalWindow.Choice(GameTranslations.EXIT_MATCH_CONFIRM.Get(), base.OnBack);
     }
 }

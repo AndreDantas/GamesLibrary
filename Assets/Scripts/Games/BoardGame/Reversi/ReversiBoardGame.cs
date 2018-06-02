@@ -302,7 +302,7 @@ public class ReversiBoardGame : Boardgame
             ReconstructBoard(load);
         }
         else
-            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
     }
     public void ConfirmBoardLoad()
     {
@@ -359,7 +359,7 @@ public class ReversiBoardGame : Boardgame
             canClick = true;
         }
         else
-            ModalWindow.Message(GameTranslations.NO_GAME_SAVED.Get());
+            ModalWindow.Message(GameTranslations.NO_SAVED_GAME.Get());
     }
 
     public IEnumerator MakeAMove(Position pos)

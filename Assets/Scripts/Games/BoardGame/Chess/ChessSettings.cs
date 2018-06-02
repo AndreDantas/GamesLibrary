@@ -138,15 +138,17 @@ public class ChessSettings : MonoBehaviour
         if (load != null)
         {
             settings = load;
-            return;
+
         }
+        else
+            settings = new ChessSettingsData();
     }
     [ButtonGroup("G1")]
     [Button(ButtonSizes.Medium)]
     public void ResetSettings()
     {
         settings = new ChessSettingsData();
-
+        SaveSettings();
     }
 
     private void Awake()

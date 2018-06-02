@@ -19,10 +19,8 @@ public class ChessEditPanel : GamePanel
         get
         {
             return new List<Color> { new Color(0.691f, 0.691f, 0.691f, 1f),
-                                new Color32(177, 228, 185, 255),
                                 new Color32(204,183,174, 255),
                                 new Color32(157,172,255, 255),
-                                new Color32(234,240,206, 255),
                                 new Color32(173,189,143, 255),
                                 new Color32(227,193,111, 255)};
         }
@@ -33,10 +31,8 @@ public class ChessEditPanel : GamePanel
         get
         {
             return new List<Color> { new Color(0.404f, 0.404f, 0.404f, 1f),
-                                    new Color32(112, 162, 163, 255),
                                     new Color32(112,102,119, 255),
                                     new Color32(111,115,210, 255),
-                                    new Color32(187,190,100, 255),
                                     new Color32(111,143,114, 255),
                                     new Color32(184,139,74, 255)};
         }
