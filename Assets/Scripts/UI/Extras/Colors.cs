@@ -11,6 +11,11 @@ public static class Colors
             && Mathf.Approximately(UtilityFunctions.RoundDown(c.b, 3), UtilityFunctions.RoundDown(other.b, 3)));
     }
 
+    public static Color RGB(this Color c)
+    {
+        return new Color(c.r, c.g, c.b, 1f);
+    }
+
     public static void SetColor(this Color c, Color other)
     {
         c = new Color(other.r, other.g, other.b);

@@ -39,8 +39,11 @@ public class AppIntro : MonoBehaviour
             gamesText.anchoredPosition = new Vector2(gamesText.rect.width, gamesText.anchoredPosition.y);
             titleRT.anchorMax = Vector2.one;
             titleRT.anchorMin = Vector2.zero;
-            gamesButtonsRT.anchorMax = new Vector2(1, 0);
-            gameButtonsOverlay.color.ChangeAlpha(1f);
+            gamesButtonsRT.anchorMax = new Vector2(1, 0.7f);
+            gamesButtonsRT.anchoredPosition = new Vector2(gamesButtonsRT.anchoredPosition.x, -gamesButtonsRT.rect.height);
+            //gamesButtonsRT.anchorMax = new Vector2(1, 0);
+            //gameButtonsOverlay.color.ChangeAlpha(1f);
+            gameButtonsOverlay.gameObject.Deactivate();
             StartCoroutine(IntroSetUp());
         }
         else
@@ -75,9 +78,10 @@ public class AppIntro : MonoBehaviour
     IEnumerator PlaceObjects()
     {
         titleRT.SetAnchorsMinTo(new Vector2(0, 0.7f), animTime, EasingEquations.EaseInOutCubic);
-        gamesButtonsRT.SetAnchorsMaxTo(new Vector2(1, 0.7f), animTime, EasingEquations.EaseInOutCubic);
+        //gamesButtonsRT.SetAnchorsMaxTo(new Vector2(1, 0.7f), animTime, EasingEquations.EaseInOutCubic);
+        gamesButtonsRT.MoveTo(new Vector2(gamesButtonsRT.anchoredPosition.x, 0), animTime, EasingEquations.EaseInOutCubic);
         settingsButton.MoveTo(settingsOrigin, animTime, EasingEquations.EaseInOutCubic);
-        gameButtonsOverlay.FadeOut(animTime);
+        //gameButtonsOverlay.FadeOut(animTime);
         yield return new WaitForSeconds(animTime);
         gameButtonsOverlay.gameObject.Deactivate();
         gameButtonsOverlay.gameObject.SetActive(false);

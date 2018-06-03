@@ -755,7 +755,7 @@ public class CheckersBoardgame : Boardgame
             {
                 winner = turnPlayer == board.playerTop ? GameTranslations.PLAYER_NAME.Get() + " 1" : GameTranslations.PLAYER_NAME.Get() + " 2";
             }
-            victoryMsg.text = winner + " " + GameTranslations.WON.Get();
+            victoryMsg.text = winner + " " + GameTranslations.WON.Get() + "!";
             victoryMsg.gameObject.SetActive(true);
         }
 

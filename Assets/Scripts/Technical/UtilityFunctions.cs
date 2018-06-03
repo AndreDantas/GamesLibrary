@@ -7,6 +7,7 @@ using TMPro;
 using System;
 using Sirenix.OdinInspector;
 using System.Linq;
+using UnityEngine.SceneManagement;
 [System.Serializable]
 public enum LerpMode
 {
@@ -526,8 +527,27 @@ public static class UtilityFunctions
     {
         g.SetActive(true);
     }
-
-
+    /// <summary>
+    /// Use this method to get all loaded objects of some type, including inactive objects. 
+    /// </summary>
+    public static List<T> FindObjectsOfTypeAll<T>()
+    {
+        List<T> results = new List<T>();
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            var s = SceneManager.GetSceneAt(i);
+            if (s.isLoaded)
+            {
+                var allGameObjects = s.GetRootGameObjects();
+                for (int j = 0; j < allGameObjects.Length; j++)
+                {
+                    var go = allGameObjects[j];
+                    results.AddRange(go.GetComponentsInChildren<T>(true));
+                }
+            }
+        }
+        return results;
+    }
 
     /// <summary>
     /// Destroys all child objects on transform.

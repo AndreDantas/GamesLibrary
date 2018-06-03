@@ -473,7 +473,7 @@ public class ReversiBoardGame : Boardgame
             {
                 playerPassedObject.SetActive(true);
                 playerPassedObject.transform.localScale = new Vector3(1f, 0f, 1f);
-                playerPassedText.text = turnPlayer.name + GameTranslations.PASSED.Get().ToLower();
+                playerPassedText.text = turnPlayer.name + " " + GameTranslations.PASSED.Get().ToLower();
                 playerPassedObject.transform.ScaleTo(new Vector3(1f, 1f, 1f), 0.5f, EasingEquations.EaseInOutElastic);
                 SceneController.LockPanel();
                 yield return new WaitForSeconds(0.8f);
@@ -526,9 +526,9 @@ public class ReversiBoardGame : Boardgame
 
             string winner;
             if (player1Score > player2Score)
-                winner = board.player1.name + " " + GameTranslations.WON.Get();
+                winner = board.player1.name + " " + GameTranslations.WON.Get() + "!";
             else if (player2Score > player1Score)
-                winner = board.player2.name + " " + GameTranslations.WON.Get();
+                winner = board.player2.name + " " + GameTranslations.WON.Get() + "!";
             else
                 winner = GameTranslations.DRAW.Get();
             victoryMsg.text = winner;

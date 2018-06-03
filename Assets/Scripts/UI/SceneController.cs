@@ -29,7 +29,7 @@ public class SceneController : MonoBehaviour
         }
         BeginFade(-1);
         instance = this;
-        mainMenuButton = GameObject.FindGameObjectWithTag("MainMenuButton").GetComponent<Button>();
+        mainMenuButton = GameObject.FindGameObjectWithTag("MainMenuButton")?.GetComponent<Button>();
         FindObjectOfType<EventSystem>().pixelDragThreshold = 30;
     }
     private void Start()

@@ -483,7 +483,7 @@ public class Connect4Boardgame : Boardgame
             if (hitConnect)
             {
                 winner = board.OtherPlayer(turnPlayer).name;
-                winner += " " + GameTranslations.WON.Get();
+                winner += " " + GameTranslations.WON.Get() + "!";
             }
             else
                 winner = GameTranslations.DRAW.Get() + "!";

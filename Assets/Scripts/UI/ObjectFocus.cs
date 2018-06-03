@@ -52,6 +52,17 @@ public class ObjectFocus : MonoBehaviour
         }
     }
 
+    public void SetFocusObject(GameObject obj)
+    {
+        focusObjects = new List<FocusObjInfo>();
+        FocusObjInfo temp = new FocusObjInfo();
+        temp.parent = obj.transform.parent;
+        temp.originLocalPos = obj.transform.localPosition;
+        temp.focusObj = obj;
+        temp.hierarchyIndex = obj.transform.GetSiblingIndex();
+        focusObjects.Add(temp);
+    }
+
     private void OnEnable()
     {
         SceneController.OnBack += BackgroundClick;
@@ -82,11 +93,10 @@ public class ObjectFocus : MonoBehaviour
 
             }
         }
-        SceneController.instance.SetCanMove(false);
+        SceneController.instance?.SetCanMove(false);
         if (focusBackground)
             focusBackground.SetActive(true);
-        if (OnEnableFocus != null)
-            OnEnableFocus();
+        OnEnableFocus?.Invoke();
 
     }
 
@@ -106,9 +116,8 @@ public class ObjectFocus : MonoBehaviour
                 obj.focusObj.transform.SetSiblingIndex(obj.hierarchyIndex);
             }
         }
-        SceneController.instance.SetCanMove(true);
-        if (OnDisableFocus != null)
-            OnDisableFocus();
+        SceneController.instance?.SetCanMove(true);
+        OnDisableFocus?.Invoke();
         lockBackground = false;
     }
 
@@ -133,9 +142,8 @@ public class ObjectFocus : MonoBehaviour
                 obj.focusObj.transform.SetSiblingIndex(obj.hierarchyIndex);
             }
         }
-        SceneController.instance.SetCanMove(true);
-        if (OnDisableFocus != null)
-            OnDisableFocus();
+        SceneController.instance?.SetCanMove(true);
+        OnDisableFocus?.Invoke();
         lockBackground = false;
     }
 

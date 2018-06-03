@@ -633,9 +633,9 @@ public class DotsAndBoxesBoardgame : Boardgame
                 }
             }
             if (score1 > score2)
-                winner = board.player1.name + GameTranslations.WON.Get() + "!";
+                winner = board.player1.name + " " + GameTranslations.WON.Get() + "!";
             else if (score2 > score1)
-                winner = board.player2.name + GameTranslations.WON.Get() + "!";
+                winner = board.player2.name + " " + GameTranslations.WON.Get() + "!";
             else
                 winner = GameTranslations.DRAW.Get();
 

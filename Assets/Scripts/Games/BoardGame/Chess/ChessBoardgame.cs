@@ -1051,8 +1051,8 @@ public class ChessBoardgame : Boardgame
         piece.player = turnPlayer;
 
         Destroy(tiles[promotionPos.x, promotionPos.y].piece);
-        GameObject obj = Instantiate(GetPieceObjectFromType(type));
-        obj.transform.SetParent(piece.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
+        GameObject obj = Instantiate(GetPieceObjectFromType(type), piece.player == board.player1 ? lightPiecesParent.transform : darkPiecesParent.transform);
+        obj.transform.localScale = Vector3.one;
         obj.transform.localPosition = tiles[promotionPos.x, promotionPos.y].transform.localPosition;
         tiles[promotionPos.x, promotionPos.y].piece = obj;
 

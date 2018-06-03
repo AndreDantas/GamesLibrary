@@ -71,7 +71,7 @@ public class LanguageObj
 public class SetUpLanguage : MonoBehaviour
 {
     [ValueDropdown("AvailableLanguages")]
-    public SystemLanguage DEBUG_LANGUAGE = SystemLanguage.Portuguese;
+    public SystemLanguage CurrentLanguage = SystemLanguage.Portuguese;
     public static SetUpLanguage instance;
     public static List<SystemLanguage> AvailableLanguages { get { return new List<SystemLanguage> { SystemLanguage.Portuguese, SystemLanguage.English }; } }
 
@@ -105,27 +105,47 @@ public class SetUpLanguage : MonoBehaviour
         SaveLoad.SaveFile("/language.lng", GameLanguage.language);
     }
 
-    public static void ChangeLanguage(SystemLanguage newLanguage)
+    public void ChangeLanguage(SystemLanguage newLanguage)
     {
         if (AvailableLanguages.Contains(newLanguage))
         {
             GameLanguage.language = new LanguageObj(newLanguage);
             SaveLanguage();
+            ChangeObjectsLanguage();
         }
+    }
+
+    public static void ChangeLanguageStatic(SystemLanguage newLanguage)
+    {
+        instance.ChangeLanguage(newLanguage);
+    }
+
+    public void SetLanguage(SystemLanguage lg)
+    {
+        CurrentLanguage = lg;
+    }
+    public void SetLanguage(int id)
+    {
+        CurrentLanguage = (SystemLanguage)id;
+    }
+
+    public void SaveCurrentLanguage()
+    {
+        ChangeLanguage(CurrentLanguage);
     }
 
 #if UNITY_EDITOR
     [Button(ButtonSizes.Large)]
     void SetDebugLanguage()
     {
-        ChangeLanguage(DEBUG_LANGUAGE);
+        ChangeLanguage(CurrentLanguage);
         if (Application.isPlaying)
             ChangeObjectsLanguage();
     }
 #endif
     public static void ChangeObjectsLanguage()
     {
-        foreach (var item in GameObject.FindObjectsOfType<ChangeTextLanguage>())
+        foreach (var item in UtilityFunctions.FindObjectsOfTypeAll<ChangeTextLanguage>())
         {
             item.ChangeLanguage();
         }

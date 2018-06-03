@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Andre Dantas/Unity/GamesLibrary/Builds/Full Game/GamesLibrary v1.5.5.apk
+D:/Andre Dantas/Unity/GamesLibrary/Builds/Full Game/PocketGames v1.0.apk
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/Catchphrase.unity
@@ -36,7 +36,7 @@ a329f0a8d3fb8954f71567cb3cbab1f9 Assembly-CSharp.dll:.Connect4EditPanel
 2c4d783368d5d4945da027170d2c47b9 Assembly-CSharp.dll:.SpriteRendererRandomColorChange
 9935f602d7488df924405402ec1818b9 Assembly-CSharp.dll:.Connect4Panel
 bd825f7237409f12b74ab0f192870073 Assembly-CSharp.dll:.DotsAndBoxesPanel
-c5b18ad3295fc314807c885dead2bdd9 Assembly-CSharp.dll:.SetUpLanguage
+02c7340baabeb5829d485907634dfa14 Assembly-CSharp.dll:.SetUpLanguage
 4f3115c8562904ca2fee94ea4c7b2dd2 Assembly-CSharp-firstpass.dll:.UICornersGradient
 820d8a46b6c0274667a98e2f0f425aef Assembly-CSharp.dll:.ChessPanel
 4e28a807c3d945f6df83ee8b4948b494 Assembly-CSharp.dll:.DotsAndBoxesSettings
@@ -134,6 +134,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 607d64d2c4bc76ac9876e6f7b9cc7edf UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 57aaa0c43f154436116694df26c008fb Assembly-CSharp.dll:.OptionSelectUI
 c490a86f77d5e1531488bf449cd3dd5c Assembly-CSharp.dll:.DotsAndBoxesEditPanel
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MenuVisibilityCtrl
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 60b2bb652410a5867a5ab9a01cd38461 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -191,6 +192,7 @@ a049a7edcb46afa471e9b603fa09e165 Assembly-CSharp.dll:.ChangeTextLanguage
 a70544fdae53964f351a9c6bf3df3aff Assembly-CSharp.dll:.CheckerTile
 216ccc9eeeeebe356b32f7720aa57257 Assembly-CSharp.dll:.ReversiBoardGame
 0020613b61aab8a5e27233c4669b1ce5 Assembly-CSharp.dll:.ImageRandomColorChange
+d29aaa161e5e89f47438ad005e390fa2 Assembly-CSharp.dll:.OptionsButtonController
 94b1256e6f638286da7d86a738f56298 Assembly-CSharp.dll:.MenuPanel
 94b1256e6f638286da7d86a738f56298 Assembly-CSharp.dll:.GamePanel
 c00751d0fdd381a57f7dc5dc88984bee Assembly-CSharp.dll:.TrailRendererController
@@ -288,7 +290,9 @@ dd5f554da8fa9bb51245fea02eb26d69 Sirenix.OdinInspector.Editor.dll:Sirenix.OdinIn
 05524b8f659e7bfe5756d1335fec24ba Sirenix.OdinInspector.Editor.dll:Sirenix.OdinInspector.Editor.PersistentContextCacheEditor
 790759ef9b7f9c9ac6dba9e602c72e7b Sirenix.OdinInspector.Editor.dll:Sirenix.Utilities.Editor.SerializationDebuggerWindow
 6045af4584bc2538c82746394dd7f099 Sirenix.OdinInspector.Editor.dll:Sirenix.OdinInspector.Editor.SirenixPreferencesWindow
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.InvisibleBGCtrl
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DisablePhysics
+3abe88851d64f5e2606260b7913d375b Assembly-CSharp.dll:.ChangeSceneColorsHelper
 04574e176b9500405144574597981e6e Assembly-CSharp.dll:.Slideshow
 73f9c9e258e4d2042926d1c6a8a41463 Assembly-CSharp-firstpass.dll:.UIGradient
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
@@ -302,11 +306,14 @@ e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 ed9f1e23fa81742eab721fe8c8a1374a Assembly-CSharp.dll:.PongPlayer
+a9d4a5e437816fe441f00dfb73d14f26 Assembly-CSharp.dll:.ClickOffRectTransform
+708cd512c80d65a5b286c318169aac17 Assembly-CSharp.dll:.LanguageOptionsController
 9e0ef5bf862444b5dc48b5a99554ce7c UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioListenerExtension
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 2b1b4ae1ee1a431d6cbcc5485d903dfa Assembly-CSharp.dll:.EdgeObject
+8d0be2b86b37a61af6e5de1df9d865ef Assembly-CSharp.dll:.ChangeImageLanguage
 9d7875ebe3700084e885f1905b93694b Assembly-CSharp.dll:.PongGameController
 933df68e2dc48094780cc712bcecdccd Assembly-CSharp.dll:WordListUI.Word
 b99c43181e1b9a8d844ed98e0c6bd0e1 Assembly-CSharp.dll:.LoadingCircle
@@ -324,17 +331,14 @@ fe05f8985de343e50ae428542234be2a Assembly-CSharp.dll:.CatchphraseController
 f68e425d4065a667f031441d649233af Assembly-CSharp.dll:.PongMatchSettingsPanel
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 53e4e88c85e3a7849f042b1e828bc003 Assembly-CSharp.dll:.ObjectSelectUI
+fdd3f39d266132a333d9ecf9b84c24ae Assembly-CSharp.dll:.AwakeEvents
 908b6b09d7f6946d9c41cd57594f3342 Assembly-CSharp.dll:.Racket
 d2d0b7843a0d03c9b656702e3f357810 Assembly-CSharp.dll:.ChessEditPanel
 44e7dd2c847d20ccc76316d5843da831 Assembly-CSharp.dll:.TestingAudio
+938139eb1cbd935a2b42904362206e5c Assembly-CSharp.dll:.ToggleEvents
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ScreenTouch
 f9462d34d4e7f69a9b6f39732062fe31 Assembly-CSharp.dll:.CheckersSettings
 c2f5ce41cd75e17442b437e3b9dbb6b0 Assembly-CSharp-firstpass.dll:.SpriteOutline
 e1ce179b956825a1333a0a697e0b083f Sirenix.Serialization.Config.dll:Sirenix.Serialization.GlobalSerializationConfig
 ab44f1bb54ce41308e5630dd331f10cc Assembly-CSharp.dll:.EditableWord
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CUIColorPicker
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MenuVisibilityCtrl
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.InvisibleBGCtrl
-a9d4a5e437816fe441f00dfb73d14f26 Assembly-CSharp.dll:.ClickOffRectTransform
-d29aaa161e5e89f47438ad005e390fa2 Assembly-CSharp.dll:.OptionsButtonController
-8d0be2b86b37a61af6e5de1df9d865ef Assembly-CSharp.dll:.ChangeImageLanguage

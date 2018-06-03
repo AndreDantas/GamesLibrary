@@ -5835,6 +5835,7 @@ GameObject:
   - component: {fileID: 862206043}
   - component: {fileID: 862206045}
   - component: {fileID: 862206044}
+  - component: {fileID: 862206046}
   m_Layer: 5
   m_Name: TextMeshPro Text
   m_TagString: Untagged
@@ -5982,6 +5983,22 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 862206042}
+--- !u!114 &862206046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 862206042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f495975598928f4d909190c5866d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languagesAndText:
+  - language: 28
+    text: "Promo\xE7\xE3o!"
+  - language: 10
+    text: Promotion !
 --- !u!1001 &862437724
 Prefab:
   m_ObjectHideFlags: 0
@@ -9611,7 +9628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc14ad0f6d288749bfc3466145e2202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DEBUG_LANGUAGE: 10
+  CurrentLanguage: 28
 --- !u!1 &1087319219
 GameObject:
   m_ObjectHideFlags: 0
